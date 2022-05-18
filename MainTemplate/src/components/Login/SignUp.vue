@@ -62,12 +62,13 @@
     </v-radio-group>
 
     <v-btn
-      class="mr-4"
+      class="submit_button"
       @click="submit"
     >
       submit
     </v-btn>
-    <v-btn @click="clear">
+    <v-btn class="clear_button"
+    @click="clear">
       clear
     </v-btn>
   </form>
