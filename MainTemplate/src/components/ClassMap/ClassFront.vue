@@ -1,0 +1,222 @@
+<template>
+  <v-card class="overflow-hidden">
+    <v-spacer></v-spacer>
+    <v-sheet
+      id="classmap-mainscroll"
+      class="overflow-y-auto"
+      max-height="425"
+      color="teal lighten-3"
+      dark
+    >
+
+
+    <div> 
+        <compo-nent :is="ClassMapModal"></compo-nent>
+       <v-row>
+              <v-col
+                v-for="n in ClassFrontModalList.length"
+                :key="n"
+                cols="4"
+              >
+                <ClassMap-Modal></ClassMap-Modal>
+              </v-col>
+            </v-row>
+    </div>
+    
+
+
+      <v-container style="height: 1000px;"></v-container>
+    </v-sheet>
+    <!--강의실 등록-->
+    <template>
+        <!--강의실 등록 우측으로 이동-->
+        <div class="text-right">
+            <v-col
+                cols="12"
+                sm="12"
+                md="8"
+                offset-md="4"
+            >
+                <v-dialog
+                    v-model="ClassFrontDialog"
+                    persistent
+                    max-width="600px"
+            
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            color="primary"
+                            dark
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            강의실 등록
+                        </v-btn>  
+                    </template>
+
+                    <!--강의실 등록 팝업창-->
+                    <v-card
+                        class="overflow-hidden"
+                        max-width="600"
+                        color="light-blue lighten-1"
+                        dark
+                    >
+                        <v-toolbar
+                            flat
+                            color="light-blue"
+                        >
+                        <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
+                        <v-spacer></v-spacer>  
+                        </v-toolbar>
+
+                        <!--강의실 이름: ClassFrontMapName-->
+                        
+                        <v-text-field
+
+                            v-model="ClassFrontMapName"
+                            :error-messages="ClassFrontMapNameErrors"
+                            :counter="10"
+                            label="강의실 이름"
+                            required
+                            @input="$v.ClassFrontMapName.$touch()"
+                            @blur="$v.ClassFrontMapName.$touch()"
+                            solo-inverted
+                            color="white"
+                        >
+                        </v-text-field>
+                        <!--강의실 유형 (type)-->
+                        <v-row>
+                            <v-col
+                                cols="12"
+                                sm="6"
+                                md="6"
+                            >
+                                <v-select
+                                    v-model="ClassFrontMapType"
+                                    :items="ClassFrontMapTypeItem"
+                                    label="강의실 유형"
+                                    @input="$v.ClassFrontMapType.$touch()"
+                                    @blur="$v.ClassFrontMapType.$touch()"
+                                    solo-inverted
+                                    color="white"
+                                >    
+                                </v-select> 
+                            </v-col>
+                                
+                            <!--강의실 참여 인원-->
+                            <v-col
+                                cols="12"
+                                sm="6"
+                                md="6"
+                            >
+                                <v-text-field
+                                    v-model="ClassFrontNumValue"
+                                    label="강의실 참여 인원수"
+                                    class="numer"
+                                    :ClassFrontRules="[ClassFrontRules.required, ClassFrontRules.min, ClassFrontRules.max]"
+                                    type="number"
+                                    @click:append-outer="ClassFrontIncrement"
+                                    @click:prepend="ClassFrontDecrement"
+                                    
+                                    color="white"
+                                    required
+                                >
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                color="light-blue lighten-5"
+                                text
+                                @click="ClassFrontDialog = false"
+                            >
+                                Close
+                            </v-btn>
+                            <v-btn
+                                color="light-blue lighten-5"
+                                text
+                                @click=ClassFrontCreateClassModal();
+                            >
+                                Save
+                            </v-btn>
+                        </v-card-actions>  
+                    </v-card>
+                </v-dialog>
+                <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
+                <v-container style="height: 20px;"></v-container>
+            </v-col>
+        </div>
+    </template>        
+  </v-card>
+</template>
+
+
+
+
+<!------script-------->
+
+<script>
+import ClassMapModal from './ClassMapModal.vue'
+
+  export default {
+    //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
+
+  components: { ClassMapModal },
+    data: () => ({
+    
+      ClassFrontMapName: "",
+      ClassFrontDialog: false,
+      ClassFrontMapType: [],
+      ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
+
+     // 참여 인원수 체크 (참여 인원)   s
+      ClassFrontNumValue: 2,
+      ClassFrontForm : {
+        min: 2,
+        max: 10
+      },
+      ClassFrontRules: {
+        required: value => !!value || "Required.",
+        min: v => v >= this.ClassFrontForm .min || `The Min is ${this.ClassFrontForm .min}`,
+        max: v => v <= this.ClassFrontForm .max || `The Max is ${this.ClassFrontForm .max}`
+      },
+      ///
+      ClassFrontModalList:[],
+    }),
+    ClassFrontMapType: "ClassFront",
+
+  methods: {
+    ClassFrontIncrement() {
+      if (this.ClassFrontNumValue < this.ClassFrontForm .max) {
+        this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) + 1;
+      }
+    },
+    ClassFrontDecrement() {
+      if (this.ClassFrontNumValue > this.ClassFrontForm .min) {
+        this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) - 1;
+      }
+    },
+  
+   
+
+
+
+      ClassFrontCreateClassModal()
+      {
+        this.ClassFrontModalList.push({
+                com : ClassMapModal
+            })
+
+        console.log("test" + "    " + this.v.ClassFrontMapType + "  " + this.v.ClassFrontMapName)
+        console.log("aaaaaaaaa")
+      },
+
+      ClassFrontDeleteClassModal()
+      {
+        this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
+      },
+  }
+  }
+</script>
