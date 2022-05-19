@@ -61,6 +61,17 @@
       ></v-radio>
     </v-radio-group>
 
+    <v-select
+          v-model="select"          
+          :items="items"
+          item-text="item_text"
+          item-value="item_value"
+          label="소속"
+          persistent-hint
+          return-object
+          single-line
+        ></v-select>
+
     <v-btn
       class="submit_button"
       @click="submit"
@@ -84,6 +95,12 @@ export default {
     name: "SignUp",
   data() {
         return {
+
+        items: [
+          { item_text: '영업 1팀 ', item_value: 'FL' }, // 더미 데이터, 100~103줄은 백 붙이면 지우면 됨
+          { item_text: '영업 2팀', item_value: 'FL' },
+          { item_text: '메타버스 팀', item_value: 'FL' },
+        ],
         
         }
     },
