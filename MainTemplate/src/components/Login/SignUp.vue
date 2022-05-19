@@ -39,15 +39,19 @@
       @input="$v.email.$touch()"
       @blur="$v.email.$touch()"
     ></v-text-field>
+
     <v-select
-      v-model="select"
-      :items="items"
-      :error-messages="selectErrors"
-      label="소속"
-      required
-      @change="$v.select.$touch()"
-      @blur="$v.select.$touch()"
-    ></v-select>
+          v-model="select_department"          
+          :items="items"
+          item-text="item_text"
+          item-value="item_value"
+          label="소속"
+          persistent-hint
+          return-object
+          single-line
+          @change="$v.select.$touch()"
+          @blur="$v.select.$touch()"
+        ></v-select>
 
 
     <v-radio-group v-model="radioGroup">
@@ -61,17 +65,7 @@
       ></v-radio>
     </v-radio-group>
 
-    <v-select
-          v-model="select"          
-          :items="items"
-          item-text="item_text"
-          item-value="item_value"
-          label="소속"
-          persistent-hint
-          return-object
-          single-line
-        ></v-select>
-
+    
     <v-btn
       class="submit_button"
       @click="submit"
@@ -97,9 +91,9 @@ export default {
         return {
 
         items: [
-          { item_text: '영업 1팀 ', item_value: 'FL' }, // 더미 데이터, 100~103줄은 백 붙이면 지우면 됨
-          { item_text: '영업 2팀', item_value: 'FL' },
-          { item_text: '메타버스 팀', item_value: 'FL' },
+          { item_text: '영업 1팀', item_value: 'test_1' },
+          { item_text: '영업 2팀', item_value: 'test_2' },
+          { item_text: '메타버스 팀', item_value: 'test_3' },
         ],
         
         }
