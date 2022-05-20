@@ -91,7 +91,7 @@ export default {
         return {
 
         items: [
-          { item_text: '영업 1팀', item_value: 'test_1' },
+          { item_text: '영업 1팀', item_value: 'test_1' }, // 현재는 더미 데이터, 94 ~ 96줄은 지워야됨
           { item_text: '영업 2팀', item_value: 'test_2' },
           { item_text: '메타버스 팀', item_value: 'test_3' },
         ],
