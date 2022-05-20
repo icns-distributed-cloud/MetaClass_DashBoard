@@ -122,15 +122,40 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
+
+            <!--과목명 안에 있는 card-text 시작-->
             <v-card-text>
-              <div class="text--primary">강의 시작 일자: 2022/08/25 13:00</div>
-              <div class="text--primary">강의 끝 일자: 2022/08/25 15:00</div>
-              <div class="text--primary">강의자: 홍길동</div>
-              <div class="text--primary">강의 타입: 계단식</div>
-              <div class="text--primary">소속: 그룹 A</div>
-              <div class="text--primary">참여 인원수: 100/300</div>
-              <span v-html="CalendarFrontSelectedEvent.details"></span>
-            </v-card-text>
+              <v-list two-line>
+                <v-list-item-group
+                  v-model="selected"
+                  active-class="pink--text"
+                  multiple
+                >
+                <template v-for="(CalendarClassnameItem, CalendarClassnameIndex) in CalendarClassnameItemS">
+                  <v-list-item :key="CalendarClassnameItem.CalendarClassnameTitle">
+                    <v-list-item-content>
+                      <v-list-item-title v-text="CalendarClassnameItem.CalendarClassnameTitle"></v-list-item-title>
+                        <v-list-item-subtitle
+                          class="text--primary"
+                          v-text="CalendarClassnameItem.headline"
+                        ></v-list-item-subtitle>
+                        <v-list-item-subtitle v-text="CalendarClassnameItem.CalendarClassnameSubTitle"></v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action>
+                        <v-list-item-action-text v-text="CalendarClassnameItem.CalendarClassnameAction"></v-list-item-action-text>
+                        </v-list-item-action>
+                        </v-list-item>
+                        <v-divider
+                          v-if="CalendarClassnameIndex < CalendarClassnameItemS.length - 1"
+                          :key="CalendarClassnameIndex"
+                        ></v-divider>
+                    </template>
+                    </v-list-item-group>
+                    </v-list>
+                  </v-card-text>
+                  <!--과목명 안에 있는 card-text 끝-->
+        
+           <span v-html="CalendarFrontSelectedEvent.details"></span>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
             <v-card-actions>
                <!--강의 메세지 전송-->
@@ -217,9 +242,37 @@ import CreateClassModal from './CreateClassModal.vue'
       CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'],
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명
       CreateClassModal : false, //  CreateClassModal 
-
       CalendarFrontMessageLoader: null, // 강의 메세지 전송
       CalendarFrontMessageLoaderloading: false, // 강의 메세지 전송
+
+      selected: [2],
+      CalendarClassnameItemS: [
+        {
+          CalendarClassnameAction: '2022-08-25, 13:00',
+          CalendarClassnameTitle: '강의 시작 일자',
+        },
+        {
+          CalendarClassnameAction: '2022-08-25, 15:00',
+          CalendarClassnameTitle: '강의 끝 일자',
+        },
+        {
+          CalendarClassnameAction: '홍길동',
+          CalendarClassnameTitle: '강의자',
+        },
+        {
+          CalendarClassnameAction: '계단식',
+          CalendarClassnameTitle: '강의 타입',
+        },
+        {
+          CalendarClassnameAction: '그룹 A',
+          CalendarClassnameTitle: '소속',
+        },
+        {
+          CalendarClassnameAction: '100/300',
+          CalendarClassnameTitle: '참여 인원수',
+        },
+        ]
+
     }),
     // 강의 메세지 전송
     watch: {
@@ -311,6 +364,7 @@ import CreateClassModal from './CreateClassModal.vue'
         }
 
       },
+
     },
   }
 </script>
