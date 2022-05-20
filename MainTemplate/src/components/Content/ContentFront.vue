@@ -1,11 +1,13 @@
 <template>
   <v-card class="overflow-hidden">
+    <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
+    <!--grey lighten-3 색이 포함된 sheet 늘리기 800-->
     <v-sheet
       id="classmap-mainscroll"
       class="overflow-y-auto"
-      max-height="425"
-      color="teal lighten-3"
+      max-height="800"
+      color="grey lighten-3"
       dark
     >
     <div> 
@@ -20,12 +22,13 @@
         </v-col>
       </v-row>
     </div>
-    
+     <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
-    <!--강의실 등록-->
+    
+    <!--컨텐츠 등록-->
     <template>
-        <!--강의실 등록 우측으로 이동-->
+        <!--컨텐츠 등록 우측으로 이동-->
         <div class="text-right">
             <v-col
                 cols="12"
@@ -46,82 +49,73 @@
                             v-bind="attrs"
                             v-on="on"
                         >
-                            강의실 등록
+                            컨텐츠 등록
                         </v-btn>  
                     </template>
 
-                    <!--강의실 등록 팝업창-->
+                    <!--컨텐츠 등록 팝업창-->
                     <v-card
                         class="overflow-hidden"
                         max-width="600"
                         color="light-blue lighten-1"
                         dark
                     >
+                    <!--상단 컨텐츠 등록-->   
                         <v-toolbar
                             flat
                             color="light-blue"
                         >
-                        <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
+                        <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title>
                         <v-spacer></v-spacer>  
                         </v-toolbar>
 
-                        <!--강의실 이름: ContentFrontMapName-->
-                        
-                        <v-text-field
+                        <!--컨텐츠 이름: ContentFrontMapName-->
 
+                        <v-text-field
                           v-model="ContentFrontMapName"
-                            
-                            :error-messages="ContentFrontMapName"
-                            :counter="10"
-                            label="강의실 이름"
-                            required
-                            @input="$v.ContentFrontMapName.$touch()"
-                            @blur="$v.ContentFrontMapName.$touch()"
-                            solo-inverted
-                            color="white"
+                          :error-messages="ContentFrontMapName"
+                          :counter="10"
+                          label="컨텐츠 이름"
+                          required
+                          @input="$v.ContentFrontMapName.$touch()"
+                          @blur="$v.ContentFrontMapName.$touch()"
+                          solo-inverted
+                          color="white"
                         >
                         </v-text-field>
-                        <!--강의실 유형 (type)-->
-                        <v-row>
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="6"
-                            >
-                                <v-select
-                                    v-model="ContentFrontMapType"
-                                    :items="ContentFrontMapTypeItem"
-                                    label="강의실 유형"
-                                    @input="$v.ContentFrontMapType.$touch()"
-                                    @blur="$v.ContentFrontMapType.$touch()"
-                                    solo-inverted
-                                    color="white"
-                                >    
-                                </v-select> 
-                            </v-col>
-                                
-                            <!--강의실 참여 인원-->
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="6"
-                            >
-                                <v-text-field
-                                    v-model="ContentFrontNumValue"
-                                    label="강의실 참여 인원"
-                                    class="numer"
-                                    :ContentFrontRules="[ContentFrontRules.required, ContentFrontRules.min, ContentFrontRules.max]"
-                                    type="number"
-                                    @click:append-outer="ContentFrontIncrement"
-                                    @click:prepend="ContentFrontDecrement"
-                                    
-                                    color="white"
-                                    required
-                                >
-                                </v-text-field>
-                            </v-col>
-                        </v-row>
 
+                        <!-- 콘텐츠 파일 첨부-->
+                        <v-file-input
+                          v-model="ContentFrontFiles"
+                          color="blue lighten-3"
+                          counter
+                          label="File input"
+                          multiple
+                          placeholder="Select your files"
+                          prepend-icon="mdi-paperclip"
+                          outlined
+                          :show-size="1000"
+                        >
+                        <template v-slot:selection="{ index, text }">
+                          <v-chip
+                            v-if="index < 2"
+                            color="blue lighten-3"
+                            dark
+                            label
+                            small
+                          >
+                            {{ text }}
+                          </v-chip>
+                          <span
+                            v-else-if="index === 2"
+                            class="text-overline grey--text text--darken-3 mx-2"
+                          >
+                            +{{ files.length - 2 }} File(s)
+                          </span>
+                        </template>
+                        </v-file-input>                      
+
+                        <!--하단 취소, 확인 버튼-->
                         <v-card-actions >
                             <v-spacer></v-spacer>
                             <v-btn
@@ -129,39 +123,31 @@
                                 text
                                 @click="ContentFrontDialog = false"
                             >
-                                Close
+                                취소
                             </v-btn>
                             <v-btn
                                 color="light-blue lighten-5"
                                 text
                                 @click=ContentFrontCreateClassModal();
                             >
-                                Save
+                                확인
                             </v-btn>
                         </v-card-actions>  
                     </v-card>
                 </v-dialog>
                 <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
                 <v-container style="height: 20px;"></v-container>
-
             </v-col>
         </div>
-
-
-
-        
-
-
-    </template>        
-  </v-card>
+    </template>   
+    </v-responsive>   
+  </v-card> 
 </template>
 
 
 
 
 <!------script-------->
-
-
 <script>
 
 import ContentModal from './ContentModal.vue'
@@ -170,50 +156,20 @@ import ContentModal from './ContentModal.vue'
 
   components: { ContentModal },
     data: () => ({
-      ContentFrontMapName: "",
-      ContentFrontDialog: false,
-      ContentFrontMapType: [],
-      ContentFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
-
-     // 참여 인원수 체크 (참여 인원)   
-      ContentFrontNumValue: 2,
-      ContentFrontForm: {
-        min: 2,
-        max: 10
-      },
-      ContentFrontRules: {
-        required: value => !!value || "Required.",
-        min: v => v >= this.ContentFrontForm.min || `The Min is ${this.ContentFrontForm.min}`,
-        max: v => v <= this.ContentFrontForm.max || `The Max is ${this.ContentFrontForm.max}`
-      },
-
-      ///
-
+      ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
+      ContentFrontMapName: "", // 컨텐츠 이름
+      ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
+    // ContentFrontModalList
       ContentFrontModalList:[],
-
     }),
-    ContentFrontMapType: "ContentFront",
+    
 
   methods: {
-    ContentFrontIncrement() {
-      if (this.ContentFrontNumValue < this.ContentFrontForm.max) {
-        this.ContentFrontNumValue = parseInt(this.ContentFrontNumValue, 10) + 1;
-      }
-    },
-    ContentFrontDecrement() {
-      if (this.ContentFrontNumValue > this.ContentFrontForm.min) {
-        this.ContentFrontNumValue = parseInt(this.ContentFrontNumValue, 10) - 1;
-      }
-    },
-    //
-     
       ContentFrontCreateClassModal()
       {
         this.ContentFrontModalList.push({
                 com : ContentModal
-            })
-
-        console.log("test" + "    " + this.v.ContentFrontMapType + "  " + this.v.ContentFrontMapName)
+            })   
         console.log("aaaaaaaaa")
       },
 

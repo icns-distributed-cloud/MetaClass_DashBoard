@@ -1,14 +1,8 @@
   <template>
-  <v-app id="inspire">
-   
-
-   
-     
-              <div id="CalendarFront">
-            <Calendar-Front></Calendar-Front>
-          </div>
-       
-   
+   <v-app id="inspire">
+     <div id="CalendarFront">
+      <Calendar-Front></Calendar-Front>
+      </div>
   </v-app>
 </template>
 

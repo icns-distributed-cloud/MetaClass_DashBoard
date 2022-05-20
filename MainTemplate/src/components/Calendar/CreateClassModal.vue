@@ -16,7 +16,7 @@
             <v-toolbar-title>강의실 선택</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
-      <!--강의실 A--> 
+          <!--강의실 A--> 
           <v-col cols="auto">
             <v-dialog
               transition="dialog-bottom-transition"
@@ -31,22 +31,23 @@
                 </v-btn>
               </template>
               
-     <!--강의실 A 클릭 후에 나타나는 page-->
+              <!--강의실 A 클릭 후에 나타나는 page-->
               <template v-slot:default="CreateClassModalDialog">
                 <v-card>
                   <v-toolbar
                     color="primary"
                     dark
-                  >강의실 생성
+                  >강좌 생성
                   </v-toolbar>
                   
-                  <!--강의실 제목 입력-->
+                  <!--강좌명 입력-->
+                  <div>
                   <v-card-text>
                     <v-text-field
                       v-model="CreateClassModalTitle"
                       :error-messages="CreateClassModalTitleErrors" 
                       :counter="10"
-                      label="강의실 제목 입력"
+                      label="강좌명 입력"
                       required
                       @input="$v.CreateClassModalTitle.$touch()"
                       @blur="$v.CreateClassModalTitle.$touch()"
@@ -54,20 +55,6 @@
                       color="white"
                     >
                     </v-text-field>    
-                  
-                  
-                  <!--강의실 이름 입력-->
-                    <v-text-field
-                      v-model="CreateClassModalName"
-                      :error-messages="CreateClassModalNameErrors"
-                      :counter="10"
-                      label="강의실 이름 입력"
-                      required
-                      @input="$v.CreateClassModalName.$touch()"
-                      @blur="$v.CreateClassModalName.$touch()"
-                      solo-inverted
-                      color="white" 
-                    ></v-text-field>
 
                   <!--강의 시작 날짜 및 시간-->
                     <v-row>
@@ -171,14 +158,66 @@
                         </v-dialog>
                       </v-col>
                     </v-row>
+
+                    <!-- 소슥 선택-->
+                    <div>
+                      <v-select
+                        v-model="CreateClassModalBelong"
+                        :items="CreateClassModalBelongItem"
+                        label="소속 선택"
+                        @input="$v.CreateClassModalBelong.$touch()"
+                        @blur="$v.CreateClassModalBelong.$touch()"
+                        solo-inverted
+                        color="white"
+                      >    
+                      </v-select> 
+                    </div>
+
+                    <!-- 컨텐츠 파일 선택-->
+                    <div>
+                      <v-select
+                        v-model="CreateClassModalFile"
+                        :items="CreateClassModalFileItem"
+                        label="컨텐츠 파일 선택"
+                        @input="$v.CreateClassModalFile.$touch()"
+                        @blur="$v.CreateClassModalFile.$touch()"
+                        solo-inverted
+                        color="white"
+                      >    
+                      </v-select> 
+                    </div> 
+                    
+                    <!-- 퀴즈 선택-->
+                    <div>
+                      <v-select
+                        v-model="CreateClassModalQuiz"
+                        :items="CreateClassModalQuizItem"
+                        label="퀴즈 선택"
+                        @input="$v.CreateClassModalQuiz.$touch()"
+                        @blur="$v.CreateClassModalQuiz.$touch()"
+                        solo-inverted
+                        color="white"
+                      >    
+                      </v-select> 
+                    </div> 
                   </v-card-text>
-                  <v-card-actions class="justify-end">
+                  </div>
+                  <!--창 닫기/ 생성-->
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-btn
-                      text
                       color="primary"
-                      @click=SetSelectClassActive(CreateClassModalDialog)
-                    >Submit
+                      text
+                      @click="CreateClassModalDialog=false"
+                    >생성
                     </v-btn>
+                    <v-btn
+                      color="primary"
+                      text
+                      @click=SetSelectClassActive(CreateClassModalDialog)
+                    >닫기
+                    </v-btn>
+
                   </v-card-actions>
                  </v-card>
               </template> 
@@ -192,7 +231,7 @@
                 color="primary"
                 @click="CreateClassModalDialog = false"
               >
-                Close
+                닫기
               </v-btn>
             </v-card-actions>
          </v-card> 
@@ -220,10 +259,26 @@
             CreateClassModalFinishDate3: "",
             CreateClassModalFinishDateModal: false,
             CreateClassModalFinishTime4: "",
-            CreateClassModalFinishTimeModal: false,   
+            CreateClassModalFinishTimeModal: false, 
+            // 소속 선택
+            CreateClassModalBelong: [],
+            CreateClassModalBelongItem: ['그룹 A', '그룹 B'],  
+            // 컨텐츠 파일 선택
+            CreateClassModalFile: [],
+            CreateClassModalFileItem: ['소방교육', '안전교육'],  // 컨텐츠 item 선택 
+            // 퀴즈 선택
+            CreateClassModalQuiz: [],
+            CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'] // 퀴즈 item 선택
+            // 창 닫기
             
+            
+            // 콘텐츠 파일 첨부
+            //CreateClassModalFiles: [],
         }
     },
+    //
+  
+
     methods: {
       // 강의실 생성 시작 date, time
       CreateClassModalStartSet() {

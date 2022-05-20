@@ -2,12 +2,12 @@
 <template>
   <v-app>
     <!--가장 위 상단의 bar, 색은 primary-->
-      <v-app-bar color="light-blue lighten-1" dark app clipped-left>
+      <v-app-bar color="blue lighten-1" dark app clipped-left>
         <v-toolbar-title>Project</v-toolbar-title>
       </v-app-bar>
       
       <!--가장 아래인 하단 bar, 색은 primary-->
-      <v-footer color="light-blue lighten-1" dark app>Project</v-footer>
+      <v-footer color="blue lighten-1" dark app>Project</v-footer>
       
     <!--왼쪽에 bar 생성-->
     <v-navigation-drawer 
@@ -47,7 +47,7 @@
     data () {
       return {
         items: [
-          { title: '캘린더', icon: 'mdi-view-dashboard', action: "Calendar" },
+          { title: '강좌 관리', icon: 'mdi-view-dashboard', action: "Calendar" },
           { title: '학생 평가 관리', icon: 'mdi-view-dashboard', action: "Student" },
           { title: '강의실 등록', icon: 'mdi-view-dashboard', action: "ClassMap" },
           { title: '컨텐츠 등록', icon: 'mdi-view-dashboard', action: "Content" },

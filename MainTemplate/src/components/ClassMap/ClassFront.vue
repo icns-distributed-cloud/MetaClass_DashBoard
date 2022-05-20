@@ -1,10 +1,12 @@
 <template>
   <v-card class="overflow-hidden">
+    <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
+    <!--teal lighten-3 색이 포함된 sheet 늘리기 800-->
     <v-sheet
       id="classmap-mainscroll"
       class="overflow-y-auto"
-      max-height="425"
+      max-height="800"
       color="teal lighten-3"
       dark
     >
@@ -132,14 +134,14 @@
                                 text
                                 @click="ClassFrontDialog = false"
                             >
-                                Close
+                                취소
                             </v-btn>
                             <v-btn
                                 color="light-blue lighten-5"
                                 text
                                 @click=ClassFrontCreateClassModal();
                             >
-                                Save
+                                확인
                             </v-btn>
                         </v-card-actions>  
                     </v-card>
@@ -148,7 +150,8 @@
                 <v-container style="height: 20px;"></v-container>
             </v-col>
         </div>
-    </template>        
+    </template>
+    </v-responsive>        
   </v-card>
 </template>
 

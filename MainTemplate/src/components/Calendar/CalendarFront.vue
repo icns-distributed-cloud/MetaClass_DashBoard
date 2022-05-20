@@ -7,7 +7,7 @@
         >
           <v-tabs
             dark
-            background-color=#64B5F6
+            background-color="light-blue lighten-3"
             grow
           >
             <v-tab>
@@ -86,8 +86,8 @@
         </v-toolbar>
       </v-sheet>
     <!--캘린더 전체 sheet 상하(위-아래)사이즈 조절 -->
-    <!--원래 사이즈 600에서 1000으로 변경-->
-      <v-sheet height="1000">
+    <!--원래 사이즈 600에서 800으로 변경-->
+      <v-sheet height="800">
         <v-calendar
           ref="calendar"
           v-model="CalendarFrontFocus"
@@ -167,6 +167,7 @@
   </v-row>
 </template>
 
+<!--script-->
 <script>
 import CreateClassModal from './CreateClassModal.vue'
 
@@ -184,7 +185,7 @@ import CreateClassModal from './CreateClassModal.vue'
       CalendarFrontSelectedElement: null,
       CalendarFrontSelectedOpen: false,
       CalendarFrontEvents: [],
-      CalendarFrontColors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'],
       CalendarFrontNames: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
       CreateClassModal : false, //  CreateClassModal 
     }),

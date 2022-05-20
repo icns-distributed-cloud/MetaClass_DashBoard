@@ -5,11 +5,10 @@
     max-width="400"
   >
     
-    <v-card-title>컨텐츠 b</v-card-title>
+    <v-card-title>컨텐츠 이름</v-card-title>
 
     <v-card-text class="text--primary">
-      <div>컨텐츠 유형 : 소회의실</div>
-      <div>최대 인원 : 500</div>
+      <div>파일 이름</div>
     </v-card-text>
     <v-list two-line>
         <v-card-actions>
