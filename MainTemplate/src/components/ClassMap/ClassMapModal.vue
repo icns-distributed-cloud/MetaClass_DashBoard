@@ -8,21 +8,21 @@
     <v-card-title>
       <v-card-subtitle>강의실 이름:</v-card-subtitle>
       <v-card-subtitle class="align-end">
-        {{ClassFrontMapName}}
+        <!-- {{ClassFrontMapName}} -->
       </v-card-subtitle>
     </v-card-title>
 
     <v-card-title>
       <v-card-subtitle>강의실 유형:</v-card-subtitle>
       <v-card-subtitle class="align-end">
-        {{ClassFrontMapType}}
+        <!-- {{ClassFrontMapType}} -->
       </v-card-subtitle>
     </v-card-title>
 
     <v-card-title>
       <v-card-subtitle>강의실 참여 인원수:</v-card-subtitle>
       <v-card-subtitle class="align-end">
-        {{ClassFrontNumValue}}
+        <!-- {{ClassFrontNumValue}} -->
       </v-card-subtitle>
     </v-card-title>
     
@@ -33,19 +33,18 @@
                 class="mr-4"
                 color="orange"
                 text
-                @click="ClassMapModalDelate = false"
-            >
+                >
                 삭제
             </v-btn>
             <v-btn
                 class="mr-4"
                 color="orange"
                 text
-                @click="hello"
-            >
+                >
                 수정
             </v-btn>
         </v-card-actions> 
+        <h3>{{ item }}</h3>
     </v-list>
   </v-card>
 
@@ -58,9 +57,18 @@
 <script>
   export default {
     
-    props: ['ClassFrontMapName'],
+    props: {
+      info: {
+        type: Object,
+        require: true
+      }
+    },
+
     computed: {
 
+    },
+    created() {
+      console.log(this.info);
     }
   }
 

@@ -6,6 +6,7 @@ import StudentPage from "../components/Student/StudentPage.vue";
 import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
 import ContentPgae from "../components/Content/ContentPage.vue";
+import TestPage from "../components/TestComponent.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
         path: "/ContentPage",
         name: ContentPgae,
         component: ContentPgae
+    },
+    {
+        path: "/Test",
+        name: TestPage,
+        component: TestPage
     }
 
 

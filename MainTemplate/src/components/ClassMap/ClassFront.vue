@@ -15,13 +15,24 @@
     <div> 
         <compo-nent :is="ClassMapModal"></compo-nent>
        <v-row>
+              <!--
+              <ClassMap-Modal
+                v-for="(item, index) in ClassFrontModalList"
+                :key="index"
+                :item="item"
+                cols="4"
+              ></ClassMap-Modal>
+              -->
+
+              
               <v-col
-                v-for="n in ClassFrontModalList.length"
-                :key="n"
+                v-for="(item, index) in ClassFrontModalList"
+                :key="index"
                 cols="4"
               >
-                <ClassMap-Modal></ClassMap-Modal>
+                <ClassMap-Modal info=item.id></ClassMap-Modal>
               </v-col>
+              
             </v-row>
     </div>
     
@@ -187,8 +198,14 @@ import ClassMapModal from './ClassMapModal.vue'
       },
       ///
       ClassFrontModalList:[],
+      ModalInfo: []
     }),
     ClassFrontMapType: "ClassFront",
+
+  created() {
+    this.fetchData();
+  },
+
 
   methods: {
     ClassFrontIncrement() {
@@ -203,13 +220,49 @@ import ClassMapModal from './ClassMapModal.vue'
     },
   
    
+    fetchData() {
+      // var vm = this;
 
+      var url = "http://163.180.117.22:8088/api/map/post/maplist"
+
+      var userId = this.$store.getters.getUserInfo.id;
+      var payload = {
+        instructorId: userId
+      }
+
+      var config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+
+      this.$http
+        .post(url, payload, config)
+        .then((res) => {
+          // console.log(res);
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              this.ClassFrontModalList.push({
+                id: element.id,
+                maxUser: element.maxUser,
+                name: element.name,
+                type: element.type
+              })
+            })
+          }
+          console.log(this.ClassFrontModalList);
+          
+          // console.log(this.ClassFrontModalList[0]);
+        })
+        
+
+    },
 
 
       ClassFrontCreateClassModal()
       {
         this.ClassFrontModalList.push({
-                com : ClassMapModal
+                info: 'as'
             })
 
         console.log("test" + "    " + this.v.ClassFrontMapType + "  " + this.v.ClassFrontMapName)
@@ -220,6 +273,7 @@ import ClassMapModal from './ClassMapModal.vue'
       {
         this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
       },
-  }
+  },
+  
   }
 </script>
