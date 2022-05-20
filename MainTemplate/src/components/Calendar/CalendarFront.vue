@@ -99,49 +99,77 @@
           @click:more="CalendarFrontViewDay"
           @click:date="CalendarFrontViewDay"
           @change="CalendarFrontUpdateRange"
-        ></v-calendar> 
+        ></v-calendar>
+
+        <!--event 클릭 시 나타나는 화면--> 
         <v-menu
           v-model="CalendarFrontSelectedOpen"
           :close-on-content-click="false"
           :activator="CalendarFrontSelectedElement"
           offset-x
         >
+        <!---->
           <v-card
             color="grey lighten-4"
-            min-width="350px"
+            min-width="300px"
             flat
           >
             <v-toolbar
               :color="CalendarFrontSelectedEvent.color"
               dark
             >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
               <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
             </v-toolbar>
+            <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
             <v-card-text>
+              <div class="text--primary">강의 시작 일자: 2022/08/25 13:00</div>
+              <div class="text--primary">강의 끝 일자: 2022/08/25 15:00</div>
+              <div class="text--primary">강의자: 홍길동</div>
+              <div class="text--primary">강의 타입: 계단식</div>
+              <div class="text--primary">소속: 그룹 A</div>
+              <div class="text--primary">참여 인원수: 100/300</div>
               <span v-html="CalendarFrontSelectedEvent.details"></span>
             </v-card-text>
+            <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
             <v-card-actions>
+               <!--강의 메세지 전송-->
+              <v-btn
+                :loading="CalendarFrontMessageLoaderloading"
+                :disabled="CalendarFrontMessageLoaderloading"
+                color="teal darken-4"
+                class="ma-2 white--text"
+                @click="CalendarFrontMessageLoader = 'CalendarFrontMessageLoaderloading'"
+              >
+                강의 메세지 전송
+                <v-icon
+                  right
+                  dark
+                >
+                  mdi-email
+                </v-icon>
+              </v-btn>
+             
+              <v-spacer></v-spacer>
               <v-btn
                 text
                 color="secondary"
                 @click="CalendarFrontSelectedOpen = false"
               >
-                Cancel
+                수정
+              </v-btn>
+              <v-btn
+                text
+                color="secondary"
+                @click="CalendarFrontSelectedOpen = false"
+              >
+                강의 취소
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
       </v-sheet>
+
       <!--하단 버튼 클릭-->
       <div class="text-right">
         <v-btn
@@ -167,6 +195,7 @@
   </v-row>
 </template>
 
+
 <!--script-->
 <script>
 import CreateClassModal from './CreateClassModal.vue'
@@ -186,9 +215,24 @@ import CreateClassModal from './CreateClassModal.vue'
       CalendarFrontSelectedOpen: false,
       CalendarFrontEvents: [],
       CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'],
-      CalendarFrontNames: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+      CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명
       CreateClassModal : false, //  CreateClassModal 
+
+      CalendarFrontMessageLoader: null, // 강의 메세지 전송
+      CalendarFrontMessageLoaderloading: false, // 강의 메세지 전송
     }),
+    // 강의 메세지 전송
+    watch: {
+      CalendarFrontMessageLoader () {
+        const l = this.CalendarFrontMessageLoader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.CalendarFrontMessageLoader = null
+      },
+    },
+   // CalendarFront
     name: "CalendarFront", // CalendarFront
 
     mounted () {

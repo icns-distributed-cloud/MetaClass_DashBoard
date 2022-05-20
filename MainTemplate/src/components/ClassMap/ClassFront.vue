@@ -2,12 +2,12 @@
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
-    <!--teal lighten-3 색이 포함된 sheet 늘리기 800-->
+    <!-- grey lighten-3 색이 포함된 sheet 늘리기 800-->
     <v-sheet
       id="classmap-mainscroll"
       class="overflow-y-auto"
       max-height="800"
-      color="teal lighten-3"
+      color="grey lighten-3"
       dark
     >
 

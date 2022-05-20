@@ -27,7 +27,7 @@
                   color="primary"
                   v-bind="attrs"
                   v-on="on"
-                > 강의실 A
+                > 강의실 A: 오픈형/200명
                 </v-btn>
               </template>
               

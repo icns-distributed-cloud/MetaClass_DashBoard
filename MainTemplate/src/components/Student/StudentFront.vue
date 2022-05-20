@@ -1,71 +1,61 @@
+<!--Student Front-->
 <template>
-  <v-card
-    class="mx-auto"
-    max-width="500"
-  >
-    <v-system-bar
-      color="indigo darken-2"
-      dark
+  <div>
+    <v-card>
+    <!--너비/높이 계산 설정 aspect-ratio-->
+    <v-responsive :aspect-ratio="16/9">
+        <v-card-text>
+          학생 평가 관리
+        </v-card-text>
+        <!--progress circular-->
+        <div class="text-center">
+    <v-progress-circular
+      :rotate="360"
+      :size="100"
+      :width="15"
+      :value="value"
+      color="teal"
     >
-      <v-spacer></v-spacer>
-
-      <v-icon>mdi-window-minimize</v-icon>
-
-      <v-icon>mdi-window-maximize</v-icon>
-
-      <v-icon>mdi-close</v-icon>
-    </v-system-bar>
-
-    <v-toolbar
-      color="indigo"
-      dark
-    >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Discover</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-    </v-toolbar>
-
-    <v-container fluid>
-      <v-row dense>
-        <v-col
-          v-for="card in cards"
-          :key="card.title"
-          :cols="card.flex"
-        >
-          <v-card>
-            <v-img
-              :src="card.src"
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="200px"
-            >
-              <v-card-title v-text="card.title"></v-card-title>
-            </v-img>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-
-              <v-btn icon>
-                <v-icon>mdi-bookmark</v-icon>
-              </v-btn>
-
-              <v-btn icon>
-                <v-icon>mdi-share-variant</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+      {{ value }}
+    </v-progress-circular>
+    </div>
+    <!--progress circular-->
+      </v-responsive>
+    </v-card>
+  </div>
 </template>
+
+    
+  
+
+
+<!------script-------->
+
+
+<script>
+  export default {
+    data () {
+      return {
+        interval: {},
+        value: 0,
+      }
+    },
+    beforeDestroy () {
+      clearInterval(this.interval)
+    },
+    mounted () {
+      this.interval = setInterval(() => {
+        if (this.value === 100) {
+          return (this.value = 0)
+        }
+        this.value += 10
+      }, 1000)
+    },
+  }
+</script>
+
+<style scoped>
+.v-progress-circular {
+  margin: 1rem;
+}
+</style>
