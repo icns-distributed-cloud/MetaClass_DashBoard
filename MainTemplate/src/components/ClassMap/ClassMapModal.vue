@@ -1,9 +1,7 @@
 <template>
   <v-card
-    v-model="ClassMapModalDelate"
     class="mx-auto"
     color="amber"
-    max-width="400"
   >
     <v-card-title>
       <v-card-subtitle>강의실 이름:</v-card-subtitle>
@@ -39,6 +37,7 @@
                 class="mr-4"
                 color="orange"
                 text
+                @click=Deletemap();
                 >
                 삭제
             </v-btn>
@@ -73,7 +72,42 @@
 
     },
     created() {
-      console.log(this.info);
+    },
+    methods: {
+      Deletemap() {
+        var prompStr = prompt(
+          '강의실이 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+        );
+        if (prompStr == null) {
+          return;
+        }
+        if (prompStr == "삭제") {
+          var url = "http://163.180.117.22:8088/api/map/patch/deletemap";
+
+          var payload = {
+            id: this.info.id
+          }
+
+          var config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+
+          this.$http
+            .patch(url, payload, config)
+            .then(() => {
+              alert("성공적으로 삭제되었습니다.");
+              this.$parent.$parent.$parent.$parent.deleteMap();
+            })
+            console.log("delete map");
+          } else {
+            alert("정확하게 입력해주세요.");
+            return;
+          }
+
+
+      }
     }
   }
 

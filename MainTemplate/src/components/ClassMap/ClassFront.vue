@@ -13,7 +13,7 @@
 
 
     <div> 
-        <compo-nent :is="ClassMapModal"></compo-nent>
+        
        <v-row>
               <!--
               <ClassMap-Modal
@@ -87,12 +87,9 @@
                         <v-text-field
 
                             v-model="ClassFrontMapName"
-                            :error-messages="ClassFrontMapNameErrors"
                             :counter="10"
                             label="강의실 이름"
                             required
-                            @input="$v.ClassFrontMapName.$touch()"
-                            @blur="$v.ClassFrontMapName.$touch()"
                             solo-inverted
                             color="white"
                         >
@@ -108,8 +105,6 @@
                                     v-model="ClassFrontMapType"
                                     :items="ClassFrontMapTypeItem"
                                     label="강의실 유형"
-                                    @input="$v.ClassFrontMapType.$touch()"
-                                    @blur="$v.ClassFrontMapType.$touch()"
                                     solo-inverted
                                     color="white"
                                 >    
@@ -186,7 +181,7 @@ import ClassMapModal from './ClassMapModal.vue'
       ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
 
      // 참여 인원수 체크 (참여 인원)   s
-      ClassFrontNumValue: 2,
+      ClassFrontNumValue: 50,
       ClassFrontForm : {
         min: 2,
         max: 10
@@ -218,12 +213,15 @@ import ClassMapModal from './ClassMapModal.vue'
         this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) - 1;
       }
     },
+    deleteMap() {
+      this.fetchData();
+    },
   
    
     fetchData() {
       // var vm = this;
-
-      var url = "http://163.180.117.22:8088/api/map/post/maplist"
+      this.ClassFrontModalList = [];
+      var url = "http://163.180.117.22:8088/api/map/post/maplist";
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -261,12 +259,50 @@ import ClassMapModal from './ClassMapModal.vue'
 
       ClassFrontCreateClassModal()
       {
-        this.ClassFrontModalList.push({
-                info: 'as'
-            })
+        var url = "http://163.180.117.22:8088/api/map/post/createmap";
+        var maptype = 0;
+        if (this.ClassFrontMapType === "오픈형") {
+          maptype = 0
+        } else if (this.ClassFrontMapType === "계단형") {
+          maptype = 1
+        } else if (this.ClassFrontMapType === "소회의실") {
+          maptype = 2
+        } else {
+          alert("강의실 유형을 정확하게 입력해주세요.")
+          console.log(maptype);
+          return;
+        }
+         
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          name: this.ClassFrontMapName,
+          type: maptype,
+          maxUser: this.ClassFrontNumValue,
+          instructorId: userId
+        }
 
-        console.log("test" + "    " + this.v.ClassFrontMapType + "  " + this.v.ClassFrontMapName)
-        console.log("aaaaaaaaa")
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            console.log(res.data.success);
+            if (res.data.success === true) {
+              alert("강의실 생성이 완료되었습니다.");
+              this.ClassFrontDialog = false;
+              this.fetchData();
+            } else {
+              alert("강의실 이름이 중복되었습니다");
+              return;
+            }
+          })
+
+
+        
       },
 
       ClassFrontDeleteClassModal()
