@@ -8,21 +8,27 @@
     <v-card-title>
       <v-card-subtitle>강의실 이름:</v-card-subtitle>
       <v-card-subtitle class="align-end">
-        <!-- {{ClassFrontMapName}} -->
+        {{info.name}}
       </v-card-subtitle>
     </v-card-title>
 
     <v-card-title>
       <v-card-subtitle>강의실 유형:</v-card-subtitle>
-      <v-card-subtitle class="align-end">
-        <!-- {{ClassFrontMapType}} -->
+      <v-card-subtitle class="align-end" v-if="info.type === 0">
+        오픈형
+      </v-card-subtitle>
+      <v-card-subtitle class="align-end" v-if="info.type === 1">
+        계단식
+      </v-card-subtitle>
+      <v-card-subtitle class="align-end" v-if="info.type === 2">
+        소회의실
       </v-card-subtitle>
     </v-card-title>
 
     <v-card-title>
       <v-card-subtitle>강의실 참여 인원수:</v-card-subtitle>
       <v-card-subtitle class="align-end">
-        <!-- {{ClassFrontNumValue}} -->
+        {{info.maxUser}}
       </v-card-subtitle>
     </v-card-title>
     
@@ -44,7 +50,6 @@
                 수정
             </v-btn>
         </v-card-actions> 
-        <h3>{{ item }}</h3>
     </v-list>
   </v-card>
 

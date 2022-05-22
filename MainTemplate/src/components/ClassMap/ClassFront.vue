@@ -30,7 +30,7 @@
                 :key="index"
                 cols="4"
               >
-                <ClassMap-Modal info=item.id></ClassMap-Modal>
+                <ClassMap-Modal v-bind:info="ClassFrontModalList[index]"></ClassMap-Modal>
               </v-col>
               
             </v-row>
