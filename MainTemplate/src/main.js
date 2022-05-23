@@ -8,7 +8,9 @@ import router from './router/router'
 // 설치 필요 : npm install vuetify-dialog
 import VuetifyDialog from 'vuetify-dialog'
 import 'vuetify-dialog/dist/vuetify-dialog.css'
+import axios from "axios";
 
+import store from "./store";
 
 
 // Vue chart
@@ -17,6 +19,7 @@ import "chart.js";
 //Vue.use(window.VueCharts);
 //
 //
+Vue.use(store);
 Vue.use(VuetifyDialog), {
         context: {
             vuetify
@@ -28,10 +31,14 @@ Vue.use(VuetifyDialog), {
     }],
 
 
-    Vue.config.productionTip = false
+Vue.config.productionTip = false
+Vue.prototype.$http = axios;
+
+
 
 new Vue({
     vuetify,
     router: router,
+    store,
     render: h => h(App)
 }).$mount('#app')

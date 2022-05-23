@@ -3,16 +3,18 @@
     class="fill-height"
     fluid
   >
+            
     <v-row
       align="center"
       justify="center"
     >
-    
+      
       <v-col
         cols="12"
         sm="8"
         md="4"
       >
+      
       
         <v-card class="elevation-12">
           <v-toolbar
@@ -20,6 +22,7 @@
             dark
             flat
           >
+          
           
             <v-toolbar-title>메타 클래스</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -47,16 +50,6 @@
                 @keydown.enter="validateUser"
               ></v-text-field>
 
-              <v-select
-              v-model="role"
-              :items="items"
-              item-text="name"
-              item-value="value"
-              label="role"
-              prepend-icon=mdi-account-details>
-              
-              ></v-select>
-
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -69,15 +62,15 @@
            
             
           </v-card-actions>
+          
           <v-overlay
             :value="overlay"
             :absolute="absolute">
             <v-progress-circular
               indeterminate
               color="primary"
-          ></v-progress-circular>
+            ></v-progress-circular>
           </v-overlay>
-          
         </v-card>
 
         <v-card>
@@ -87,35 +80,22 @@
       </v-col>
     </v-row>
 
-  
   </v-container>
 </template>
 
 <script>
-import SignUp from './SignUp.vue'
-
 export default {
   components:
   {
-    SignUp,
+
   },
     data: () => ({
-      
         overlay: false,
         absolute: true,
-        sending: false,
-
-        useMode: 1,
-
-        items: [
-          {name: "student", value: 1},
-          {name: "instructor", value: 0}
-        ],
 
         id : "",
         password : "",
         confirm : "",
-        role: "",
         showSignUpModal: false,
         SignUp : false,
     }),
@@ -123,32 +103,14 @@ export default {
         validateUser() {
           // 추후 형식 맞는지 검사
 
-          this.onSubmit(this.id, this.password, this.role);
+          this.onSubmit(this.id, this.password);
         },
-
-        // signin
-        onSubmit(id, password, userMode) {
+        onSubmit(id, password) {
           this.overlay = true;
 
-          setTimeout(() => {
-            this.sending = true;
-
-            this.$store
-            .dispatch("LOGIN", {id, password, userMode})
-            .then(() => {
-              this.overlay = false;
-              this.redirect();
-            })
-
-          }, 1000);
-
+          console.log(id, password);
         },
-        redirect() {
-           
-          var redirectPath = "/CalendarPage";
-          
-          this.$router.push(redirectPath);
-        },
+
 
         signup() {
           this.showSignUpModal=true;
@@ -159,14 +121,4 @@ export default {
 
 
 </script>
-<style lang="scss" scoped>
-.loading-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-</style>
-
 
