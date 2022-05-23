@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.22:8088"
+const resourceHost = "http://163.180.117.47:8088"
 
 export default new Vuex.Store({
     plugins: [
@@ -15,7 +15,8 @@ export default new Vuex.Store({
         })
     ],
     state: {
-        id: null
+        id: null,
+        name: null
     },
     getters: {
         isLogin(state){
@@ -23,18 +24,22 @@ export default new Vuex.Store({
         },
         getUserInfo(state) {
             return {
-                id: state.id
+                id: state.id,
+                name: state.nsme
             }
         }
     },
     mutations: {
-        LOGIN(state, {id}) {
+        LOGIN(state, {id, name}) {
             state.id = id;
+            state.name = name;
 
             localStorage.id = id;
+            localStorage.name = name;
         },
         LOGOUT(state) {
             state.id = null;
+            state.name = null;
 
             localStorage.clear();
         }
@@ -61,8 +66,8 @@ export default new Vuex.Store({
                     console.log(parsedData);
 
                     commit("LOGIN", {
-                        id: parsedData.id
-                        
+                        id: parsedData.id,
+                        name: parsedData.name
                     })
                 })
                 .catch(error => {
