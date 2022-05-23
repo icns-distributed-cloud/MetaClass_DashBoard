@@ -223,7 +223,7 @@
 
 <!--script-->
 <script>
-import CreateClassModal from './CreateClassModal.vue'
+import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
   export default {
     components: { CreateClassModal },
@@ -239,12 +239,13 @@ import CreateClassModal from './CreateClassModal.vue'
       CalendarFrontSelectedElement: null,
       CalendarFrontSelectedOpen: false,
       CalendarFrontEvents: [],
-      CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'],
-      CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명
+      CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'], // 색도 랜덤 값
+      CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
       CreateClassModal : false, //  CreateClassModal 
       CalendarFrontMessageLoader: null, // 강의 메세지 전송
       CalendarFrontMessageLoaderloading: false, // 강의 메세지 전송
-
+   
+      // 과목명 안에 있는 card-text 시작
       selected: [2],
       CalendarClassnameItemS: [
         {
@@ -272,8 +273,8 @@ import CreateClassModal from './CreateClassModal.vue'
           CalendarClassnameTitle: '참여 인원수',
         },
         ]
-
     }),
+    
     // 강의 메세지 전송
     watch: {
       CalendarFrontMessageLoader () {
@@ -325,6 +326,10 @@ import CreateClassModal from './CreateClassModal.vue'
         nativeEvent.stopPropagation()
       },
       CalendarFrontUpdateRange ({ start, end }) {
+        // 이벤트 막대기 생성부분
+        // 여기서 데이터베이스에서 정보를 가져와야한다.
+        // 가져올 데이터 data , time
+         
         const CalendarFrontEvents = []
 
         var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
@@ -411,7 +416,12 @@ import CreateClassModal from './CreateClassModal.vue'
           console.log(first)
           const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
           const second = new Date(first.getTime() + secondTimestamp)
+<<<<<<< HEAD
           
+=======
+         
+         // CalendarFrontEvents
+>>>>>>> 37ed32c400ce44ed5e121f0403f6f4f2b94d04a3
           CalendarFrontEvents.push({
             name: this.CalendarFrontNames[this.rnd(0, this.CalendarFrontNames.length - 1)],
             start: first,

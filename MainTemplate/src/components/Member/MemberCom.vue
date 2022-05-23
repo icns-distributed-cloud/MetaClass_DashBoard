@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-card color="blue lighten-5">
-    <!--card-title-->
+    <!--card-title : 회원 관리-->
     <v-card-title>
       회원관리
       <!--search 부분을 우측으로 밀기-->
@@ -14,33 +14,28 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-
+<!--MemberName가 header-->
   <v-data-table
     :headers="headers"
     :items="MemberName" 
-    sort-by="calories"
+    sort-by="MemberManager"
     class="elevation-1"
     :search="search"
-    
     hide-default-footer
     :page.sync="page" 
     :items-per-page="itemsPerPage"
     @page-count="pageCount = $event"
-
   >
+    <!--MemberComDialog 시작-->
     <template v-slot:top>
-     
-     
         <v-dialog
           v-model="MemberComDialog"
           max-width="500px"
-        >
-          
+        > 
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
-          <!---->
             <v-card-text>
               <v-container>
                 <v-row>
@@ -97,7 +92,7 @@
                 </v-row>
               </v-container>
             </v-card-text>
-
+            <!--펜 클릭시 나타나는 화면 editname-->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -105,14 +100,14 @@
                 text
                 @click="close"
               >
-                Cancel
+                취소
               </v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 @click="save"
               >
-                Save
+                확인
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -123,8 +118,8 @@
             <v-card-title class="text-h5">회원 정보를 삭제하시겠습니까?</v-card-title> 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDelete">취소</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm">확인</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -132,6 +127,8 @@
         <!--휴지통 클릭시 나타나는 화면 끝!-->
       
     </template>
+     <!--MemberComDialog 끝-->
+
     <!--펜 아이콘 생성-->
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon
@@ -207,7 +204,7 @@
       dialogDelete: false,
       headers: [
         {
-          text: 'MemberName',
+          text: 'Member Name',
           align: 'start',
           filterable: true, // 모든 항목에 오름차순, 내림차순
           //sortable: false,
