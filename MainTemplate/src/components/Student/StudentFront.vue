@@ -6,6 +6,16 @@
     <!--card-title : 학생평가관리 -> 가장 위의 상단-->
     <v-card-title>
       학생 평가 관리
+       <!--search 부분을 우측으로 밀기-->
+      <v-spacer></v-spacer>
+       <!--search-->
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
     </v-card-title>
   <!--StudentManager가 header-->
   <v-data-table
@@ -20,6 +30,7 @@
     item-key="name"
     show-expand
     :expanded.sync="expanded"
+    :search="search"
    
   >
   <!--과목 앞에 있는 ^표시 : 아래에 그래프 넣을 것 StudentModal-->
@@ -98,6 +109,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
       pageCount: 0, // pageCount
       itemsPerPage: 10, // itemsPerPage
       StudentFrontDialog: false,
+      search: '', // 회원 평가 관리 Search
       // headers
       StudentHeaders: [
         {

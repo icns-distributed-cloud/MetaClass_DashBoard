@@ -232,7 +232,11 @@
                       color="primary"
                       text
                       @click=CreateClass()
+<<<<<<< HEAD
+                    >생성
+=======
                     >등록 확인
+>>>>>>> 2b3f58820118c4906c105842d497ea12bb03df5a
                     </v-btn>
                     <v-btn
                       color="primary"
