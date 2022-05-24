@@ -14,11 +14,11 @@
         <compo-nent :is="ContentModal"></compo-nent>
        <v-row>
         <v-col
-          v-for="n in ContentFrontModalList.length"
-          :key="n"
+          v-for="(item, index) in ContentFrontModalList"
+          :key="index"
           cols="4"
         >
-          <Content-Modal></Content-Modal>
+          <Content-Modal v-bind:info="ContentFrontModalList[index]"></Content-Modal>
         </v-col>
       </v-row>
     </div>
@@ -95,6 +95,7 @@
                           prepend-icon="mdi-paperclip"
                           outlined
                           :show-size="1000"
+                          @change=Upload()
                         >
                         <template v-slot:selection="{ index, text }">
                           <v-chip
@@ -128,7 +129,7 @@
                             <v-btn
                                 color="light-blue lighten-5"
                                 text
-                                @click=ContentFrontCreateClassModal();
+                                @click=UpdateId()
                             >
                                 확인
                             </v-btn>
@@ -156,15 +157,50 @@ import ContentModal from './ContentModal.vue'
 
   components: { ContentModal },
     data: () => ({
+      contentId: "",
+
       ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
       ContentFrontMapName: "", // 컨텐츠 이름
       ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
     // ContentFrontModalList
       ContentFrontModalList:[],
     }),
-    
+  created() {
+    this.fetchData();
+  },    
 
   methods: {
+      fetchData() {
+        this.ContentFrontModalList = [];
+
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.ContentFrontModalList.push({
+                  id: element.id,
+                  name: element.name
+                })
+              })
+            }
+          })
+
+      },
+
       ContentFrontCreateClassModal()
       {
         this.ContentFrontModalList.push({
@@ -178,7 +214,58 @@ import ContentModal from './ContentModal.vue'
         this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
       },
       Upload() {
+        const formData = new FormData();
+        formData.append("file", this.ContentFrontFiles[0]);
+
+        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
+
+        var config = {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+
+        this.$http
+          .post(url, formData, config)
+          .then(res => {
+            console.log(res);
+            if (res.data.success === true) {
+              this.contentId = res.data.data.contentId;
+              console.log(this.contentId);
+            } else {
+              alert("업로드 실패");
+              return;
+            }
+          })
+
+
         console.log(this.ContentFrontFiles);
+      },
+      UpdateId() {
+        if (this.contentId === "") {
+          alert("파일을 선택해주세요");
+          return;
+        } else {
+          var userId = this.$store.getters.getUserInfo.id;
+          var idUpdateUrl = "http://163.180.117.47:8088/api/content/post/updateidbycontentid";
+          var payload = {
+            instructorId: userId,
+            contentId: this.contentId
+          }
+          this.$http
+            .post(idUpdateUrl, payload, {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+            .then(res => {
+              console.log(res);
+              alert("컨텐츠 업로드가 완료되었습니다.");
+              this.fetchData();
+              this.ContentFrontDialog = false;
+            })
+        }
+
       }
   }
   }

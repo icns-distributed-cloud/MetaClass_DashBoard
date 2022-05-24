@@ -263,7 +263,7 @@ import ClassMapModal from './ClassMapModal.vue'
         var maptype = 0;
         if (this.ClassFrontMapType === "오픈형") {
           maptype = 0
-        } else if (this.ClassFrontMapType === "계단형") {
+        } else if (this.ClassFrontMapType === "계단식") {
           maptype = 1
         } else if (this.ClassFrontMapType === "소회의실") {
           maptype = 2
