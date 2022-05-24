@@ -1,6 +1,8 @@
 <template>
-<div>
-  <v-card color="blue lighten-5">
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+         <v-card color="blue lighten-5">
     <!--card-title : 학생평가관리 -> 가장 위의 상단-->
     <v-card-title>
       학생 평가 관리
@@ -15,70 +17,43 @@
     :page.sync="page" 
     :items-per-page="itemsPerPage"
     @page-count="pageCount = $event"
-
-  >
-<!--test 버튼 클릭 시 나타나는 화면-->
-<v-dialog  v-model="dialogDelete" max-width="500px">
-  <v-card>
-    <v-card-title class="text-h5">회원 정보를 삭제하시겠습니까?</v-card-title>
-    <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">취소</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">확인</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-          <!--test 버튼 클릭 시 나타나는 화면-->
-    <!--휴지통 아이콘 생성-->
-      <v-icon
-        elevation="4"
-        fab
-        class="cyan"
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-trash-can-outline
-      </v-icon>
-
-
-
-</v-dialog>
-<!--그래프 아이콘 생성-->
-
-    <template v-slot:[`item.actions`]="{  }">
-      <v-btn 
-      class="ma-2" 
-      color="primary" 
-      dark 
-      @click=StudentModalPopup(StudentModal);
-      >그래프 보기
-      <v-icon 
-        dark 
-        right
-        elevation="4"
-        fab
-        class="teal mr-2"
-        small
-      >mdi-checkbox-marked-circle  
-      </v-icon>
-      </v-btn>
-      <!--StudentModal-->
-      <Student-Modal
-      v-if="StudentModal"
-
-      @close="
-      StudentModal = false;"
-      />
-
-      </template>
-    
-      
-  
-
-    
+    item-key="name"
+    show-expand
+    :expanded.sync="expanded"
    
+  >
+  <!--과목 앞에 있는 ^표시 : 아래에 그래프 넣을 것 StudentModal-->
+  <template v-slot:expanded-item="{ headers }">
+      <td :colspan="headers.length">
+        <!--StudentModal-->
+        <Student-Modal
+        v-if="StudentModal"/>
+      </td>  
+    </template>
 
+ <!--Action 안에 있는 볼펜 아이콘을 클릭-->
+     <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+        small
+        @click="StudentSubjectModalItem(item)"
+      >
+         mdi-pencil
+      </v-icon>
+
+     <!--Student-Subject-Modal안에 들어가기-->  
+    <v-dialog v-model="StudentSubjectModalDialog" max-width="800px">
+        <!--StudentSubjectModal-->
+        <Student-Subject-Modal
+        v-if="StudentSubjectModal"/>
+            
+    </v-dialog>
+    </template>
+     
+      
     
+     
+    
+
   </v-data-table>
   </v-card>
   <!--data tabel 끝!-->
@@ -100,28 +75,29 @@
         @input="itemsPerPage = parseInt($event, 10)"
       ></v-text-field>
     </div>
-  </div>
+    </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 
+ 
 
 <!--script-->
 
 <script>
 import StudentModal from './StudentModal.vue' // StudentModal
+import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectModal
 
   export default {
-   components: { StudentModal }, // StudentModal
+    components: { StudentModal, StudentSubjectModal }, // StudentModal, StudentSubjectModal
     data: () => ({
-     dialogDelete: false, //
-   
+     StudentSubjectModalDialog: false,//
+      expanded: [],
       page: 1, // page
       pageCount: 0, // pageCount
       itemsPerPage: 10, // itemsPerPage
       StudentFrontDialog: false,
-
-
-
       // headers
       StudentHeaders: [
         {
@@ -131,12 +107,14 @@ import StudentModal from './StudentModal.vue' // StudentModal
           //sortable: false,
           value: 'name',
         },
-        { text: '강의 날짜', value: 'ClassDate'}, 
-        { text: 'Actions', value: 'actions', sortable: false },
-       
+        { text: '강의 날짜', value: 'ClassDate'},  
+        { text: 'Actions', value: 'actions', sortable: false }, 
+
+
       ],
       ClassName: [], //ClassName
-      StudentModal : false, //  StudentModal
+      StudentModal : true, //  StudentModal
+      StudentSubjectModal : true, //  StudentSubjectModal
      
     }),
 
@@ -162,51 +140,17 @@ import StudentModal from './StudentModal.vue' // StudentModal
          
         ]
       },
-///
-      watch: {
-   
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
-    },
-   
     
- deleteItem (item) {
-        this.editedIndex = this.MemberName.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.MemberName.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-      //
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-
-      
       isNotEmpty() {
        return this.items && this.items.length > 0;
       },
-
-
-       StudentModalPopup(modal){
-        if(modal == true)
-        {
-          this.StudentModal = false;
-        }
-        else
-        {
-          this.StudentModal = true; 
-        }
-
+   
+       // Action 안에 있는 볼펜 아이콘을 클릭
+       StudentSubjectModalItem (item) {
+        this.editedIndex = this.ClassName.indexOf(item)
+        
+        this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
+       
       },
 
     },

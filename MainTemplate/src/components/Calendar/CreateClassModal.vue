@@ -22,12 +22,13 @@
               transition="dialog-bottom-transition"
               max-width="600"
             >
-              <template v-slot:activator="{ on, attrs }">
+              <template v-slot:activator="{ on, attrs, maplist }">
                 <v-btn
                   color="primary"
                   v-bind="attrs"
                   v-on="on"
-                > 강의실 A: 오픈형/200명
+                  v-list="maplist"
+                >
                 </v-btn>
               </template>
               
@@ -248,6 +249,7 @@
   export default {
     data () {
         return {
+            maplist: ["강의실1", "강의실2"],
             // 강의실 선택
             CreateClassModalDialog: true,
             // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1

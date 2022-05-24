@@ -1,81 +1,47 @@
 <!--SudentModal-->
-
+<!--학생 참여율과 학생 지각율을 카드 2개로 나누어서 넣기 위한 sheet-->
 <template>
-
-  <Bar
-    :chart-options="chartOptions"
-    :chart-data="chartData"
-    :chart-id="chartId"
-    :dataset-id-key="datasetIdKey"
-    :plugins="plugins"
-    :css-classes="cssClasses"
-    :styles="styles"
-    :width="width"
-    :height="height"
-  />
-
-
-
- 
-
- 
+  <div>
+    <v-sheet>
+      <v-responsive :aspect-ratio="10/6">
+    
+  
+      
+       <div id="StudentParticipation">
+         <Student-Participation></Student-Participation>
+       </div>
+     
+     
+     
+     
+       <div id="StudentTardy">
+         <Student-Tardy></Student-Tardy>
+       </div>
+      
+     
+      </v-responsive>
+    </v-sheet>
+  </div>
 </template>
 
-<script>
-import { Bar } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+<!--script-->
+<script>
+import StudentParticipation from './StudentParticipation.vue' // StudentParticipation (참여율)
+import StudentTardy from './StudentTardy.vue' // StudentTardy (지각율)
 
 export default {
-  name: 'BarChart',
-  components: { Bar },
-  props: {
-    chartId: {
-      type: String,
-      default: 'bar-chart'
+    components: 
+    { 
+      StudentParticipation, StudentTardy
     },
-    datasetIdKey: {
-      type: String,
-      default: 'label'
+      name: "StudentModal",
+    data() {
+        return {
+        
+        }
     },
-    width: {
-      type: Number,
-      default: 200
-    },
-    height: {
-      type: Number,
-      default: 200
-    },
-    cssClasses: {
-      default: '',
-      type: String
-    },
-    styles: {
-      type: Object,
-      default: () => {}
-    },
-    plugins: {
-      type: Object,
-      default: () => {}
+    methods: {
     }
-  },
-  data() {
-    return {
-      chartData: {
-        labels: [ '학생 A', '학생 B', '학생 C', '학생 D', '학생 E' ], // 학생 A, 학생 B, 학생 C
-        datasets: [
-  
-        {
-          label: '점수', 
-          backgroundColor: ['#E57373', '#FFB74D', '#FFF176', '#81C784', '#4FC3F7'], // 칼라
-          data: [100, 90, 80, 70, 50]
-        }]
-      },
-      chartOptions: {
-        responsive: true
-      }
-    }
-  }
 }
 </script>
