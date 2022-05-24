@@ -4,9 +4,8 @@
   <div>
     <v-sheet>
       <v-responsive :aspect-ratio="10/6">
-      
        <div id="StudentText">
-         <Student-Text></Student-Text>
+         <Student-Text v-bind:student="studentlist"></Student-Text>
        </div>
       
      
@@ -22,17 +21,32 @@ import StudentText from './StudentText.vue' // StudentText
 
 
 export default {
+    props: {
+      info: {
+        type: Object,
+        require: true
+      }
+    },
     components: 
     { 
       StudentText, 
     },
       name: "StudentSubjectModal",
     data() {
-        return {
-        
+        return { 
+          studentlist: {}
         }
     },
+    watch: {
+      info() {
+        this.studentlist = this.info;
+        console.log(this.studentlist)
+      }
+    },
+    beforeMount() {
+    },
     methods: {
+      
     }
 }
 </script>

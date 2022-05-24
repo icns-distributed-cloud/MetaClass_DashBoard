@@ -187,6 +187,7 @@
                         label="소속 선택"
                         @input="$v.CreateClassModalBelong.$touch()"
                         @blur="$v.CreateClassModalBelong.$touch()"
+                        @change=test()
                         solo-inverted
                         color="white"
                       >    
@@ -198,6 +199,8 @@
                       <v-select
                         v-model="CreateClassModalFile"
                         :items="CreateClassModalFileItem"
+                        item-text="item_text"
+                        item-value="item_value"
                         label="컨텐츠 파일 선택"
                         @input="$v.CreateClassModalFile.$touch()"
                         @blur="$v.CreateClassModalFile.$touch()"
@@ -277,11 +280,12 @@
             CreateClassModalFinishTime4: "",
             CreateClassModalFinishTimeModal: false, 
             // 소속 선택
-            CreateClassModalBelong: [],
-            CreateClassModalBelongItems: [],  
+            CreateClassModalBelong: "",
+            CreateClassModalBelongItems: [],
+            BelongStudents: [],
             // 컨텐츠 파일 선택
-            CreateClassModalFile: [],
-            CreateClassModalFileItem: ['소방교육', '안전교육'],  // 컨텐츠 item 선택 
+            CreateClassModalFile: "",
+            CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
             // 퀴즈 선택
             CreateClassModalQuiz: [],
             CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'] // 퀴즈 item 선택
@@ -295,10 +299,40 @@
     created() {
       this.fetchMapData();
       this.fecthDepartment();
+      this.fetchContent();
     },
   
 
     methods: {
+      fetchContent() {
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.CreateClassModalFileItem.push({
+                  item_text: element.name,
+                  item_value: element.id
+                })
+              })
+            }
+          })
+
+
+      },
       fecthDepartment() {
         var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
 
@@ -385,12 +419,19 @@
 
       SetSelectClassActive()
       {
+        console.log(this.CreateClassModalFile);
           if(this.CreateClassModalDialog == true)
           {
               this.CreateClassModalDialog = false;
           }
       },
       CreateClass() {
+        if (this.CreateClassModalBelong === "") {
+          alert("부서를 선택하세요.");
+          return;
+        } else {
+          console.log("wler");
+        }
         var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
 
         var userId = this.$store.getters.getUserInfo.id;
@@ -398,12 +439,8 @@
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
-          contentId: "1",
-          stulist: [
-            {
-              studentId: "1"
-            }
-          ],
+          contentId: this.CreateClassModalFile,
+          stulist: this.BelongStudents,
           startTime: this.CreateClassModalStartDate1+":00",
           endTime: this.CreateClassModalFinishDate3+":00"
         }
@@ -427,6 +464,32 @@
             }
           })
 
+      },
+      test() {
+        console.log(this.CreateClassModalBelong);
+        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
+
+        var payload = {
+          departmentId: this.CreateClassModalBelong
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.BelongStudents.push({
+                  studentId: element.studentId
+                })
+              })
+            }
+          })
       }
   }
   }

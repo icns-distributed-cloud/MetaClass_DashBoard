@@ -3,6 +3,7 @@
 <!--template-->
 <template>
   <v-card>
+    
         <v-card-title>
         학생 참여율 & 학생 지각율
         <v-spacer></v-spacer>
@@ -32,7 +33,10 @@
       </v-icon>
 
      <!--Student-Individual-Modal안에 들어가기-->  
-    <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
+    <v-dialog v-model="StudentIndividualModalDialog" max-width="800px"
+    @click:outside=test()
+    @keydown.esc=test()
+    :retain-focus="false">
         <!--StudentIndividualModal-->
         <Student-Individual-Modal
         v-if="StudentIndividualModal"/>
@@ -54,6 +58,12 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
   export default {
       components: { StudentIndividualModal }, // StudentIndividualModal
+      props: {
+      student: {
+        type: Object,
+        require: true
+      }
+    },
     data () {
       return {
         search: '',
@@ -76,6 +86,11 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
         
       }
     },
+    watch: {
+      student() {
+        //console.log(this.student);
+      }
+    },
 
     created () {
       this.initialize()
@@ -83,6 +98,9 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
 
     methods: {
+      test() {
+        this.StudentIndividualModalDialog = false;
+      },
       initialize () {
 
     this.StudentSubjectText= [
@@ -128,6 +146,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
     // Action 안에 있는 볼펜 아이콘을 클릭
        StudentIndividualModalItem (item) {
+         console.log(this.student);
         this.editedIndex = this.StudentSubjectText.indexOf(item)
         
         this.StudentIndividualModalDialog = true // StudentIndividualModalDialog

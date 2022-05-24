@@ -52,11 +52,15 @@
       </v-icon>
 
      <!--Student-Subject-Modal안에 들어가기-->  
-    <v-dialog v-model="StudentSubjectModalDialog" max-width="800px">
+    <v-dialog v-model="StudentSubjectModalDialog" max-width="800px"
+    @click:outside=test()
+    @keydown.esc=test()
+    :retain-focus="false">
         <!--StudentSubjectModal-->
         <Student-Subject-Modal
-        v-if="StudentSubjectModal"/>
-            
+        v-if="StudentSubjectModal"
+        v-bind:info="selectedClass" />
+
     </v-dialog>
     </template>
      
@@ -103,7 +107,9 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
   export default {
     components: { StudentModal, StudentSubjectModal }, // StudentModal, StudentSubjectModal
     data: () => ({
+      dialogsync: false,
      StudentSubjectModalDialog: false, // StudentSubjectModalDialog
+     selectedClass: {},
       expanded: [],
       page: 1, // page
       pageCount: 0, // pageCount
@@ -129,12 +135,50 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
       StudentSubjectModal : true, //  StudentSubjectModal
      
     }),
+    watch: {
+      
+    },
 
     created () {
-      this.initialize()
+      this.fetchClassData();
     },
 
     methods: {
+      test() {
+        this.StudentSubjectModalDialog = false;
+      },
+      fetchClassData() {
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId,
+          startDate: "2000-01-01",
+          endDate: "2100-12-31"
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.ClassName.push({
+                  name: element.name,
+                  ClassDate: element.startTime.slice(0, 10),
+                  id: element.id
+                })
+              })
+            }
+          })
+
+      },
+      /*
       initialize () {
         this.ClassName = [
           {
@@ -152,6 +196,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
          
         ]
       },
+      */
     
       isNotEmpty() {
        return this.items && this.items.length > 0;
@@ -159,7 +204,34 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
    
        // Action 안에 있는 볼펜 아이콘을 클릭
        StudentSubjectModalItem (item) {
-        this.editedIndex = this.ClassName.indexOf(item)
+        var selectedclass = item;
+
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/cktstubylecture";
+
+        var payload = {
+          lectureId: item.id
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            selectedclass.data = res.data.data;
+
+            this.selectedClass = selectedclass;
+          })
+
+
+
+
+
+
+        // this.editedIndex = this.ClassName.indexOf(item)
         
         this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
        
