@@ -51,7 +51,9 @@
           { title: '학생 평가 관리', icon: 'mdi-view-dashboard', action: "Student" },
           { title: '강의실 등록', icon: 'mdi-view-dashboard', action: "ClassMap" },
           { title: '컨텐츠 등록', icon: 'mdi-view-dashboard', action: "Content" },
-          { title: '회원 관리', icon: 'mdi-view-dashboard' , action: "Member"},       
+          { title: '퀴즈 등록', icon: 'mdi-view-dashboard' , action: "Quiz"},
+          { title: '회원 관리', icon: 'mdi-view-dashboard' , action: "Member"}, 
+          { title: '서버 관리', icon: 'mdi-view-dashboard' , action: "Server"},    
         ],
         right: null,
       }
@@ -74,9 +76,17 @@
         {
           this.$router.push('/ContentPage');
         }
+        else if(action=="Quiz")
+        {
+          this.$router.push('/QuizPage');
+        }
         else if(action=="Member")
         {
           this.$router.push('/MemberPage');
+        }
+        else if(action=="Server")
+        {
+          this.$router.push('/ServerPage');
         }
       
       }

@@ -221,7 +221,7 @@ import ClassMapModal from './ClassMapModal.vue'
     fetchData() {
       // var vm = this;
       this.ClassFrontModalList = [];
-      var url = "http://163.180.117.22:8088/api/map/post/maplist";
+      var url = "http://163.180.117.47:8088/api/map/post/maplist";
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -259,7 +259,7 @@ import ClassMapModal from './ClassMapModal.vue'
 
       ClassFrontCreateClassModal()
       {
-        var url = "http://163.180.117.22:8088/api/map/post/createmap";
+        var url = "http://163.180.117.47:8088/api/map/post/createmap";
         var maptype = 0;
         if (this.ClassFrontMapType === "오픈형") {
           maptype = 0

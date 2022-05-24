@@ -131,7 +131,7 @@
                   active-class="pink--text"
                   multiple
                 >
-                <template v-for="(CalendarClassnameItem, CalendarClassnameIndex) in CalendarClassnameItemS">
+                <template v-for="(CalendarClassnameItem, CalendarClassnameIndex) in CalendarFrontSelectedEvent.showevent">
                   <v-list-item :key="CalendarClassnameItem.CalendarClassnameTitle">
                     <v-list-item-content>
                       <v-list-item-title v-text="CalendarClassnameItem.CalendarClassnameTitle"></v-list-item-title>
@@ -146,7 +146,7 @@
                         </v-list-item-action>
                         </v-list-item>
                         <v-divider
-                          v-if="CalendarClassnameIndex < CalendarClassnameItemS.length - 1"
+                          v-if="CalendarClassnameIndex < CalendarFrontSelectedEvent.showevent.length - 1"
                           :key="CalendarClassnameIndex"
                         ></v-divider>
                     </template>
@@ -331,19 +331,97 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         // 가져올 데이터 data , time
          
         const CalendarFrontEvents = []
+
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId,
+          startDate: start.date,
+          endDate: end.date
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = "";
+                if (element.mapType === 0) {
+                  maptype = "오픈형";
+                } else if (element.mapType === 1) {
+                  maptype = "계단식";
+                } else if (element.mapType === 2) {
+                  maptype = "소회의실"
+                }
+                CalendarFrontEvents.push({
+                  name: element.name,
+                  start: new Date(`${element.startTime}`),
+                  end: new Date(`${element.endTime}`),
+                  color: this.CalendarFrontColors[0],
+                  timed: true,
+                  showevent: [
+                    {
+                      CalendarClassnameAction: element.startTime,
+                      CalendarClassnameTitle: '강의 시작 일자',
+                    },
+                    {
+                      CalendarClassnameAction: element.endTime,
+                      CalendarClassnameTitle: '강의 끝 일자',
+                    },
+                    {
+                      CalendarClassnameAction: userId,
+                      CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: maptype,
+                      CalendarClassnameTitle: '강의 타입',
+                    },
+                    {
+                      CalendarClassnameAction: '그룹 A',
+                      CalendarClassnameTitle: '소속',
+                    },
+                    {
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      CalendarClassnameTitle: '참여 인원수',
+                    },
+                  ]
+                })
+              })
+
+            }
+            this.CalendarFrontEvents = CalendarFrontEvents;
+          })
+
+        /*
+        const CalendarFrontEvents = []
         const min = new Date(`${start.date}T00:00:00`)
+        
         const max = new Date(`${end.date}T23:59:59`)
         const days = (max.getTime() - min.getTime()) / 86400000
         const eventCount = this.rnd(days, days + 20)
 
         for (let i = 0; i < eventCount; i++) {
           const allDay = this.rnd(0, 3) === 0
+          console.log(this.rnd(0, 3))
           const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+          
           const first = new Date(firstTimestamp - (firstTimestamp % 900000))
+          console.log(first)
           const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
           const second = new Date(first.getTime() + secondTimestamp)
+<<<<<<< HEAD
+          
+=======
          
          // CalendarFrontEvents
+>>>>>>> 37ed32c400ce44ed5e121f0403f6f4f2b94d04a3
           CalendarFrontEvents.push({
             name: this.CalendarFrontNames[this.rnd(0, this.CalendarFrontNames.length - 1)],
             start: first,
@@ -354,6 +432,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
 
         this.CalendarFrontEvents = CalendarFrontEvents
+        */
       },
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a

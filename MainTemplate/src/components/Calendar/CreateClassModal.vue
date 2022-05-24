@@ -7,6 +7,7 @@
       >
       <!--강의실 상단 box-->
         <v-card>
+          
             <v-toolbar
               class="overflow-hidden mx-auto"
               color="light-blue darken-4"
@@ -22,6 +23,7 @@
               transition="dialog-bottom-transition"
               max-width="600"
             >
+<<<<<<< HEAD
               <template v-slot:activator="{ on, attrs, maplist }">
                 <v-btn
                   color="primary"
@@ -30,6 +32,32 @@
                   v-list="maplist"
                 >
                 </v-btn>
+=======
+            <v-list>
+              <v-list-item
+                v-for="(item, index) in maplist"
+                :key=index
+
+              > <v-btn>{{ item.id }}</v-btn>
+              </v-list-item>
+            </v-list>
+              <template v-slot:activator="{ on, attrs }">
+                
+                <v-list>
+                  <v-list-item
+                    v-for="(item, index) in maplist"
+                    :key=index
+                  > 
+                  <v-btn
+                    width=98%
+                    color="primary"
+                    v-bind="attrs"
+                    v-on=on
+                    @click="selectedMap=item.id"
+                  >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
+                  </v-list-item>
+                </v-list>
+>>>>>>> e83bf07ed66a5cfe883f5afed1b04690e1bf72fe
               </template>
               
               <!--강의실 A 클릭 후에 나타나는 page-->
@@ -209,8 +237,13 @@
                     <v-btn
                       color="primary"
                       text
+<<<<<<< HEAD
+                      @click=CreateClass()
+                    >생성
+=======
                       @click="CreateClassModalDialog=false"
                     >등록 확인
+>>>>>>> 37ed32c400ce44ed5e121f0403f6f4f2b94d04a3
                     </v-btn>
                     <v-btn
                       color="primary"
@@ -225,16 +258,7 @@
               <!--강의실 A 클릭 후 sumit 끝 부분-->
             </v-dialog>
            </v-col>
-            <v-card-actions>
-              <v-spacer></v-spacer> 
-              <v-btn
-                text
-                color="primary"
-                @click="CreateClassModalDialog = false"
-              >
-                닫기
-              </v-btn>
-            </v-card-actions>
+            
          </v-card> 
       </v-dialog>
     </v-col>
@@ -249,7 +273,15 @@
   export default {
     data () {
         return {
+<<<<<<< HEAD
             maplist: ["강의실1", "강의실2"],
+=======
+            maplist: [],
+            ButtonValue: "",
+            selectedMap: "",
+            hello: "",
+
+>>>>>>> e83bf07ed66a5cfe883f5afed1b04690e1bf72fe
             // 강의실 선택
             CreateClassModalDialog: true,
             // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
@@ -278,10 +310,59 @@
             //CreateClassModalFiles: [],
         }
     },
-    //
+    created() {
+      this.fetchMapData();
+    },
   
 
     methods: {
+      test(e) {
+        console.log(e);
+        console.log(this.selectedMap);
+      },
+      fetchMapData() {
+        this.maplist = [];
+
+        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            console.log(res.data.data);
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = ""
+                if (element.type === 0) {
+                  maptype = "오픈형";
+                } else if (element.type ===1){ 
+                  maptype = "계단식";
+                } else if (element.type === 2) {
+                  maptype = "소회의실";
+                }
+                this.maplist.push({
+                  id: element.id,
+                  name: element.name,
+                  type: element.type,
+                  maxUser: element.maxUser,
+                  typename: maptype
+                })
+              })
+            }
+
+
+          })
+      },
       // 강의실 생성 시작 date, time
       CreateClassModalStartSet() {
         this.CreateClassModalStartDate1 = this.CreateClassModalStartDate1 +" "+ this.CreateClassModalStartTime2;
@@ -290,18 +371,63 @@
       },
       // 강의실 생성 종료 date, time
       CreateClassModalFinishSet() {
-        this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime3;
+        this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime4;
         this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
         this.$refs.CreateClassModalFinishTimeDialog4.save(this.CreateClassModalFinishTime4);
       },
 
       SetSelectClassActive()
       {
+        console.log(this.selectedMap, this.hello);
+        // console.log(this.CreateClassModalTitle);
+        // console.log(this.CreateClassModalFile);
+        // console.log(this.CreateClassModalStartDate1);
+        // console.log(this.CreateClassModalFinishDate3);
+        // console.log(this.CreateClassModalFinishTime4);
+        // console.log(this.ButtonValue);
           if(this.CreateClassModalDialog == true)
           {
               this.CreateClassModalDialog = false;
           }
       },
+      CreateClass() {
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          name: this.CreateClassModalTitle,
+          instructorId: userId,
+          mapId: this.selectedMap,
+          contentId: "1",
+          stulist: [
+            {
+              studentId: "1"
+            }
+          ],
+          startTime: this.CreateClassModalStartDate1+":00",
+          endTime: this.CreateClassModalFinishDate3+":00"
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.success === true) {
+              alert("강좌 생성이 완료되었습니다.");
+              this.CreateClassModalDialog = false;
+              this.$parent.$parent.CalendarFrontUpdateRange();
+            } else {
+              alert("정확하게 입력해주세요.");
+              return;
+            }
+          })
+
+      }
   }
   }
 </script>

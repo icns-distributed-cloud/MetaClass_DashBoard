@@ -92,7 +92,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
   export default {
     components: { StudentModal, StudentSubjectModal }, // StudentModal, StudentSubjectModal
     data: () => ({
-     StudentSubjectModalDialog: false,//
+     StudentSubjectModalDialog: false, // StudentSubjectModalDialog
       expanded: [],
       page: 1, // page
       pageCount: 0, // pageCount
