@@ -3,16 +3,7 @@
   <v-card color="blue lighten-5">
     <!--card-title : 회원 관리-->
     <v-card-title>
-      회원관리
-      <!--search 부분을 우측으로 밀기-->
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      회원 정보
     </v-card-title>
 <!--MemberName가 header-->
   <v-data-table
@@ -20,11 +11,7 @@
     :items="MemberName" 
     sort-by="MemberManager"
     class="elevation-1"
-    :search="search"
     hide-default-footer
-    :page.sync="page" 
-    :items-per-page="itemsPerPage"
-    @page-count="pageCount = $event"
   >
     <!--MemberComDialog 시작-->
     <template v-slot:top>
@@ -162,27 +149,6 @@
     </template>
   </v-data-table>
   </v-card>
-
-<!--페이지 이동-->
-  <div class="text-center pt-2">
-    <v-pagination
-      v-model="page"
-      :length="pageCount"
-    ></v-pagination>
-    
-    <!--페이지 설정-->  
-      <v-text-field
-        :value="itemsPerPage"
-        label="Items per page"
-        type="number"
-        min="-1"
-        max="15"
-        @input="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-    </div>
-   
-
-
   </div>
 </template>
 
@@ -193,13 +159,6 @@
 <script>
   export default {
     data: () => ({
-      search: '', // 회원관리 Search
-
-      page: 1, // page
-      pageCount: 0, // pageCount
-      itemsPerPage: 10, // itemsPerPage
-
-
       MemberComDialog: false,
       dialogDelete: false,
       headers: [
@@ -257,46 +216,11 @@
       initialize () {
         this.MemberName = [
           {
-            name: '서유리',
-            id: 'yuri',
-            email: 'yuri95@khu.ac.kr',
+            name: '홍길동',
+            id: 'dong1234',
+            email: 'dong1234@khu.ac.kr',
             group: 'A',
             phonenumber: '010-1253-5000',
-          },
-          {
-            name: '손덕인',
-            id: 'Jen',
-            email: 'thsejrdls@naver.com',
-            group: 'B',
-            phonenumber: '010-5000-1234',
-          },
-          {
-            name: '노설',
-            id: 'seol',
-            email: 'seol12@khu.ac.kr',
-            group: 'A',
-            phonenumber: '010-5555-2222',
-          },
-          {
-            name: '이하이',
-            id: 'hi',
-            email: 'hi@khu.ac.kr',
-            group: 'B',
-            phonenumber: '010-6978-5656',
-          },
-          {
-            name: '김경희',
-            id: 'hee',
-            email: 'hee@khu.ac.kr',
-            group: 'B',
-            phonenumber: '010-1231-4569',
-          },
-          {
-            name: '김민석',
-            id: 'min',
-            email: 'min@khu.ac.kr',
-            group: 'C',
-            phonenumber: '010-1865-4457',
           },
          
         ]

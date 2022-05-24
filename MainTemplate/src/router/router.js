@@ -8,6 +8,11 @@ import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
 import ContentPgae from "../components/Content/ContentPage.vue";
 import TestPage from "../components/TestComponent.vue";
+// 학생 홈페이지
+import StudentCalendarPage from "../components/StudentFolder/StudentCalendar/StudentCalendarPage.vue";
+import StudentEvaluationPage from "../components/StudentFolder/StudentEvaluation/StudentEvaluationPage.vue";
+import StudentInformationPage from "../components/StudentFolder/StudentInformation/StudentInformationPage.vue";
+
 
 Vue.use(VueRouter);
 const routes = [
@@ -51,7 +56,22 @@ const routes = [
         path: "/Test",
         name: TestPage,
         component: TestPage
-    }
+    },
+    {
+        path: "/StudentCalendar",
+        name: StudentCalendarPage,
+        component: StudentCalendarPage
+    },
+    {
+        path: "/StudentEvaluation",
+        name: StudentEvaluationPage,
+        component: StudentEvaluationPage
+    },
+    {
+        path: "/StudentInformation",
+        name: StudentInformationPage,
+        component: StudentInformationPage
+    },
 
 
 ];
