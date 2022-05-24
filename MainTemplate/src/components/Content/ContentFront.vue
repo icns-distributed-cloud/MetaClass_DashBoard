@@ -95,6 +95,7 @@
                           prepend-icon="mdi-paperclip"
                           outlined
                           :show-size="1000"
+                          loading=true
                           @change=Upload()
                         >
                         <template v-slot:selection="{ index, text }">

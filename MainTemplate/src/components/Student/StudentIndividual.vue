@@ -4,7 +4,8 @@
 
 <template>
   <v-card>
-          <v-card-title>
+          <v-card-title
+          >
             학생 참여율 & 학생 지각율
             <v-spacer></v-spacer>
            <v-text-field
@@ -82,5 +83,9 @@
 
       }
     },
+    methods: {
+      test() {
+      }
+    }
   }
 </script>
