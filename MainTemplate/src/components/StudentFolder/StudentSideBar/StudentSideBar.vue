@@ -47,47 +47,29 @@
     data () {
       return {
         items: [
-          { title: '강좌 관리', icon: 'mdi-view-dashboard', action: "Calendar" },
-          { title: '학생 평가 관리', icon: 'mdi-view-dashboard', action: "Student" },
-          { title: '강의실 등록', icon: 'mdi-view-dashboard', action: "ClassMap" },
-          { title: '컨텐츠 등록', icon: 'mdi-view-dashboard', action: "Content" },
-          { title: '퀴즈 등록', icon: 'mdi-view-dashboard' , action: "Quiz"},
-          { title: '회원 관리', icon: 'mdi-view-dashboard' , action: "Member"}, 
-          { title: '서버 관리', icon: 'mdi-view-dashboard' , action: "Server"},  
+          { title: '강좌 정보', icon: 'mdi-view-dashboard', action: "StudentCalendar" },
+          { title: '학생 평가 정보', icon: 'mdi-view-dashboard', action: "StudentEvaluation" },
+          { title: '회원 정보', icon: 'mdi-view-dashboard', action: "StudentInformation" },
+         
         ],
         right: null,
       }
     },
     methods:{
       menuActionClick(action){
-        if(action=="Calendar")
+        if(action=="StudentCalendar")
         {
-          this.$router.push('/CalendarPage');
+          this.$router.push('/StudentCalendarPage');
         }
-        else if(action=="Student")
+        else if(action=="StudentEvaluation")
         {
-          this.$router.push('/StudentPage');
+          this.$router.push('/StudentEvaluationPage');
         }
-        else if(action=="ClassMap")
+        else if(action=="StudentInformation")
         {
-          this.$router.push('/ClassMapPage');
+          this.$router.push('/StudentInformationPage');
         }
-        else if(action=="Content")
-        {
-          this.$router.push('/ContentPage');
-        }
-        else if(action=="Quiz")
-        {
-          this.$router.push('/QuizPage');
-        }
-        else if(action=="Member")
-        {
-          this.$router.push('/MemberPage');
-        }
-        else if(action=="Server")
-        {
-          this.$router.push('/ServerPage');
-        }
+        
       
       }
     }
