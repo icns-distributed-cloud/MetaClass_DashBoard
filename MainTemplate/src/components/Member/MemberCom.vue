@@ -119,7 +119,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">취소</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">확인</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm"></v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
