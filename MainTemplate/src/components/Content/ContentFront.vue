@@ -177,6 +177,9 @@ import ContentModal from './ContentModal.vue'
       {
         this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
       },
+      Upload() {
+        console.log(this.ContentFrontFiles);
+      }
   }
   }
 </script>

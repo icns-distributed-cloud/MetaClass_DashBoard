@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import CalendarPage from "../components/Calendar/CalendarPage.vue";
 import LoginHome from "../components/Login/LoginHome.vue";
+import Signup from "../components/Login/SignUp.vue"
 import StudentPage from "../components/Student/StudentPage.vue";
 import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
@@ -15,6 +16,11 @@ const routes = [
         path: "/",
         name: LoginHome,
         component: LoginHome
+    },
+    {
+        path: "/Signup",
+        name: Signup,
+        component: Signup
     },
     {
         path: "/CalendarPage",

@@ -186,7 +186,7 @@
               <v-btn
                 text
                 color="secondary"
-                @click="CalendarFrontSelectedOpen = false"
+                @click=ClassDelete(CalendarFrontSelectedEvent)
               >
                 강의 취소
               </v-btn>
@@ -228,6 +228,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
   export default {
     components: { CreateClassModal },
     data: () => ({
+      beforestart: "",
+      beforeend: "",
       CalendarFrontFocus: '',
       CalendarFrontType: 'month',
       CalendarFrontTypeToLabel: {
@@ -326,6 +328,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         nativeEvent.stopPropagation()
       },
       CalendarFrontUpdateRange ({ start, end }) {
+        this.beforestart = start;
+        this.beforeend = end;
         // 이벤트 막대기 생성부분
         // 여기서 데이터베이스에서 정보를 가져와야한다.
         // 가져올 데이터 data , time
@@ -339,6 +343,78 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           instructorId: userId,
           startDate: start.date,
           endDate: end.date
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = "";
+                if (element.mapType === 0) {
+                  maptype = "오픈형";
+                } else if (element.mapType === 1) {
+                  maptype = "계단식";
+                } else if (element.mapType === 2) {
+                  maptype = "소회의실"
+                }
+                CalendarFrontEvents.push({
+                  name: element.name,
+                  start: new Date(`${element.startTime}`),
+                  end: new Date(`${element.endTime}`),
+                  color: this.CalendarFrontColors[0],
+                  timed: true,
+                  classid: element.id,
+                  showevent: [
+                    {
+                      CalendarClassnameAction: element.startTime,
+                      CalendarClassnameTitle: '강의 시작 일자',
+                    },
+                    {
+                      CalendarClassnameAction: element.endTime,
+                      CalendarClassnameTitle: '강의 끝 일자',
+                    },
+                    {
+                      CalendarClassnameAction: userId,
+                      CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: maptype,
+                      CalendarClassnameTitle: '강의 타입',
+                    },
+                    {
+                      CalendarClassnameAction: '그룹 A',
+                      CalendarClassnameTitle: '소속',
+                    },
+                    {
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      CalendarClassnameTitle: '참여 인원수',
+                    },
+                  ]
+                })
+              })
+
+            }
+            this.CalendarFrontEvents = CalendarFrontEvents;
+          })
+
+      },
+      refreshData() { 
+        const CalendarFrontEvents = []
+
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId,
+          startDate: this.beforestart.date,
+          endDate: this.beforeend.date
         }
 
         var config = {
@@ -398,42 +474,34 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             }
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
+      },
+      ClassDelete(a) {
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
 
-        /*
-        const CalendarFrontEvents = []
-        const min = new Date(`${start.date}T00:00:00`)
-        
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
-
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          console.log(this.rnd(0, 3))
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          console.log(first)
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
-<<<<<<< HEAD
-          
-=======
-         
-         // CalendarFrontEvents
->>>>>>> 37ed32c400ce44ed5e121f0403f6f4f2b94d04a3
-          CalendarFrontEvents.push({
-            name: this.CalendarFrontNames[this.rnd(0, this.CalendarFrontNames.length - 1)],
-            start: first,
-            end: second,
-            color: this.CalendarFrontColors[this.rnd(0, this.CalendarFrontColors.length - 1)],
-            timed: !allDay,
-          })
+        var payload = {
+          id: a.classid
         }
 
-        this.CalendarFrontEvents = CalendarFrontEvents
-        */
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .patch(url, payload, config)
+          .then(res => {
+            if (res.data.success === true) {
+              alert("강좌 삭제가 완료되었습니다.")
+              this.CalendarFrontSelectedOpen = false;
+              this.refreshData();
+            } else if (res.data.success === false) {
+              alert(res.data.message);
+            }
+          })
+          console.log(a.classid);
       },
+
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
       },

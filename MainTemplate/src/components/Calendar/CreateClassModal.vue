@@ -181,7 +181,9 @@
                     <div>
                       <v-select
                         v-model="CreateClassModalBelong"
-                        :items="CreateClassModalBelongItem"
+                        :items="CreateClassModalBelongItems"
+                        item-text="item_text"
+                        item-value="item_value"
                         label="소속 선택"
                         @input="$v.CreateClassModalBelong.$touch()"
                         @blur="$v.CreateClassModalBelong.$touch()"
@@ -227,7 +229,11 @@
                       color="primary"
                       text
                       @click=CreateClass()
+<<<<<<< HEAD
                     >생성
+=======
+                    >등록 확인
+>>>>>>> 2b3f58820118c4906c105842d497ea12bb03df5a
                     </v-btn>
                     <v-btn
                       color="primary"
@@ -276,7 +282,7 @@
             CreateClassModalFinishTimeModal: false, 
             // 소속 선택
             CreateClassModalBelong: [],
-            CreateClassModalBelongItem: ['그룹 A', '그룹 B'],  
+            CreateClassModalBelongItems: [],  
             // 컨텐츠 파일 선택
             CreateClassModalFile: [],
             CreateClassModalFileItem: ['소방교육', '안전교육'],  // 컨텐츠 item 선택 
@@ -292,14 +298,38 @@
     },
     created() {
       this.fetchMapData();
+      this.fecthDepartment();
     },
   
 
     methods: {
-      test(e) {
-        console.log(e);
-        console.log(this.selectedMap);
+      fecthDepartment() {
+        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .get(url, config)
+          .then(res => {
+            console.log(res.data.data);
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.CreateClassModalBelongItems.push({
+                  item_text: element.name,
+                  item_value: element.id
+                })
+              })
+            }
+          })
+
+
+
       },
+     
       fetchMapData() {
         this.maplist = [];
 
@@ -319,7 +349,6 @@
         this.$http
           .post(url, payload, config)
           .then(res => {
-            console.log(res.data.data);
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 var maptype = ""
@@ -343,6 +372,8 @@
 
           })
       },
+      
+
       // 강의실 생성 시작 date, time
       CreateClassModalStartSet() {
         this.CreateClassModalStartDate1 = this.CreateClassModalStartDate1 +" "+ this.CreateClassModalStartTime2;
@@ -358,13 +389,6 @@
 
       SetSelectClassActive()
       {
-        console.log(this.selectedMap, this.hello);
-        // console.log(this.CreateClassModalTitle);
-        // console.log(this.CreateClassModalFile);
-        // console.log(this.CreateClassModalStartDate1);
-        // console.log(this.CreateClassModalFinishDate3);
-        // console.log(this.CreateClassModalFinishTime4);
-        // console.log(this.ButtonValue);
           if(this.CreateClassModalDialog == true)
           {
               this.CreateClassModalDialog = false;
@@ -400,7 +424,7 @@
             if (res.data.success === true) {
               alert("강좌 생성이 완료되었습니다.");
               this.CreateClassModalDialog = false;
-              this.$parent.$parent.CalendarFrontUpdateRange();
+              this.$parent.refreshData();
             } else {
               alert("정확하게 입력해주세요.");
               return;
