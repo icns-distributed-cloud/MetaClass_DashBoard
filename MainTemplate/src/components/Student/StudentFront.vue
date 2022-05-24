@@ -41,7 +41,13 @@
         v-if="StudentModal"/>
       </td>  
     </template>
-
+    <template v-slot:top>
+      <v-dialog v-model="StudentSubjectModalDialog" max-width="800px">
+        <Student-Subject-Modal
+        :info="selectedClass"
+        />
+      </v-dialog>
+    </template>
  <!--Action 안에 있는 볼펜 아이콘을 클릭-->
      <template v-slot:[`item.actions`]="{ item }">
         <v-icon
@@ -50,22 +56,9 @@
       >
          mdi-pencil
       </v-icon>
-
-     <!--Student-Subject-Modal안에 들어가기-->  
-    <v-dialog v-model="StudentSubjectModalDialog" max-width="800px"
-    @click:outside=test()
-    @keydown.esc=test()
-    :retain-focus="false">
-        <!--StudentSubjectModal-->
-        <Student-Subject-Modal
-        v-if="StudentSubjectModal"
-        v-bind:info="selectedClass" />
-
-    </v-dialog>
-    </template>
-     
+      </template>
       
-    
+      
      
     
 
@@ -132,13 +125,13 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
       ],
       ClassName: [], //ClassName
       StudentModal : true, //  StudentModal
-      StudentSubjectModal : true, //  StudentSubjectModal
+      StudentSubjectModal : false, //  StudentSubjectModal
      
     }),
     watch: {
       
     },
-
+    
     created () {
       this.fetchClassData();
     },
@@ -204,6 +197,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
    
        // Action 안에 있는 볼펜 아이콘을 클릭
        StudentSubjectModalItem (item) {
+         console.log(item);
         var selectedclass = item;
 
         var url = "http://163.180.117.47:8088/api/lecture/instructor/post/cktstubylecture";
@@ -234,7 +228,8 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
         // this.editedIndex = this.ClassName.indexOf(item)
         
         this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
-       
+        console.log(this.StudentSubjectModalDialog);
+        this.StudentSubjectModal = true;
       },
 
     },

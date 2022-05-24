@@ -11,11 +11,11 @@
       
     <!--왼쪽에 bar 생성-->
     <v-navigation-drawer 
-    class="light-blue darken-1" dark permanet app v-model="drawer" clipped>
+    class="light-blue darken-1" dark permanet app clipped>
     <v-container>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-tile class="title grey--text text--darken-2">Meta Class</v-list-item-tile>
+          <v-list-item-title class="title grey--text text--darken-2">Meta Class</v-list-item-title>
           <v-list-item-subtitle>ICNS Lab</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

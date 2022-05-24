@@ -40,8 +40,10 @@ export default {
     watch: {
       info() {
         this.studentlist = this.info;
-        console.log(this.studentlist)
       }
+    },
+    updated() {
+      console.log("helll");
     },
     beforeMount() {
     },
