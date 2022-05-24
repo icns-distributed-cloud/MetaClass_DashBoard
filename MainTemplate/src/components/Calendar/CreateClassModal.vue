@@ -23,16 +23,6 @@
               transition="dialog-bottom-transition"
               max-width="600"
             >
-<<<<<<< HEAD
-              <template v-slot:activator="{ on, attrs, maplist }">
-                <v-btn
-                  color="primary"
-                  v-bind="attrs"
-                  v-on="on"
-                  v-list="maplist"
-                >
-                </v-btn>
-=======
             <v-list>
               <v-list-item
                 v-for="(item, index) in maplist"
@@ -57,7 +47,6 @@
                   >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
                   </v-list-item>
                 </v-list>
->>>>>>> e83bf07ed66a5cfe883f5afed1b04690e1bf72fe
               </template>
               
               <!--강의실 A 클릭 후에 나타나는 page-->
@@ -237,13 +226,8 @@
                     <v-btn
                       color="primary"
                       text
-<<<<<<< HEAD
                       @click=CreateClass()
                     >생성
-=======
-                      @click="CreateClassModalDialog=false"
-                    >등록 확인
->>>>>>> 37ed32c400ce44ed5e121f0403f6f4f2b94d04a3
                     </v-btn>
                     <v-btn
                       color="primary"
@@ -273,15 +257,11 @@
   export default {
     data () {
         return {
-<<<<<<< HEAD
-            maplist: ["강의실1", "강의실2"],
-=======
             maplist: [],
             ButtonValue: "",
             selectedMap: "",
             hello: "",
 
->>>>>>> e83bf07ed66a5cfe883f5afed1b04690e1bf72fe
             // 강의실 선택
             CreateClassModalDialog: true,
             // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
