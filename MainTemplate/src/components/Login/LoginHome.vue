@@ -61,7 +61,8 @@
           </v-card-text>
           <v-card-actions>
 
-            <v-btn color="secondary" @click="showSignUpModal = true">회원 가입</v-btn>
+            <!-- <v-btn color="secondary" @click="showSignUpModal = true">회원 가입</v-btn> -->
+            <v-btn color="secondary" href="/signup">회원가입</v-btn>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="validateUser" @keydown.enter="validateUser">로그인</v-btn>
 
@@ -80,9 +81,7 @@
           
         </v-card>
 
-        <v-card>
-            <SignUp v-if="showSignUpModal" @close="showSignUpModal=false"></SignUp>
-        </v-card>
+        
         
       </v-col>
     </v-row>
@@ -92,12 +91,10 @@
 </template>
 
 <script>
-import SignUp from './SignUp.vue'
-
 export default {
   components:
   {
-    SignUp,
+    
   },
     data: () => ({
       
