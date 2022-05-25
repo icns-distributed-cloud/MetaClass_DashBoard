@@ -197,13 +197,16 @@ import ContentModal from './ContentModal.vue'
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
-                var filename = element.directory.slice(element.directory.indexOf("_")+1);
-                console.log(filename);
-                this.ContentFrontModalList.push({
+                if (element.id !== 51) {
+                  var filename = element.directory.slice(element.directory.indexOf("_")+1);
+                  console.log(filename);
+                  this.ContentFrontModalList.push({
                   id: element.id,
                   name: element.name,
                   filename: filename
                 })
+                }
+                
               })
             }
           })
