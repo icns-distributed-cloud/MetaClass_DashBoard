@@ -197,7 +197,6 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
    
        // Action 안에 있는 볼펜 아이콘을 클릭
        StudentSubjectModalItem (item) {
-         console.log(item);
         var selectedclass = item;
 
         var url = "http://163.180.117.47:8088/api/lecture/instructor/post/cktstubylecture";
@@ -228,7 +227,6 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
         // this.editedIndex = this.ClassName.indexOf(item)
         
         this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
-        console.log(this.StudentSubjectModalDialog);
         this.StudentSubjectModal = true;
       },
 

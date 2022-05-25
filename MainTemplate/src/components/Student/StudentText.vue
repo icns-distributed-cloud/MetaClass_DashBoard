@@ -23,7 +23,17 @@
          
       
         >
-        <!--Action 안에 있는 볼펜 아이콘을 클릭-->
+
+      <template v-slot:top>
+        <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
+          <Student-Individual-Modal
+            :individualInfo="individualinfo"
+          />
+        </v-dialog>
+      </template>
+
+
+      <!--Action 안에 있는 볼펜 아이콘을 클릭-->
      <template v-slot:[`item.actions`]="{ item }">
         <v-icon
         small
@@ -31,21 +41,12 @@
       >
          mdi-pencil
       </v-icon>
+      </template>
 
      <!--Student-Individual-Modal안에 들어가기-->  
-    <v-dialog v-model="StudentIndividualModalDialog" max-width="800px"
-    @click:outside=test()
-    @keydown.esc=test()
-    :retain-focus="false">
-        <!--StudentIndividualModal-->
-        <Student-Individual-Modal
-        v-if="StudentIndividualModal"/>
-            
-    </v-dialog>
-    </template>
     
 
-        </v-data-table>
+  </v-data-table>
 </v-card>
  
 
@@ -66,6 +67,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
     },
     data () {
       return {
+        individualinfo: '',
         search: '',
         StudentIndividualModalDialog: false, // StudentIndividualModalDialog
         StudentIndividualModal: true, //  StudentIndividualModal
@@ -88,7 +90,16 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
     },
     watch: {
       student() {
-        //console.log(this.student);
+        var studentsubjecttext = []
+        this.student.data.forEach(element => {
+          studentsubjecttext.push({
+            name: element.name,
+            participation: element.participationLevel,
+            tardy: 100-element.participationLevel,
+            id: element.id
+          })
+        })
+        this.StudentSubjectText = studentsubjecttext;
       }
     },
 
@@ -146,7 +157,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
     // Action 안에 있는 볼펜 아이콘을 클릭
        StudentIndividualModalItem (item) {
-         console.log(this.student);
+        console.log(item);
         this.editedIndex = this.StudentSubjectText.indexOf(item)
         
         this.StudentIndividualModalDialog = true // StudentIndividualModalDialog

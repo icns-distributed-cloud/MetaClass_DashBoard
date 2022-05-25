@@ -193,6 +193,24 @@
                       >    
                       </v-select> 
                     </div>
+                    <v-data-table v-if="CreateClassModalBelong !== ''"
+                      v-model="selectedStudents"
+                      :items="belongstudents"
+                      :single-select="singleSelect"
+                      item-key="name"
+                      hide-default-footer
+                      show-select
+                    >
+                      <template v-slot:top>
+                        <v-switch
+                          v-model="singleSelect"
+                          label="Single select"
+                          class="pa-3"
+                        ></v-switch>
+
+                      </template>
+                    </v-data-table>
+
 
                     <!-- 컨텐츠 파일 선택-->
                     <div>
@@ -262,10 +280,25 @@
   export default {
     data () {
         return {
+
             maplist: [],
             ButtonValue: "",
             selectedMap: "",
             hello: "",
+
+            belongstudents: [],
+            singleSelect: false,
+            headers: [
+              {
+                text: "aa",
+                align: "start",
+                sortable: false,
+                value: "name"
+              }
+            ],
+
+            selectedStudents: [],
+            showStudents: false,
 
             // 강의실 선택
             CreateClassModalDialog: true,
@@ -416,6 +449,10 @@
         this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
         this.$refs.CreateClassModalFinishTimeDialog4.save(this.CreateClassModalFinishTime4);
       },
+      show() {
+        this.showStudents = true;
+        console.log(this.showStudents);
+      },
 
       SetSelectClassActive()
       {
@@ -466,6 +503,8 @@
 
       },
       test() {
+        this.belongstudents = []
+        
         console.log(this.CreateClassModalBelong);
         var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
 
@@ -487,9 +526,16 @@
                 this.BelongStudents.push({
                   studentId: element.studentId
                 })
+                this.belongstudents.push({
+                  name: element.studentName
+                })
               })
             }
+            console.log(this.belongstudents);
+            this.showStudents = true;
+            
           })
+
       }
   }
   }
