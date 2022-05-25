@@ -481,16 +481,12 @@
                       CalendarClassnameTitle: '강의 끝 일자',
                     },
                     {
-                      CalendarClassnameAction: userId,
+                      CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
                     },
                     {
                       CalendarClassnameAction: maptype,
                       CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: '그룹 A',
-                      CalendarClassnameTitle: '소속',
                     },
                     {
                       CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
