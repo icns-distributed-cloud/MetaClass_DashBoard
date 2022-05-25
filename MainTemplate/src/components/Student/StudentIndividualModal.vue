@@ -4,9 +4,8 @@
   <div>
     <v-sheet>
       <v-responsive :aspect-ratio="10/6">
-      
        <div id="StudentIndividual">
-         <Student-Individual></Student-Individual>
+         <Student-Individual v-bind:infoinfo="individual"></Student-Individual>
        </div>
       
      
@@ -22,15 +21,34 @@ import StudentIndividual from './StudentIndividual.vue' // StudentIndividual
 
 
 export default {
+    props: {
+      individualInfo: {
+        type: Object,
+        require: true
+      }
+    },
     components: 
     { 
       StudentIndividual, 
     },
-      name: "StudentIndividualModal",
+    
+    name: "StudentIndividualModal",
     data() {
         return {
+          individual: this.individualInfo
         
         }
+    },
+    watch: {
+      individualInfo() {
+        this.individual = this.individualInfo;
+      }
+    },
+    updated() {
+
+    },
+    beforeMount() {
+
     },
     methods: {
     }

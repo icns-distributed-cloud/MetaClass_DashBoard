@@ -24,13 +24,7 @@
       
         >
 
-      <template v-slot:top>
-        <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
-          <Student-Individual-Modal
-            :individualInfo="individualinfo"
-          />
-        </v-dialog>
-      </template>
+      
 
 
       <!--Action 안에 있는 볼펜 아이콘을 클릭-->
@@ -41,6 +35,14 @@
       >
          mdi-pencil
       </v-icon>
+      </template>
+
+      <template v-slot:top>
+        <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
+          <Student-Individual-Modal
+            :individualInfo="individualinfo"
+          />
+        </v-dialog>
       </template>
 
      <!--Student-Individual-Modal안에 들어가기-->  
@@ -67,7 +69,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
     },
     data () {
       return {
-        individualinfo: '',
+        individualinfo: {},
         search: '',
         StudentIndividualModalDialog: false, // StudentIndividualModalDialog
         StudentIndividualModal: true, //  StudentIndividualModal
@@ -157,7 +159,34 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
     // Action 안에 있는 볼펜 아이콘을 클릭
        StudentIndividualModalItem (item) {
-        console.log(item);
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+
+        var payload = {
+          studentId: item.id,
+          startDate: "2000-01-01",
+          endDate: "2100-12-31"
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+        var tempinfo = {}
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            tempinfo.data = res.data.data;
+            tempinfo.studentId = item.id;
+            
+            this.individualinfo = tempinfo;
+          })
+
+
+        // var tempinfo = item;
+
+        // this.individualinfo = tempinfo;
+        console.log(this.individualinfo);
         this.editedIndex = this.StudentSubjectText.indexOf(item)
         
         this.StudentIndividualModalDialog = true // StudentIndividualModalDialog

@@ -40,6 +40,7 @@ export default {
     watch: {
       info() {
         this.studentlist = this.info;
+        console.log(this.info);
       }
     },
     updated() {

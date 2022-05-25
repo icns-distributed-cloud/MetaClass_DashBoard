@@ -6,6 +6,7 @@
   <v-card>
           <v-card-title
           >
+          {{infoinfo.name}}
             학생 참여율 & 학생 지각율
             <v-spacer></v-spacer>
            <v-text-field
@@ -30,8 +31,15 @@
 <!--script-->
 <script>
   export default {
+    props: {
+      infoinfo: {
+        type: Object,
+        require: true
+      }
+    },
     data () {
       return {
+        individualInfo: [],
         search: '',
        
         // headers
@@ -46,46 +54,46 @@
           { text: '지각율 (%)', value: 'tardy' },  // tardy (지각율)
          
         ],
-        StudentIndividualText: [
-          {
-            subject: '컴퓨터개론',
-            participation: 80,
-            tardy: 10,
-          },
-          {
-            subject: '선형대수',
-            participation: 70,
-            tardy: 20,
-          },
-          {
-            subject: '컴퓨터구조',
-            participation: 50,
-            tardy: 30,
-          },
-          {
-            subject: '데이터센터프로그래밍',
-            participation: 95,
-            tardy: 0.5,
-          },
-          {
-            subject: '컴퓨터네트워크',
-            participation: 65,
-            tardy: 35,
-          },
-          {
-            subject: '인공지능',
-            participation: 75,
-            tardy: 10,
-          },
-          
-        ],
+        StudentIndividualText: [],
         
+
+      }
+    },
+    watch: {
+      infoinfo() {
+
+        this.StudentIndividualText = []
+        this.individualInfo = this.infoinfo;
+
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo"
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+        this.individualInfo.data.forEach(element => {
+          this.$http
+            .post(url, {studentId: this.individualInfo.studentId, lectureId: element.id}, config)
+            .then(res => {
+              if (res.data.success === true) {
+                this.StudentIndividualText.push({
+                  subject: res.data.data.lectureName,
+                  participation: res.data.data.participationLevel,
+                  tardy: 100-res.data.data.participationLevel
+                })
+              }
+            })
+        })
 
       }
     },
     methods: {
       test() {
       }
+    },
+    beforeMount() {
     }
+
   }
 </script>
