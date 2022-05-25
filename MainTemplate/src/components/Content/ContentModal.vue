@@ -76,9 +76,14 @@
 
           this.$http
             .patch(url, payload, config)
-            .then(() => {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.fetchData();
+            .then(res => {
+              if (res.data.success === true) {
+                alert("성공적으로 삭제되었습니다.");
+                this.$parent.$parent.$parent.$parent.fetchData();
+              } else {
+                alert(res.data.message);
+              }
+              
             })
         } else {
           alert("정확하게 입력해주세요.");

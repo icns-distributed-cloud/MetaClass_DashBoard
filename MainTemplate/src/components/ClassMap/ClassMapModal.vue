@@ -96,9 +96,14 @@
 
           this.$http
             .patch(url, payload, config)
-            .then(() => {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.deleteMap();
+            .then(res => {
+              if (res.data.success === true) {
+                alert("성공적으로 삭제되었습니다.");
+                this.$parent.$parent.$parent.$parent.deleteMap();
+              } else {
+                alert(res.data.message);
+              }
+              
             })
             console.log("delete map");
           } else {
