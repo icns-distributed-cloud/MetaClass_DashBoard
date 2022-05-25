@@ -82,7 +82,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
             value: 'name',
           },
           { text: '참여율 (%)', value: 'participation' }, // participation (참여율)
-          { text: '지각율 (%)', value: 'tardy' }, // tardy (지각율)
+          { text: '지각여부', value: 'tardy' }, // tardy (지각율)
           { text: 'Actions', value: 'actions', sortable: false }, // actions
         ],
 
@@ -94,10 +94,16 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
       student() {
         var studentsubjecttext = []
         this.student.data.forEach(element => {
+          var istardy;
+          if (element.lateYN === true) {
+            istardy = "YES"
+          } else if (element.lateYN === false) {
+            istardy = "NO"
+          }
           studentsubjecttext.push({
             name: element.name,
             participation: element.participationLevel,
-            tardy: 100-element.participationLevel,
+            tardy: istardy,
             id: element.id
           })
         })

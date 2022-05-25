@@ -32,6 +32,7 @@
     data () {
       return {
         search: '',
+        subjectlist: [],
        
         // headers
         StudentIndividualHeaders: [
@@ -41,8 +42,9 @@
             filterable: true, // 모든 항목에 오름차순, 내림차순
             value: 'subject',
           },
+          { text: '강의 날짜', value: 'date'},
           { text: '참여율 (%)', value: 'participation' },  // participation (참여율)
-          { text: '지각율 (%)', value: 'tardy' },  // tardy (지각율)
+          { text: '지각여부', value: 'tardy' },  // tardy (지각율)
          
         ],
         StudentIndividualText: [
@@ -82,5 +84,72 @@
 
       }
     },
+    created() {
+      this.fetchData();
+    },
+    methods: {
+      fetchData() {
+        this.subjectlist = [];
+
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          studentId: userId,
+          startDate: "2000-01-01",
+          endDate: "2100-12-31"
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.subjectlist.push({
+                  id: element.id,
+                  name: element.name,
+                  date: element.startTime.slice(0, 10)
+
+                })
+              })
+
+              
+            }
+            var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
+
+
+            this.subjectlist.forEach(element => {
+              var payload = {
+                studentId: userId,
+                lectureId: element.id
+              }
+              this.StudentIndividualText = []
+              this.$http
+                .post(url2, payload, config)
+                .then(res => {
+                  var istardy;
+                  if (res.data.data.lateYN === true) {
+                    istardy = "YES"
+                  } else if (res.data.data.lateYN === false) {
+                    istardy = "NO"
+                  }
+                  this.StudentIndividualText.push({
+                    subject: res.data.data.lectureName,
+                    date: element.date,
+                    participation: res.data.data.participationLevel,
+                    tardy: istardy
+                  })
+                })
+
+            })
+          })
+      }
+    }
   }
 </script>

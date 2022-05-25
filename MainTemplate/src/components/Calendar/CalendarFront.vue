@@ -385,16 +385,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 끝 일자',
                     },
                     {
-                      CalendarClassnameAction: userId,
+                      CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
                     },
                     {
                       CalendarClassnameAction: maptype,
                       CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: '그룹 A',
-                      CalendarClassnameTitle: '소속',
                     },
                     {
                       CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
@@ -446,6 +442,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   end: new Date(`${element.endTime}`),
                   color: this.CalendarFrontColors[0],
                   timed: true,
+                  classid: element.id,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -456,16 +453,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 끝 일자',
                     },
                     {
-                      CalendarClassnameAction: userId,
+                      CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
                     },
                     {
                       CalendarClassnameAction: maptype,
                       CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: '그룹 A',
-                      CalendarClassnameTitle: '소속',
                     },
                     {
                       CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,

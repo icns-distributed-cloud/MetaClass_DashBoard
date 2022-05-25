@@ -50,8 +50,9 @@
             filterable: true, // 모든 항목에 오름차순, 내림차순
             value: 'subject',
           },
+          { text: '강의 날짜', value: 'date' },
           { text: '참여율 (%)', value: 'participation' },  // participation (참여율)
-          { text: '지각율 (%)', value: 'tardy' },  // tardy (지각율)
+          { text: '지각여부', value: 'tardy' },  // tardy (지각율)
          
         ],
         StudentIndividualText: [],
@@ -61,7 +62,7 @@
     },
     watch: {
       infoinfo() {
-
+        console.log(this.infoinfo);
         this.StudentIndividualText = []
         this.individualInfo = this.infoinfo;
 
@@ -77,10 +78,17 @@
             .post(url, {studentId: this.individualInfo.studentId, lectureId: element.id}, config)
             .then(res => {
               if (res.data.success === true) {
+                var istardy;
+                if (res.data.data.lateYN === true) {
+                  istardy = "YES"
+                } else if (res.data.data.lateYN === false) {
+                  istardy = "NO"
+                }
                 this.StudentIndividualText.push({
                   subject: res.data.data.lectureName,
                   participation: res.data.data.participationLevel,
-                  tardy: 100-res.data.data.participationLevel
+                  tardy: istardy,
+                  date: element.startTime.slice(0, 10)
                 })
               }
             })

@@ -164,16 +164,18 @@
              
               <v-spacer></v-spacer>
               <v-btn
+                v-if="CalendarFrontSelectedEvent.isRegistered === false"
                 text
                 color="secondary"
-                @click="CalendarFrontSelectedOpen = false"
+                @click=register(CalendarFrontSelectedEvent)
               >
                 수강 신청
               </v-btn>
               <v-btn
+                v-if="CalendarFrontSelectedEvent.isRegistered === true"
                 text
                 color="secondary"
-                @click=ClassDelete(CalendarFrontSelectedEvent)
+                @click=deletelecture(CalendarFrontSelectedEvent)
               >
                 수강 취소
               </v-btn>
@@ -205,7 +207,7 @@
       CalendarFrontSelectedElement: null,
       CalendarFrontSelectedOpen: false,
       CalendarFrontEvents: [],
-      CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'], // 색도 랜덤 값
+      CalendarFrontColors: ['light-green lighten-1', 'grey lighten-1'], // 색도 랜덤 값
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
   
    
@@ -288,11 +290,11 @@
          
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/registerlecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          instructorId: userId,
+          studentId: userId,
           startDate: start.date,
           endDate: end.date
         }
@@ -320,9 +322,10 @@
                   name: element.name,
                   start: new Date(`${element.startTime}`),
                   end: new Date(`${element.endTime}`),
-                  color: this.CalendarFrontColors[0],
+                  color: this.CalendarFrontColors[1],
                   timed: true,
                   classid: element.id,
+                  isRegistered: false,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -333,16 +336,12 @@
                       CalendarClassnameTitle: '강의 끝 일자',
                     },
                     {
-                      CalendarClassnameAction: userId,
+                      CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
                     },
                     {
                       CalendarClassnameAction: maptype,
                       CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: '그룹 A',
-                      CalendarClassnameTitle: '소속',
                     },
                     {
                       CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
@@ -355,16 +354,93 @@
             }
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
+        
+        var url2 = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+        
+        this.$http
+          .post(url2, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = "";
+                if (element.mapType === 0) {
+                  maptype = "오픈형";
+                } else if (element.mapType === 1) {
+                  maptype = "계단식";
+                } else if (element.mapType === 2) {
+                  maptype = "소회의실"
+                }
+                CalendarFrontEvents.push({
+                  name: element.name,
+                  start: new Date(`${element.startTime}`),
+                  end: new Date(`${element.endTime}`),
+                  color: this.CalendarFrontColors[0],
+                  timed: true,
+                  classid: element.id,
+                  isRegistered: true,
+                  showevent: [
+                    {
+                      CalendarClassnameAction: element.startTime,
+                      CalendarClassnameTitle: '강의 시작 일자',
+                    },
+                    {
+                      CalendarClassnameAction: element.endTime,
+                      CalendarClassnameTitle: '강의 끝 일자',
+                    },
+                    {
+                      CalendarClassnameAction: element.instructorName,
+                      CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: maptype,
+                      CalendarClassnameTitle: '강의 타입',
+                    },
+                    {
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      CalendarClassnameTitle: '참여 인원수',
+                    },
+                  ]
+                })
+              })
+            }
+          })
 
+
+      },
+      register(a) {
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/joinlecture";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          studentId: userId,
+          lectureId: a.classid
+        }
+        var config = {
+          "Content-Type": "application/json"
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.success === true) {
+              alert("수강신청이 완료되었습니다.");
+              this.CalendarFrontSelectedOpen = false;
+              this.refreshData();
+            } else {
+              alert(res.data.message);
+            }
+          })
+
+        
       },
       refreshData() { 
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.47:8088/api/lecture/student/post/registerlecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          instructorId: userId,
+          studentId: userId,
           startDate: this.beforestart.date,
           endDate: this.beforeend.date
         }
@@ -392,7 +468,8 @@
                   name: element.name,
                   start: new Date(`${element.startTime}`),
                   end: new Date(`${element.endTime}`),
-                  color: this.CalendarFrontColors[0],
+                  color: this.CalendarFrontColors[1],
+                  isRegistered: false,
                   timed: true,
                   showevent: [
                     {
@@ -426,25 +503,81 @@
             }
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
+
+          var url2 = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+        
+        this.$http
+          .post(url2, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = "";
+                if (element.mapType === 0) {
+                  maptype = "오픈형";
+                } else if (element.mapType === 1) {
+                  maptype = "계단식";
+                } else if (element.mapType === 2) {
+                  maptype = "소회의실"
+                }
+                CalendarFrontEvents.push({
+                  name: element.name,
+                  start: new Date(`${element.startTime}`),
+                  end: new Date(`${element.endTime}`),
+                  color: this.CalendarFrontColors[0],
+                  timed: true,
+                  classid: element.id,
+                  isRegistered: true,
+                  showevent: [
+                    {
+                      CalendarClassnameAction: element.startTime,
+                      CalendarClassnameTitle: '강의 시작 일자',
+                    },
+                    {
+                      CalendarClassnameAction: element.endTime,
+                      CalendarClassnameTitle: '강의 끝 일자',
+                    },
+                    {
+                      CalendarClassnameAction: userId,
+                      CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: maptype,
+                      CalendarClassnameTitle: '강의 타입',
+                    },
+                    {
+                      CalendarClassnameAction: '그룹 A',
+                      CalendarClassnameTitle: '소속',
+                    },
+                    {
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      CalendarClassnameTitle: '참여 인원수',
+                    },
+                  ]
+                })
+              })
+            }
+          })
+
       },
-      ClassDelete(a) {
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
+      deletelecture(a) {
+        console.log(a);
+        var url = "http://163.180.117.47:8088/api/lecture/student/delete/deletelecture";
 
+        var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          id: a.classid
+          data: {
+            studentId: userId,
+            lectureId: a.classid
+          }
+          
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
 
         this.$http
-          .patch(url, payload, config)
+          .delete(url, payload)
           .then(res => {
             if (res.data.success === true) {
-              alert("강좌 삭제가 완료되었습니다.")
+              alert("수강 취소가 완료되었습니다.")
               this.CalendarFrontSelectedOpen = false;
               this.refreshData();
             } else if (res.data.success === false) {

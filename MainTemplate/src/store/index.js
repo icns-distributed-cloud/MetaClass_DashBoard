@@ -16,7 +16,8 @@ export default new Vuex.Store({
     ],
     state: {
         id: null,
-        name: null
+        name: null,
+        userMode: null
     },
     getters: {
         isLogin(state){
@@ -25,21 +26,25 @@ export default new Vuex.Store({
         getUserInfo(state) {
             return {
                 id: state.id,
-                name: state.nsme
+                name: state.name,
+                userMode: state.userMode
             }
         }
     },
     mutations: {
-        LOGIN(state, {id, name}) {
+        LOGIN(state, {id, name, userMode}) {
             state.id = id;
             state.name = name;
+            state.userMode = userMode;
 
             localStorage.id = id;
             localStorage.name = name;
+            localStorage.userMode = userMode;
         },
         LOGOUT(state) {
             state.id = null;
             state.name = null;
+            state.userMode = null;
 
             localStorage.clear();
         }
@@ -67,12 +72,16 @@ export default new Vuex.Store({
 
                     commit("LOGIN", {
                         id: parsedData.id,
-                        name: parsedData.name
+                        name: parsedData.name,
+                        userMode: userMode
                     })
                 })
                 .catch(error => {
                     console.log(error);
                 })
+        },
+        LOGOUT({commit}) {
+            commit("LOGOUT");
         }
     }
 })

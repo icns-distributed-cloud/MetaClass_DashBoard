@@ -63,7 +63,6 @@
                   <v-card-text>
                     <v-text-field
                       v-model="CreateClassModalTitle"
-                      :error-messages="CreateClassModalTitleErrors" 
                       :counter="10"
                       label="강좌명 입력"
                       required
@@ -185,21 +184,21 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="소속 선택"
-                        @input="$v.CreateClassModalBelong.$touch()"
-                        @blur="$v.CreateClassModalBelong.$touch()"
                         @change=test()
                         solo-inverted
                         color="white"
                       >    
                       </v-select> 
                     </div>
-                    <v-data-table v-if="CreateClassModalBelong !== ''"
+                    <v-data-table v-if="showStudents"
                       v-model="selectedStudents"
+                      :headers="headers"
                       :items="belongstudents"
                       :single-select="singleSelect"
                       item-key="name"
                       hide-default-footer
                       show-select
+                      @click:row=selectstudent()
                     >
                       <template v-slot:top>
                         <v-switch
@@ -290,7 +289,7 @@
             singleSelect: false,
             headers: [
               {
-                text: "aa",
+                text: "이름",
                 align: "start",
                 sortable: false,
                 value: "name"
@@ -321,7 +320,8 @@
             CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
             // 퀴즈 선택
             CreateClassModalQuiz: [],
-            CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'] // 퀴즈 item 선택
+            CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'], // 퀴즈 item 선택
+            CreateClassModalTitle: ""
             // 창 닫기
             
             
@@ -337,6 +337,9 @@
   
 
     methods: {
+      selectstudent() {
+        console.log(this.selectedStudents)
+      },
       fetchContent() {
         var url = "http://163.180.117.47:8088/api/content/post/contentlist";
 
@@ -472,12 +475,20 @@
         var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
 
         var userId = this.$store.getters.getUserInfo.id;
+
+        var studentlist = []
+        this.selectedStudents.forEach(element => {
+          studentlist.push({
+            studentId: element.studentId
+          })
+        })
+        
         var payload = {
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
           contentId: this.CreateClassModalFile,
-          stulist: this.BelongStudents,
+          stulist: studentlist,
           startTime: this.CreateClassModalStartDate1+":00",
           endTime: this.CreateClassModalFinishDate3+":00"
         }
@@ -527,12 +538,16 @@
                   studentId: element.studentId
                 })
                 this.belongstudents.push({
-                  name: element.studentName
+                  name: element.studentName,
+                  studentId: element.studentId
                 })
+                
               })
+              console.log(this.belongstudents);
+              this.showStudents = true;
             }
-            console.log(this.belongstudents);
-            this.showStudents = true;
+            
+            
             
           })
 

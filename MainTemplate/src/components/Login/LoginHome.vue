@@ -102,11 +102,10 @@ export default {
         absolute: true,
         sending: false,
 
-        useMode: 1,
 
         items: [
-          {name: "student", value: 1},
-          {name: "instructor", value: 0}
+          {name: "instructor", value: 0},
+          {name: "student", value: 1}
         ],
 
         id : "",
@@ -125,10 +124,13 @@ export default {
 
         // signin
         onSubmit(id, password, userMode) {
+          console.log(userMode);
           this.overlay = true;
 
           setTimeout(() => {
             this.sending = true;
+
+            this.$store.dispatch("LOGOUT");
 
             this.$store
             .dispatch("LOGIN", {id, password, userMode})
@@ -141,8 +143,17 @@ export default {
 
         },
         redirect() {
-           
-          var redirectPath = "/CalendarPage";
+          var userMode = this.$store.getters.getUserInfo.userMode;
+          console.log(userMode);
+          var redirectPath = "/";
+          if (userMode === 0) {
+            redirectPath = "/CalendarPage"
+          } else if (userMode === 1) {
+            redirectPath = "/StudentCalendar"
+          } else {
+            alert("직업을 선택해주세요.");
+            return;
+          }
           
           this.$router.push(redirectPath);
         },

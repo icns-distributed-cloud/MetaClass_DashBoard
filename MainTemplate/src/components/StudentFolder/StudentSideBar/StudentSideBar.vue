@@ -59,15 +59,15 @@
       menuActionClick(action){
         if(action=="StudentCalendar")
         {
-          this.$router.push('/StudentCalendarPage');
+          this.$router.push('/StudentCalendar');
         }
         else if(action=="StudentEvaluation")
         {
-          this.$router.push('/StudentEvaluationPage');
+          this.$router.push('/StudentEvaluation');
         }
         else if(action=="StudentInformation")
         {
-          this.$router.push('/StudentInformationPage');
+          this.$router.push('/StudentInformation');
         }
         
       

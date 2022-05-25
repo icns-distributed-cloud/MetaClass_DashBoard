@@ -8,7 +8,7 @@
     <v-card-title>{{info.name}}</v-card-title>
 
     <v-card-text class="text--primary">
-      <div>{{info.name}}</div>
+      <div>{{info.filename}}</div>
     </v-card-text>
     <v-list two-line>
         <v-card-actions>
