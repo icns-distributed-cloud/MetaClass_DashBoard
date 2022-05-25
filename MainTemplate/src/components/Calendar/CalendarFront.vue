@@ -86,8 +86,9 @@
         </v-toolbar>
       </v-sheet>
     <!--캘린더 전체 sheet 상하(위-아래)사이즈 조절 -->
-    <!--원래 사이즈 600에서 800으로 변경-->
-      <v-sheet height="800">
+    <!--원래 사이즈 600에서 850으로 변경-->
+    <!--:events="CalendarFrontEvents" 이벤트: 시간, 과목-->
+      <v-sheet height="850">
         <v-calendar
           ref="calendar"
           v-model="CalendarFrontFocus"
@@ -99,7 +100,10 @@
           @click:more="CalendarFrontViewDay"
           @click:date="CalendarFrontViewDay"
           @change="CalendarFrontUpdateRange"
+          font-weight-black
         ></v-calendar>
+        <!--class="test-css black--text"-->
+       
 
         <!--event 클릭 시 나타나는 화면--> 
         <v-menu
@@ -211,7 +215,6 @@
       <!--create-class-modal-->
       <create-class-modal
       v-if="CreateClassModal"
-
       @close="
       CreateClassModal = false;"
       />
@@ -228,6 +231,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
   export default {
     components: { CreateClassModal },
     data: () => ({
+      
       beforestart: "",
       beforeend: "",
       CalendarFrontFocus: '',
@@ -241,7 +245,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CalendarFrontSelectedElement: null,
       CalendarFrontSelectedOpen: false,
       CalendarFrontEvents: [],
-      CalendarFrontColors: ['light-green lighten-1', 'red lighten-1'], // 색도 랜덤 값
+      CalendarFrontColors: ['green', 'red lighten-1'], // 색도 랜덤 값
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
       CreateClassModal : false, //  CreateClassModal 
       CalendarFrontMessageLoader: null, // 강의 메세지 전송
@@ -525,4 +529,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
 
 
+
+<!--
+<style scoped lang="scss">
+
+
+.test-css {
+font-size: 15px;}
+  
+.black--text {color:black;}
+</style>-->
 

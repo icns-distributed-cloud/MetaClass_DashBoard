@@ -80,7 +80,7 @@
                           @input="$v.ContentFrontMapName.$touch()"
                           @blur="$v.ContentFrontMapName.$touch()"
                           solo-inverted
-                          color="white"
+                          color="white" 
                         >
                         </v-text-field>
 
@@ -105,10 +105,12 @@
                             dark
                             label
                             small
+        
                           >
                             {{ text }}
                           </v-chip>
                           <span
+                          color="blue"
                             v-else-if="index === 2"
                             class="text-overline grey--text text--darken-3 mx-2"
                           >
