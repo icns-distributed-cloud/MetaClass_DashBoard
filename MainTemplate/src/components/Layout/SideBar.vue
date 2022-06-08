@@ -1,15 +1,13 @@
 
 <template>
-  <div>
     <!--가장 위 상단의 bar, 색은 primary-->
-      
+
       
       <!--가장 아래인 하단 bar, 색은 primary-->
       <!-- <v-footer color="blue lighten-1" dark app>Project</v-footer> -->
       
     <!--왼쪽에 bar 생성-->
-    <v-navigation-drawer 
-    class="light-blue darken-1" dark permanet app clipped>
+    <v-navigation-drawer permanet app clipped color="#313a46">
     <v-container>
       <v-list-item>
         <v-list-item-content style="back">
@@ -30,13 +28,12 @@
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
           </v-list-item>
         </v-list>
     </v-container>
     </v-navigation-drawer>
-  </div>
 </template>
 
 

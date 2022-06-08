@@ -1,7 +1,5 @@
 <template>
-  <v-row class="fill-height">
-    <v-col>
-      <v-sheet height="64">
+    <v-col style="background-color: #f8f9fc;">
         <v-toolbar
           flat
         >
@@ -84,7 +82,6 @@
             </v-tab>   
           </v-tabs>
         </v-toolbar>
-      </v-sheet>
     <!--캘린더 전체 sheet 상하(위-아래)사이즈 조절 -->
     <!--원래 사이즈 600에서 850으로 변경-->
     <!--:events="CalendarFrontEvents" 이벤트: 시간, 과목-->
@@ -220,7 +217,6 @@
       />
 
     </v-col>
-  </v-row>
 </template>
 
 

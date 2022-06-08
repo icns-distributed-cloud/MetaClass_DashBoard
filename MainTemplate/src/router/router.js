@@ -8,6 +8,9 @@ import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
 import ContentPgae from "../components/Content/ContentPage.vue";
 import TestPage from "../components/TestComponent.vue";
+
+import DashboardLayout from "../components/Layout/DashboardLayout.vue"
+
 // 학생 홈페이지
 import StudentCalendarPage from "../components/StudentFolder/StudentCalendar/StudentCalendarPage.vue";
 import StudentEvaluationPage from "../components/StudentFolder/StudentEvaluation/StudentEvaluationPage.vue";
@@ -16,6 +19,18 @@ import StudentInformationPage from "../components/StudentFolder/StudentInformati
 
 Vue.use(VueRouter);
 const routes = [
+    {
+        path: "/aaa",
+        component: DashboardLayout,
+        redirect: "/home",
+        children: [
+            {
+                path: "/home",
+                name: CalendarPage,
+                component: CalendarPage
+            }
+        ]
+    },
 
     {
         path: "/",
