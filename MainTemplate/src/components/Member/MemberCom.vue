@@ -131,26 +131,29 @@
 
     <!--펜 아이콘 생성-->
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        elevation="4"
+      <v-btn
+        class="mx-1"
         fab
-        class="teal mr-2"
-        small
         dark
+        samll
+        color="green lighten-1"
         @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
+        >
+        <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+      
      <!--휴지통 아이콘 생성-->
-      <v-icon
-        elevation="4"
+     <v-btn
+        class="mx-1"
         fab
-        class="cyan"
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-trash-can-outline
-      </v-icon>
+        dark
+        samll
+        color="red lighten-1"
+         @click="deleteItem(item)"
+        >
+        <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      
     </template>
     <template v-slot:no-data>
       <v-btn
@@ -163,23 +166,25 @@
   </v-data-table>
   </v-card>
 
-<!--페이지 이동-->
-  <div class="text-center pt-2">
-    <v-pagination
-      v-model="page"
-      :length="pageCount"
-    ></v-pagination>
-    
-    <!--페이지 설정-->  
-      <v-text-field
-        :value="itemsPerPage"
-        label="Items per page"
-        type="number"
-        min="-1"
-        max="15"
-        @input="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-    </div>
+<!--페이지--> <!--:length="pageCount" -->
+<template>
+  <div class="text-center">
+    <v-container>
+      <v-row justify="center">
+        <v-col cols="8">
+          <v-container class="max-width">
+            <v-pagination
+              v-model="page"
+              class="my-4"
+              :length="100" 
+            ></v-pagination>
+          </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
+<!--페이지 끝-->
    
 
 
@@ -214,7 +219,7 @@
         { text: 'Email', value: 'email' },
         { text: 'Group', value: 'group' },
         { text: 'Phone Number', value: 'phonenumber' },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: '상세보기', value: 'actions', sortable: false },
       ],
       MemberName: [],
       editedIndex: -1,
@@ -236,7 +241,7 @@
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Name' : 'Edit Name'
+        return this.editedIndex === -1 ? '새로운 이름' : '이름 수정'
       },
     },
 

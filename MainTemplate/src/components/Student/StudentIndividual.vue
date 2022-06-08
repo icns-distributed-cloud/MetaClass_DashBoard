@@ -4,25 +4,35 @@
 
 <template>
   <v-card>
-          <v-card-title
+    <v-toolbar
+      dark
+      color="primary"
+    >
+      <v-toolbar-title>{{infoinfo.name}}</v-toolbar-title>
+      <v-spacer></v-spacer>
+       <v-btn
+            icon
+            dark
+            @click="dialog = !dialog"
           >
-          {{infoinfo.name}}
-            학생 참여율 & 학생 지각율
-            <v-spacer></v-spacer>
-           <v-text-field
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          </v-toolbar>
+        <v-card-title>
+          <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
             single-line
             hide-details
-           ></v-text-field>
-            </v-card-title>
-            <v-data-table
-             :headers="StudentIndividualHeaders"
-             :items="StudentIndividualText"
-             :search="search"
-            >
-            
+          ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="StudentIndividualHeaders"
+            :items="StudentIndividualText"
+            :search="search"
+            class="elevation-1"
+          >
     </v-data-table>
 </v-card>
 </template>
@@ -41,7 +51,7 @@
       return {
         individualInfo: [],
         search: '',
-       
+        dialog: false,
         // headers
         StudentIndividualHeaders: [
           {

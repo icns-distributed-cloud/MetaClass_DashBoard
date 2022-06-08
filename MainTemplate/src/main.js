@@ -3,6 +3,8 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router/router'
 
+
+
 // vuetify-dialog
 // data tables 항목에 crud actions를 하기 위해서 
 // 설치 필요 : npm install vuetify-dialog
@@ -31,7 +33,8 @@ Vue.use(VuetifyDialog), {
     }],
 
 
-Vue.config.productionTip = false
+
+    Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 
 

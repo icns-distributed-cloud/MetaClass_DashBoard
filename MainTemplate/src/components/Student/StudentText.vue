@@ -2,11 +2,24 @@
 <!--해당 과목 클릭시, "학생 참여율" & "학생 지각율" 오름차순과 내림차순으로 나타남-->
 <!--template-->
 <template>
-  <v-card>
-    
+  <v-card>    
+    <v-toolbar
+          dark
+          color="primary"
+        >
+        <v-toolbar-title>학생 참여율 & 학생 지각율</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn
+            icon
+            dark
+            @click="dialog = !dialog"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          </v-toolbar>
         <v-card-title>
-        학생 참여율 & 학생 지각율
-        <v-spacer></v-spacer>
+     
+      
             <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
@@ -27,14 +40,22 @@
       
 
 
-      <!--Action 안에 있는 볼펜 아이콘을 클릭-->
+      <!--상세보기 안에 있는 사람 아이콘을 클릭-->
      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn
+        color="cyan lighten-3"
+        depressed
+        @click="StudentIndividualModalItem(item)"
+        >
         <v-icon
-        small
+        left
         @click="StudentIndividualModalItem(item)"
       >
-         mdi-pencil
+         mdi-account
       </v-icon>
+      상세보기
+      </v-btn>
+      
       </template>
 
       <template v-slot:top>
@@ -47,9 +68,13 @@
 
      <!--Student-Individual-Modal안에 들어가기-->  
     
+    </v-data-table>
+    
+  
+  </v-card>
+ 
+  
 
-  </v-data-table>
-</v-card>
  
 
 </template>
@@ -69,6 +94,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
     },
     data () {
       return {
+        dialog: false,
         individualinfo: {},
         search: '',
         StudentIndividualModalDialog: false, // StudentIndividualModalDialog
@@ -83,7 +109,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
           },
           { text: '참여율 (%)', value: 'participation' }, // participation (참여율)
           { text: '지각여부', value: 'tardy' }, // tardy (지각율)
-          { text: 'Actions', value: 'actions', sortable: false }, // actions
+          { text: '상세보기', value: 'actions', sortable: false }, // actions
         ],
 
         StudentSubjectText: [],
@@ -163,7 +189,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
 
 
-    // Action 안에 있는 볼펜 아이콘을 클릭
+    // 상세보기 안에 있는 사람 아이콘을 클릭
        StudentIndividualModalItem (item) {
         var url = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
 

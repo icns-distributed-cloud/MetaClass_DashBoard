@@ -45,13 +45,13 @@
     data () {
       return {
         items: [
-          { title: '강좌 관리', icon: 'mdi-view-dashboard', action: "Calendar" },
-          { title: '학생 평가 관리', icon: 'mdi-view-dashboard', action: "Student" },
-          { title: '강의실 등록', icon: 'mdi-view-dashboard', action: "ClassMap" },
-          { title: '컨텐츠 등록', icon: 'mdi-view-dashboard', action: "Content" },
-          { title: '퀴즈 등록', icon: 'mdi-view-dashboard' , action: "Quiz"},
-          { title: '회원 관리', icon: 'mdi-view-dashboard' , action: "Member"}, 
-          { title: '서버 관리', icon: 'mdi-view-dashboard' , action: "Server"},  
+          { title: '강좌 관리', icon: 'event', action: "Calendar" }, // event
+          { title: '학생 평가 관리', icon: 'mdi-clipboard-text', action: "Student" }, // mdi-clipboard-text
+          { title: '강의실 등록', icon: 'class', action: "ClassMap" }, // class
+          { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" }, // mdi-folder
+          { title: '퀴즈 등록', icon: 'quiz', action: "Quiz"}, // quiz // 또는  mdi-format-list-bulleted-square
+          { title: '회원 관리', icon: 'mdi-account-circle' , action: "Member"},  // mdi-account-circle
+          { title: '서버 관리', icon: 'mdi-server' , action: "Server"},  // mdi-server
         ],
         right: null,
       }

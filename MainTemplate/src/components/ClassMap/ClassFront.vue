@@ -78,6 +78,7 @@
                             flat
                             color="light-blue"
                         >
+                        
                         <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
                         <v-spacer></v-spacer>  
                         </v-toolbar>

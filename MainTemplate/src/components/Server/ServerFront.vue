@@ -11,24 +11,15 @@
       color="grey lighten-3"
       dark
     >
-    <div>         
+    <div> 
+      <compo-nent :is="ServerModal"></compo-nent>        
        <v-row>
-              <!--
-              <ClassMap-Modal
-                v-for="(item, index) in ClassFrontModalList"
-                :key="index"
-                :item="item"
-                cols="4"
-              ></ClassMap-Modal>
-              -->
-
-              
               <v-col
-                v-for="(item, index) in ClassFrontModalList"
+                v-for="(item, index) in ServerFrontModalList"
                 :key="index"
                 cols="4"
               >
-                <ClassMap-Modal v-bind:info="ClassFrontModalList[index]"></ClassMap-Modal>
+                <Server-Modal v-bind:info="ServerFrontModalList[index]"></Server-Modal>
               </v-col>
               
             </v-row>
@@ -38,9 +29,9 @@
 
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
-    <!--강의실 등록-->
+    <!--서버 등록-->
     <template>
-        <!--강의실 등록 우측으로 이동-->
+        <!--서버 등록 우측으로 이동-->
         <div class="text-right">
             <v-col
                 cols="12"
@@ -49,14 +40,14 @@
                 offset-md="4"
             >
                 <v-dialog
-                    v-model="ClassFrontDialog"
+                    v-model="ServerFrontDialog"
                     persistent
                     max-width="600px"
             
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
-                            color="primary"
+                            color="deep-purple lighten-1"
                             dark
                             v-bind="attrs"
                             v-on="on"
@@ -66,89 +57,70 @@
                     </template>
 
                     <!--서버 등록 팝업창-->
-                    <v-card
+                    <template>
+                      <v-card
                         class="overflow-hidden"
-                        max-width="600"
-                        color="light-blue lighten-1"
+                        color="purple lighten-1"
                         dark
-                    >
+                      >
                         <v-toolbar
-                            flat
-                            color="light-blue"
+                          flat
+                          color="purple"
                         >
-                        <v-toolbar-title class="front-weight-light">서버 등록</v-toolbar-title>
-                        <v-spacer></v-spacer>  
+                          <v-toolbar-title class="font-weight-light"> 서버 등록 </v-toolbar-title>
                         </v-toolbar>
 
-                        <!--ip 주소 강의실 이름: ClassFrontMapName-->
-                        
-                        <v-text-field
-
-                            v-model="ClassFrontMapName"
-                            :counter="10"
-                            label="강의실 이름"
-                            required
-                            solo-inverted
-                            color="white"
-                        >
-                        </v-text-field>
-                        <!--강의실 유형 (type)-->
-                        <v-row>
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="6"
-                            >
-                                <v-select
-                                    v-model="ClassFrontMapType"
-                                    :items="ClassFrontMapTypeItem"
-                                    label="강의실 유형"
-                                    solo-inverted
-                                    color="white"
-                                >    
-                                </v-select> 
-                            </v-col>
-                                
-                            <!--강의실 참여 인원-->
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="6"
-                            >
-                                <v-text-field
-                                    v-model="ClassFrontNumValue"
-                                    label="강의실 참여 인원수"
-                                    class="numer"
-                                    :ClassFrontRules="[ClassFrontRules.required, ClassFrontRules.min, ClassFrontRules.max]"
-                                    type="number"
-                                    @click:append-outer="ClassFrontIncrement"
-                                    @click:prepend="ClassFrontDecrement"
-                                    
-                                    color="white"
-                                    required
-                                >
-                                </v-text-field>
-                            </v-col>
-                        </v-row>
+                        <v-card-text>
+                          <v-text-field
+                           v-model="ServerIPaddress"
+                           :counter="10"
+                           label="IP 주소"
+                           required
+                           
+                           color="white"
+                          ></v-text-field>
+                          <v-autocomplete
+                            v-model="ServerTeacherList"
+                            :items="ServerTeacherListItem"
+                            label="강의자 리스트"
+                            color="white"   
+                          ></v-autocomplete>
+                          <v-autocomplete
+                            v-model="ServerSubjectList"
+                            :items="ServerSubjectListItem"
+                            label="강좌 리스트"
+                            color="white"   
+                          ></v-autocomplete>
+                        </v-card-text>
+                        <v-divider></v-divider>
 
                         <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                color="light-blue lighten-5"
-                                text
-                                @click="ClassFrontDialog = false"
-                            >
-                                취소
-                            </v-btn>
-                            <v-btn
-                                color="light-blue lighten-5"
-                                text
-                                @click=ClassFrontCreateClassModal();
-                            >
-                                확인
-                            </v-btn>
-                        </v-card-actions>  
-                    </v-card>
+                          <v-spacer></v-spacer>
+                           <v-btn
+                            color="green"
+                            @click=save()
+                          >
+                            확인
+                          </v-btn>
+
+                        </v-card-actions>
+
+
+                        <v-snackbar
+                          v-model="ServerSaved"
+                          :timeout="2000"
+                          absolute
+                          bottom
+                          left
+                        >
+                          서버 등록이 완료되었습니다.
+                        </v-snackbar>
+                      </v-card>
+                    </template>
+
+
+
+
                 </v-dialog>
                 <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
                 <v-container style="height: 20px;"></v-container>
@@ -170,28 +142,34 @@ import ServerModal from './ServerModal.vue'
   export default {
   components: { ServerModal },
     data: () => ({
-    
-      ClassFrontMapName: "",
-      ClassFrontDialog: false,
-      ClassFrontMapType: [],
-      ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
+      
+      ServerIPaddress : "",
+      ServerFrontDialog: false,
+      ServerTeacherList: [], // 강의자 리스트 
+      ServerTeacherListItem: ['손덕인', '최인훈', '노설', '서유리'],  // 강의자 리스트 아이템
+      ServerSubjectList: [], // 강좌 리스트
+      ServerSubjectListItem: ['수치해석', '네트워크론'], //  강좌 리스트 아이템
+      // ServerSaved
+      ServerSaved: false,
+      // model
+     
 
-     // 참여 인원수 체크 (참여 인원)   s
-      ClassFrontNumValue: 50,
-      ClassFrontForm : {
+     // 참여 인원수 체크 (참여 인원)   
+      ServerFrontNumValue: 50,
+      ServerFrontForm : {
         min: 2,
         max: 10
       },
-      ClassFrontRules: {
+      ServerFrontRules: {
         required: value => !!value || "Required.",
-        min: v => v >= this.ClassFrontForm .min || `The Min is ${this.ClassFrontForm .min}`,
-        max: v => v <= this.ClassFrontForm .max || `The Max is ${this.ClassFrontForm .max}`
+        min: v => v >= this.ServerFrontForm .min || `The Min is ${this.ServerFrontForm .min}`,
+        max: v => v <= this.ServerFrontForm .max || `The Max is ${this.ServerFrontForm .max}`
       },
       ///
-      ClassFrontModalList:[],
+      ServerFrontModalList:[],
       ModalInfo: []
     }),
-    ClassFrontMapType: "ClassFront",
+    ServerTeacherList: "ServerFront",
 
   created() {
     this.fetchData();
@@ -199,24 +177,27 @@ import ServerModal from './ServerModal.vue'
 
 
   methods: {
-    ClassFrontIncrement() {
-      if (this.ClassFrontNumValue < this.ClassFrontForm .max) {
-        this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) + 1;
+    ServerFrontIncrement() {
+      if (this.ServerFrontNumValue < this.ServerFrontForm .max) {
+        this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) + 1;
       }
     },
-    ClassFrontDecrement() {
-      if (this.ClassFrontNumValue > this.ClassFrontForm .min) {
-        this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) - 1;
+    ServerFrontDecrement() {
+      if (this.ServerFrontNumValue > this.ServerFrontForm .min) {
+        this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
     deleteMap() {
       this.fetchData();
     },
+    save () {
+        this.ServerSaved = true
+      },
   
    
     fetchData() {
       // var vm = this;
-      this.ClassFrontModalList = [];
+      this.ServerFrontModalList = [];
       var url = "http://163.180.117.47:8088/api/map/post/maplist";
 
       var userId = this.$store.getters.getUserInfo.id;
@@ -236,7 +217,7 @@ import ServerModal from './ServerModal.vue'
           // console.log(res);
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
-              this.ClassFrontModalList.push({
+              this.ServerFrontModalList.push({
                 id: element.id,
                 maxUser: element.maxUser,
                 name: element.name,
@@ -244,24 +225,24 @@ import ServerModal from './ServerModal.vue'
               })
             })
           }
-          console.log(this.ClassFrontModalList);
+          console.log(this.ServerFrontModalList);
           
-          // console.log(this.ClassFrontModalList[0]);
+          // console.log(this.ServerFrontModalList[0]);
         })
         
 
     },
 
 
-      ClassFrontCreateClassModal()
+      ServerFrontCreateClassModal()
       {
         var url = "http://163.180.117.47:8088/api/map/post/createmap";
         var maptype = 0;
-        if (this.ClassFrontMapType === "오픈형") {
+        if (this.ServerTeacherList === "손덕인") {
           maptype = 0
-        } else if (this.ClassFrontMapType === "계단형") {
+        } else if (this.ServerTeacherList === "최인훈") {
           maptype = 1
-        } else if (this.ClassFrontMapType === "소회의실") {
+        } else if (this.ServerTeacherList === "노설") {
           maptype = 2
         } else {
           alert("강의실 유형을 정확하게 입력해주세요.")
@@ -271,9 +252,9 @@ import ServerModal from './ServerModal.vue'
          
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          name: this.ClassFrontMapName,
+          name: this.ServerIPaddress,
           type: maptype,
-          maxUser: this.ClassFrontNumValue,
+          maxUser: this.ServerFrontNumValue,
           instructorId: userId
         }
 
@@ -289,7 +270,7 @@ import ServerModal from './ServerModal.vue'
             console.log(res.data.success);
             if (res.data.success === true) {
               alert("강의실 생성이 완료되었습니다.");
-              this.ClassFrontDialog = false;
+              this.ServerFrontDialog = false;
               this.fetchData();
             } else {
               alert("강의실 이름이 중복되었습니다");
@@ -301,9 +282,9 @@ import ServerModal from './ServerModal.vue'
         
       },
 
-      ClassFrontDeleteClassModal()
+      ServerFrontDeleteClassModal()
       {
-        this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
+        this.ServerFrontModalList.splice(this.ServerFrontModalList.length, 1)
       },
   },
   

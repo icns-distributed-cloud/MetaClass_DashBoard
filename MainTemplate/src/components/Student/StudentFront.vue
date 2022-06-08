@@ -17,8 +17,8 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-  <!--StudentManager가 header-->
-  <v-data-table
+  <!--StudentManager가 header--> 
+  <v-data-table 
     :headers="StudentHeaders"
     :items="ClassName" 
     sort-by="StudentManager"
@@ -48,14 +48,21 @@
         />
       </v-dialog>
     </template>
- <!--Action 안에 있는 볼펜 아이콘을 클릭-->
+ <!--상세보기 안에 있는 사람 아이콘을 클릭-->
      <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-        small
+       <v-btn
+        color="teal lighten-3"
+        depressed
+         @click="StudentSubjectModalItem(item)"
+        >
+        <v-icon 
+        left
         @click="StudentSubjectModalItem(item)"
       >
-         mdi-pencil
+         mdi-account
       </v-icon>
+      상세보기
+      </v-btn>
       </template>
       
       
@@ -66,23 +73,25 @@
   </v-card>
   <!--data tabel 끝!-->
 
-<!--페이지 이동-->
-  <div class="text-center pt-2">
-    <v-pagination
-      v-model="page"
-      :length="pageCount"
-    ></v-pagination>
-    
-    <!--페이지 설정-->  
-      <v-text-field
-        :value="itemsPerPage"
-        label="Items per page"
-        type="number"
-        min="-1"
-        max="15"
-        @input="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-    </div>
+<!--페이지--> <!--:length="pageCount" -->
+<template>
+  <div class="text-center">
+    <v-container>
+      <v-row justify="center">
+        <v-col cols="8">
+          <v-container class="max-width">
+            <v-pagination
+              v-model="page"
+              class="my-4"
+              :length="100" 
+            ></v-pagination>
+          </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
+<!--페이지 끝-->
     </v-col>
     </v-row>
   </v-container>
@@ -96,6 +105,11 @@
 <script>
 import StudentModal from './StudentModal.vue' // StudentModal
 import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectModal
+import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+import Vue from 'vue'
+import Vuetify from 'vuetify/lib'
+
+Vue.use(Vuetify)
 
   export default {
     components: { StudentModal, StudentSubjectModal }, // StudentModal, StudentSubjectModal
@@ -119,7 +133,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
           value: 'name',
         },
         { text: '강의 날짜', value: 'ClassDate'},  
-        { text: 'Actions', value: 'actions', sortable: false }, 
+        { text: '상세보기', value: 'actions', sortable: false }, 
 
 
       ],
@@ -195,7 +209,7 @@ import StudentSubjectModal from './StudentSubjectModal.vue' // StudentSubjectMod
        return this.items && this.items.length > 0;
       },
    
-       // Action 안에 있는 볼펜 아이콘을 클릭
+       // 상세보기 안에 있는 사람 아이콘을 클릭
        StudentSubjectModalItem (item) {
         var selectedclass = item;
 
