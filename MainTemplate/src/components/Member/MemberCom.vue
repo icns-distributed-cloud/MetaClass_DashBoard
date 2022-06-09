@@ -36,6 +36,7 @@
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
+            <!--
             <v-card-text>
               <v-container>
                 <v-row>
@@ -79,20 +80,11 @@
                       label="Group"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.phonenumber"
-                      label="Phone Number"
-                    ></v-text-field>
-                  </v-col>
+                  
                 </v-row>
               </v-container>
-            </v-card-text>
-            <!--펜 클릭시 나타나는 화면 editname-->
+            </v-card-text>-->
+            <!--펜 클릭시 나타나는 화면 editname
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -109,10 +101,10 @@
               >
                 수정 확인
               </v-btn>
-            </v-card-actions>
+            </v-card-actions>-->
           </v-card>
         </v-dialog>
-        <!--휴지통 클릭시 나타나는 화면-->
+        <!--휴지통 클릭시 나타나는 화면
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="text-h5">회원 정보를 삭제하시겠습니까?</v-card-title> 
@@ -123,14 +115,15 @@
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-dialog>-->
         <!--휴지통 클릭시 나타나는 화면 끝!-->
       
     </template>
      <!--MemberComDialog 끝-->
 
-    <!--펜 아이콘 생성-->
+   
     <template v-slot:[`item.actions`]="{ item }">
+       <!--펜 아이콘 생성
       <v-btn
         class="mx-1"
         fab
@@ -140,7 +133,7 @@
         @click="editItem(item)"
         >
         <v-icon>mdi-pencil</v-icon>
-        </v-btn>
+        </v-btn>-->
       
      <!--휴지통 아이콘 생성-->
      <v-btn
@@ -154,14 +147,6 @@
         <v-icon>mdi-delete</v-icon>
         </v-btn>
       
-    </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
     </template>
   </v-data-table>
   </v-card>
@@ -223,8 +208,8 @@ import { mapState } from 'vuex'
         { text: '부서', value: 'group' }, // grop
         { text: '상세보기', value: 'actions', sortable: false },
       ],
-      MemberName: [],
-      editedIndex: -1,
+      MemberName: [ ], // MemberName
+      /*editedIndex: -1,
       editedItem: {
         name: ' ',
         id: ' ',
@@ -237,6 +222,7 @@ import { mapState } from 'vuex'
         email: ' ',
         group: ' ',
       },
+      */
     }),
 
     computed: {
@@ -265,37 +251,38 @@ import { mapState } from 'vuex'
     },
 
     created () {
-      this.initialize()
+      //this.initialize(),
+      this.memberlist()
     },
 
     methods: {
-      initialize () {
+      
+      /**initialize () {
         this.MemberName = [
           {
-            name: '{ user.name }',
-            id: '{ user.id }',
-            email: '{ user.email }',
-            group: '{ user.group }',
-       
+            name: ' ',
+            id: ' ',
+            email: ' ',
+            group: '' 
           },
           
          
         ]
-      },
+      },**/
 
-      editItem (item) {
+      /**editItem (item) {
         this.editedIndex = this.MemberName.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.MemberComDialog = true
-      },
+      },**/
 
-      deleteItem (item) {
-        this.editedIndex = this.MemberName.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
+      /**deleteItem (item) {
+       this.editedIndex = this.MemberName.indexOf(item)
+       this.editedItem = Object.assign({}, item)
+       this.dialogDelete = true
+      },**/
 
-      deleteItemConfirm () {
+      /**deleteItemConfirm () {
         this.MemberName.splice(this.editedIndex, 1)
         this.closeDelete()
       },
@@ -323,7 +310,7 @@ import { mapState } from 'vuex'
           this.MemberName.push(this.editedItem)
         }
         this.close()
-      },
+      },**/
 
       isNotEmpty() {
       return this.items && this.items.length > 0;
@@ -334,16 +321,16 @@ import { mapState } from 'vuex'
        // 로그인의 정보를 받아야한다
        // 가져올 데이터는 회원정보의 이름, 아이디, 이메일, 부서
 
-       
+
        memberlist(){
   
         
 
-        var url = "http://IPAdress/api/users/get/allstudent";
+        var url = "http://163.180.117.47:8088/api/users/get/allstudent";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          instructorId: userId,
+          instructorId: userId
         }
 
         var config = {
@@ -353,9 +340,66 @@ import { mapState } from 'vuex'
         }
 
         this.$http
-              .get(url, payload, config)
-
+          .get(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                this.MemberName.push({
+                  name: element.name,
+                  id: element.id,
+                  email: element.email,
+                  group:element.departmentName
+                })
+              })
+            }
+          })
       },
+
+      // 휴지통 클릭시 삭제
+      deleteItem(item) {
+        var prompStr = prompt(
+          '정보가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+        );
+        if (prompStr == null) {
+          return;
+        }
+        if (prompStr == "삭제") {
+          var url = "http://163.180.117.47:8088/api/users/patch/deleteuser";
+          var userId = this.$store.getters.getUserInfo.id;
+          var itemInfo = Object.assign({}, item);
+
+          var payload = {
+            id: userId,
+            loginId: itemInfo.id, 
+            userM1de: 1 // 0이면 강의자 1이면 학습자
+
+          }
+
+          var config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+
+          this.$http
+            .patch(url, payload, config)
+            .then(res => {
+              if (res.data.success === true) {
+                alert("성공적으로 삭제되었습니다.");
+                this.$parent.$parent.$parent.$parent.deleteItem(item);
+              } else {
+                alert(res.data.message);
+              }
+              
+            })
+            console.log("delete item");
+          } else {
+            alert("정확하게 입력해주세요.");
+            return;
+          }
+
+
+      }
     },
   }
 </script>

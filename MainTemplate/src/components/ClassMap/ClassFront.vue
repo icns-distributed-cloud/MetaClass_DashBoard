@@ -22,7 +22,8 @@
               ></ClassMap-Modal>
               -->
 
-              
+              <!--클릭시 나오는 화면
+              즉, ClassMap-Modal에 정보를 보내겠다는 의미-->
               <v-col
                 v-for="(item, index) in ClassFrontModalList"
                 :key="index"
