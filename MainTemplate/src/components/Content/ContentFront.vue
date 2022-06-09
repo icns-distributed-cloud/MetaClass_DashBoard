@@ -1,3 +1,4 @@
+<!--Content front-->
 <template>
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
@@ -44,7 +45,7 @@
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
-                            color="primary"
+                            color="deep-purple lighten-1"
                             dark
                             v-bind="attrs"
                             v-on="on"
@@ -56,33 +57,30 @@
                     <!--컨텐츠 등록 팝업창-->
                     <v-card
                         class="overflow-hidden"
-                        max-width="600"
-                        color="light-blue lighten-1"
+                        color="purple lighten-1"
                         dark
                     >
                     <!--상단 컨텐츠 등록-->   
                         <v-toolbar
                             flat
-                            color="light-blue"
+                            color="purple"
                         >
-                        <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title>
-                        <v-spacer></v-spacer>  
+                        <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
                         </v-toolbar>
 
                         <!--컨텐츠 이름: ContentFrontMapName-->
-
-                        <v-text-field
-                          v-model="ContentFrontMapName"
-                          :error-messages="ContentFrontMapName"
-                          :counter="10"
-                          label="컨텐츠 이름"
-                          required
-                          @input="$v.ContentFrontMapName.$touch()"
-                          @blur="$v.ContentFrontMapName.$touch()"
-                          solo-inverted
-                          color="white" 
-                        >
-                        </v-text-field>
+                        <v-card-text>
+                          <v-text-field
+                            v-model="ContentFrontMapName"
+                            :error-messages="ContentFrontMapName"
+                            :counter="10"
+                            label="컨텐츠 이름"
+                            required
+                            @input="$v.ContentFrontMapName.$touch()"
+                            @blur="$v.ContentFrontMapName.$touch()"
+                            color="white"
+                          >
+                          </v-text-field>
 
                         <!-- 콘텐츠 파일 첨부-->
                         <v-file-input
@@ -120,21 +118,20 @@
                         
                         </template>
                         
-                        </v-file-input>                      
+                        </v-file-input>
+                      </v-card-text>                     
 
                         <!--하단 취소, 확인 버튼-->
-                        <v-card-actions >
+                        <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn
-                                color="light-blue lighten-5"
-                                text
+                                color="blue-grey"
                                 @click="ContentFrontDialog = false"
                             >
                                 취소
                             </v-btn>
                             <v-btn
-                                color="light-blue lighten-5"
-                                text
+                                color="green"
                                 @click=UpdateId()
                             >
                                 확인

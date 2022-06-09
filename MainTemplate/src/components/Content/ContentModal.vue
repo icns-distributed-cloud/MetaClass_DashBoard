@@ -1,37 +1,45 @@
 <template>
-  <v-card
-    class="mx-auto"
-    color="amber"
-    max-width="400"
-  >
+  <v-col>
+  <v-card>
+    <v-toolbar
+      color="indigo"
+      light
+      extended
+    >
+      <v-toolbar-title class="white--text">
+        <h2>{{info.name}}</h2>
+      </v-toolbar-title>
+      </v-toolbar>
+      <v-list
+      two-line
+      subheader
+      color="indigo lighten-5"
+      >
+      <v-subheader inset class="indigo--text">
+        <h3>{{info.filename}}</h3>
+      </v-subheader>
+      </v-list>
     
-    <v-card-title>{{info.name}}</v-card-title>
-
-    <v-card-text class="text--primary">
-      <div>{{info.filename}}</div>
-    </v-card-text>
-    <v-list two-line>
+    <v-list two-line color="indigo lighten-5">
         <v-card-actions>
             <v-spacer></v-spacer> 
             <v-btn
                 class="mr-4"
-                color="orange"
-                text
+                color="indigo darken-4"
                 @click=DeleteContent()
             >
                 삭제
             </v-btn>
             <v-btn
                 class="mr-4"
-                color="orange"
-                text
-                
+                color="green"     
             >
                 수정
             </v-btn>
         </v-card-actions> 
     </v-list>
   </v-card>
+  </v-col>
 </template>
 
 

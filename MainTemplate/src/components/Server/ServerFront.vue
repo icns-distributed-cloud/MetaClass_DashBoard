@@ -76,9 +76,9 @@
                            :counter="10"
                            label="IP 주소"
                            required
-                           
                            color="white"
-                          ></v-text-field>
+                          >
+                          </v-text-field>
                           <v-autocomplete
                             v-model="ServerTeacherList"
                             :items="ServerTeacherListItem"
@@ -92,10 +92,16 @@
                             color="white"   
                           ></v-autocomplete>
                         </v-card-text>
-                        <v-divider></v-divider>
+                       
 
                         <v-card-actions>
                           <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue-grey"
+                            @click="ClassFrontDialog = false"
+                            >
+                            취소
+                            </v-btn>
                            <v-btn
                             color="green"
                             @click=save()

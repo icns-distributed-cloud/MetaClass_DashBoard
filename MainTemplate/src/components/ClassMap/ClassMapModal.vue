@@ -1,57 +1,54 @@
 <template>
-  <v-card
-    class="mx-auto"
-    color="amber"
-  >
-    <v-card-title>
-      <v-card-subtitle>강의실 이름:</v-card-subtitle>
-      <v-card-subtitle class="align-end">
-        {{info.name}}
-      </v-card-subtitle>
-    </v-card-title>
+<v-col>
+  <v-card>
+    <v-toolbar
+      color="indigo"
+      light
+      extended
+    >
+      <v-toolbar-title class="white--text">
+        <h2>{{info.name}}</h2>
+      </v-toolbar-title>
+    </v-toolbar>
+    <v-list
+      two-line
+      subheader
+      color="indigo lighten-5"
+    >
+      <v-subheader inset class="indigo--text" v-if="info.type === 0">
+        <h2>오픈형</h2>
+      </v-subheader>
+      <v-subheader inset class="indigo--text" v-if="info.type === 1">
+        <h2>계단식</h2>
+      </v-subheader>
+      <v-subheader inset class="indigo--text" v-if="info.type === 2">
+        <h2>소회의실</h2>
+      </v-subheader>
+      <v-subheader inset class="indigo--text">
+        <h2>{{info.maxUser}}</h2>
+      </v-subheader>
+    </v-list>
 
-    <v-card-title>
-      <v-card-subtitle>강의실 유형:</v-card-subtitle>
-      <v-card-subtitle class="align-end" v-if="info.type === 0">
-        오픈형
-      </v-card-subtitle>
-      <v-card-subtitle class="align-end" v-if="info.type === 1">
-        계단식
-      </v-card-subtitle>
-      <v-card-subtitle class="align-end" v-if="info.type === 2">
-        소회의실
-      </v-card-subtitle>
-    </v-card-title>
-
-    <v-card-title>
-      <v-card-subtitle>강의실 참여 인원수:</v-card-subtitle>
-      <v-card-subtitle class="align-end">
-        {{info.maxUser}}
-      </v-card-subtitle>
-    </v-card-title>
-    
-    <v-list two-line>
+    <v-list two-line color="indigo lighten-5">
         <v-card-actions>
             <v-spacer></v-spacer> 
             <v-btn
-                class="mr-4"
-                color="orange"
-                text
-                @click=Deletemap();
-                >
+              class="mr-4"
+              color="indigo darken-4"
+              @click=Deletemap();
+            >
                 삭제
             </v-btn>
             <v-btn
-                class="mr-4"
-                color="orange"
-                text
-                >
+              class="mr-4"
+              color="green"
+              >
                 수정
             </v-btn>
         </v-card-actions> 
     </v-list>
   </v-card>
-
+</v-col>
 </template>
 
 

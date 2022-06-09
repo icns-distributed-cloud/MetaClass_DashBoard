@@ -1,5 +1,5 @@
 <template>
-  
+  <v-col>
       <v-card>
         <v-toolbar
           color="indigo"
@@ -19,6 +19,7 @@
             <h2>과목명</h2>
           </v-subheader>
          </v-list>
+
          <v-list two-line color="indigo lighten-5">
          <v-card-actions>
             <v-spacer></v-spacer> 
@@ -39,5 +40,5 @@
 
        
       </v-card>
-
+  </v-col>
 </template>
