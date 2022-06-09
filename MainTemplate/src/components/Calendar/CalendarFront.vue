@@ -158,7 +158,11 @@
         
            <span v-html="CalendarFrontSelectedEvent.details"></span>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
+
+            <v-list two-line color="grey lighten-3">
             <v-card-actions>
+              <v-spacer></v-spacer>
+             
                <!--강의 메세지 전송-->
               <v-btn
                 :loading="CalendarFrontMessageLoaderloading"
@@ -175,23 +179,29 @@
                   mdi-email
                 </v-icon>
               </v-btn>
-             
+              </v-card-actions>
+            </v-list>
+
+             <v-list two-line color="grey lighten-3">
+                 <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                text
-                color="secondary"
+               
+                color="green"
                 @click="CalendarFrontSelectedOpen = false"
               >
                 수정
               </v-btn>
               <v-btn
-                text
-                color="secondary"
+              
+                color="indigo lighten-3"
                 @click=ClassDelete(CalendarFrontSelectedEvent)
               >
                 강의 취소
               </v-btn>
             </v-card-actions>
+            </v-list>
+
           </v-card>
         </v-menu>
       </v-sheet>
@@ -519,8 +529,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
 
 
-<!--
-<style scoped lang="scss">
+
+<!--<style scoped lang="scss">
+
+.v-calendar {
+  $font-size-root: 30px;
+}
+
+</style>
 
 
 .test-css {

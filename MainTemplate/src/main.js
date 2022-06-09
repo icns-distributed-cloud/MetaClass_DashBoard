@@ -37,7 +37,8 @@ Vue.use(VuetifyDialog), {
     Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 
-
+// 유리추가 : 회원관리(MemberCom)에 넣을 정보
+export const EventBus = new Vue()
 
 new Vue({
     vuetify,

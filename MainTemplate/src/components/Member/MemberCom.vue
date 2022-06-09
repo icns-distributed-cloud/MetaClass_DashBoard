@@ -194,8 +194,11 @@
 
 
 <!--script-->
-
 <script>
+// 유리추가 : main.js 안에 있는 코드
+import { EventBus } from '@/main.js'
+import { mapState } from 'vuex'
+
   export default {
     data: () => ({
       search: '', // 회원관리 Search
@@ -209,33 +212,30 @@
       dialogDelete: false,
       headers: [
         {
-          text: 'Member Name',
+          text: '이름', // Member Name
           align: 'start',
           filterable: true, // 모든 항목에 오름차순, 내림차순
           //sortable: false,
           value: 'name',
         },
-        { text: 'ID', value: 'id' },
-        { text: 'Email', value: 'email' },
-        { text: 'Group', value: 'group' },
-        { text: 'Phone Number', value: 'phonenumber' },
+        { text: 'ID', value: 'id' }, // 아이디
+        { text: 'Email', value: 'email' }, // 이메일
+        { text: '부서', value: 'group' }, // grop
         { text: '상세보기', value: 'actions', sortable: false },
       ],
       MemberName: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
-        id: 0,
-        email: 0,
-        group: 0,
-        phonenumber: 0,
+        name: ' ',
+        id: ' ',
+        email: ' ',
+        group: ' ',
       },
       defaultItem: {
-        name: '',
-        id: 0,
-        email: 0,
-        group: 0,
-        phonenumber: 0,
+        name: ' ',
+        id: ' ',
+        email: ' ',
+        group: ' ',
       },
     }),
 
@@ -243,6 +243,16 @@
       formTitle () {
         return this.editedIndex === -1 ? '새로운 이름' : '이름 수정'
       },
+     
+       
+      // 유리추가
+      ...mapState(['allUsers'])
+    },
+    // 유리추가
+    mounted() {
+      EventBus.$on('signUp', users => {
+        this.$store.state.allUsers.push(users)
+      })
     },
 
     watch: {
@@ -262,47 +272,13 @@
       initialize () {
         this.MemberName = [
           {
-            name: '서유리',
-            id: 'yuri',
-            email: 'yuri95@khu.ac.kr',
-            group: 'A',
-            phonenumber: '010-1253-5000',
+            name: '{ user.name }',
+            id: '{ user.id }',
+            email: '{ user.email }',
+            group: '{ user.group }',
+       
           },
-          {
-            name: '손덕인',
-            id: 'Jen',
-            email: 'thsejrdls@naver.com',
-            group: 'B',
-            phonenumber: '010-5000-1234',
-          },
-          {
-            name: '노설',
-            id: 'seol',
-            email: 'seol12@khu.ac.kr',
-            group: 'A',
-            phonenumber: '010-5555-2222',
-          },
-          {
-            name: '이하이',
-            id: 'hi',
-            email: 'hi@khu.ac.kr',
-            group: 'B',
-            phonenumber: '010-6978-5656',
-          },
-          {
-            name: '김경희',
-            id: 'hee',
-            email: 'hee@khu.ac.kr',
-            group: 'B',
-            phonenumber: '010-1231-4569',
-          },
-          {
-            name: '김민석',
-            id: 'min',
-            email: 'min@khu.ac.kr',
-            group: 'C',
-            phonenumber: '010-1865-4457',
-          },
+          
          
         ]
       },
@@ -350,8 +326,36 @@
       },
 
       isNotEmpty() {
-    return this.items && this.items.length > 0;
-  },
+      return this.items && this.items.length > 0;
+       },
+
+       
+       // 회원정보 리스트 받기
+       // 로그인의 정보를 받아야한다
+       // 가져올 데이터는 회원정보의 이름, 아이디, 이메일, 부서
+
+       
+       memberlist(){
+  
+        
+
+        var url = "http://IPAdress/api/users/get/allstudent";
+        
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId,
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+              .get(url, payload, config)
+
+      },
     },
   }
 </script>

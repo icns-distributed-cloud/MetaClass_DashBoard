@@ -16,6 +16,13 @@
             
             <v-toolbar-title>강의실 선택</v-toolbar-title>
             <v-spacer></v-spacer>
+              <v-btn
+              icon
+              dark
+              @click="dialog = !dialog"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
           </v-toolbar>
           <!--강의실 A--> 
           <v-col cols="auto">
@@ -40,7 +47,7 @@
                   > 
                   <v-btn
                     width=98%
-                    color="primary"
+                    color="light-blue lighten-2"
                     v-bind="attrs"
                     v-on=on
                     @click="selectedMap=item.id"

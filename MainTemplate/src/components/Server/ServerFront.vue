@@ -128,7 +128,7 @@
 
 
                 </v-dialog>
-                <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
+                <!--서버 등록 입력이 스크롤창 위로 보이도록 조정-->
                 <v-container style="height: 20px;"></v-container>
             </v-col>
         </div>
