@@ -1,17 +1,21 @@
 <template>
-<div>
-  <v-card color="blue lighten-5">
+  <v-container fluid>
+
+  <v-card color="cyan">
     <!--card-title : 회원 관리-->
     <v-card-title>
-      회원관리
+      <h2>회원관리</h2>
       <!--search 부분을 우측으로 밀기-->
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
         label="Search"
-        single-line
         hide-details
+        class="mx-4"
+        flat
+        solo-inverted
+        dark
       ></v-text-field>
     </v-card-title>
 <!--MemberName가 header-->
@@ -140,7 +144,7 @@
         class="mx-1"
         fab
         dark
-        samll
+        x-small
         color="red lighten-1"
          @click="deleteItem(item)"
         >
@@ -173,7 +177,7 @@
    
 
 
-  </div>
+  </v-container>
 </template>
 
 
@@ -206,7 +210,7 @@ import { mapState } from 'vuex'
         { text: 'ID', value: 'id' }, // 아이디
         { text: 'Email', value: 'email' }, // 이메일
         { text: '부서', value: 'group' }, // grop
-        { text: '상세보기', value: 'actions', sortable: false },
+        { text: '정보삭제', value: 'actions', sortable: false },
       ],
       MemberName: [ ], // MemberName
       /*editedIndex: -1,
@@ -346,7 +350,7 @@ import { mapState } from 'vuex'
               res.data.data.forEach(element => {
                 this.MemberName.push({
                   name: element.name,
-                  id: element.id,
+                  id: element.loginId,
                   email: element.email,
                   group:element.departmentName
                 })
@@ -371,7 +375,7 @@ import { mapState } from 'vuex'
           var payload = {
             id: userId,
             loginId: itemInfo.id, 
-            userM1de: 1 // 0이면 강의자 1이면 학습자
+            userMode: 1 // 0이면 강의자 1이면 학습자
 
           }
 
