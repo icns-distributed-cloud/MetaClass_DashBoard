@@ -103,12 +103,14 @@
        
 
         <!--event 클릭 시 나타나는 화면--> 
+     
         <v-menu
           v-model="CalendarFrontSelectedOpen"
           :close-on-content-click="false"
           :activator="CalendarFrontSelectedElement"
           offset-x
         >
+        
         <!---->
           <v-card
             color="grey lighten-4"
@@ -118,13 +120,112 @@
             <v-toolbar
               :color="CalendarFrontSelectedEvent.color"
               dark
+              flat
             >
               <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
+              <!--강좌 생성에 따른 펜 생성-->
+              <v-btn
+                dark
+                color="blue-grey"
+                fab
+                small
+                @click="isEditing = !isEditing"
+              >
+                <v-icon v-if="isEditing">
+                  mdi-close
+                </v-icon>
+                <v-icon v-else>
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
             </v-toolbar>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
 
-            <!--과목명 안에 있는 card-text 시작-->
+            
+            <!--v-data table-->
+            <v-data-table
+              :headers="headers"
+              :items="desserts"
+              sort-by="calories"
+              class="elevation-1"
+              hide-default-footer
+            >
+     
+             <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="Dessert name"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.calories"
+                        label="Calories"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="close"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="save"
+              >
+                Save
+              </v-btn>
+             </v-card-actions>
+            </v-card>
+    
+
+
+
+
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon
+               color="blue-grey"
+                fab
+                small
+                class="mr-2"
+                @click="editItem(item)"
+              >
+                mdi-pencil
+              </v-icon>
+            </template>
+          </v-data-table>
+
+
+
+
+
+            <!--과목명 안에 있는 card-text 시작
+            
             <v-card-text>
               <v-list two-line>
                 <v-list-item-group
@@ -154,7 +255,7 @@
                     </v-list-item-group>
                     </v-list>
                   </v-card-text>
-                  <!--과목명 안에 있는 card-text 끝-->
+                  과목명 안에 있는 card-text 끝-->
         
            <span v-html="CalendarFrontSelectedEvent.details"></span>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
@@ -171,7 +272,7 @@
                 class="ma-2 white--text"
                 @click="CalendarFrontMessageLoader = 'CalendarFrontMessageLoaderloading'"
               >
-                강의 메세지 전송
+                메일 전송
                 <v-icon
                   right
                   dark
@@ -181,17 +282,21 @@
               </v-btn>
               </v-card-actions>
             </v-list>
+       
+            <!--test-->
 
              <v-list two-line color="grey lighten-3">
                  <v-card-actions>
               <v-spacer></v-spacer>
+              <!--유리추가: 수정 클릭 시 item-->
+              <template v-slot:[`item.actions`]="{ item }">
               <v-btn
-               
                 color="green"
-                @click="CalendarFrontSelectedOpen = false"
+                @click="CalendarFrontSelectedOpen(item)"
               >
                 수정
               </v-btn>
+              </template>
               <v-btn
               
                 color="indigo lighten-3"
@@ -205,6 +310,7 @@
           </v-card>
         </v-menu>
       </v-sheet>
+    
 
       <!--하단 버튼 클릭-->
       <div class="text-right">
@@ -237,6 +343,62 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
   export default {
     components: { CreateClassModal },
     data: () => ({
+      //test
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: '강의 정보', // 강의 정보 Dessert (100g serving)
+          align: 'start',
+          value: 'name',
+          sortable: false
+        },
+        { text: '강의 상세정보', value: 'calories', sortable: false }, // 강의 상세정보 Calories
+        { text: '정보 수정', value: 'actions', sortable: false }, // 정보수정 Actions
+      ],
+      desserts: [
+          {
+            name: '강의 시작 일자',
+            calories: '2022-06-09 14:00',
+          },
+          {
+            name: '강의 끝 일자',
+            calories: '2022-06-09 15:00',
+          },
+          {
+            name: '강의자',
+            calories: '최인훈',
+          },
+          {
+            name: '강의자 타입',
+            calories: '계단식',
+          },
+          {
+            name: '참여 인원수',
+            calories: '2/300',
+          },
+],
+      //desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
+
+      computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      },
+    },
+
+      created () {
+      this.initialize()
+       },
+
+      //test 끝
       
       beforestart: "",
       beforeend: "",
@@ -305,6 +467,55 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       this.$refs.calendar.checkChange()
     },
     methods: {
+
+      //test
+      initialize () {
+        this.desserts = [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+            fat: 6.0,
+            carbs: 24,
+            protein: 4.0,
+          },
+          ]
+      },
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+      
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
+      
+
+      //test 끝
+
+
+
       CalendarFrontViewDay ({ date }) {
         this.CalendarFrontFocus = date
         this.CalendarFrontType = 'day'
@@ -520,7 +731,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
 
       },
+      
+    // 수정 클릭 시, 정보 수정이 가능하게!!
+    // 
 
+
+   
     },
   }
 </script>
@@ -544,4 +760,3 @@ font-size: 15px;}
   
 .black--text {color:black;}
 </style>-->
-

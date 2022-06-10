@@ -352,7 +352,8 @@ import { mapState } from 'vuex'
                   name: element.name,
                   id: element.loginId,
                   email: element.email,
-                  group:element.departmentName
+                  group:element.departmentName,
+                  userMode: element.userMode
                 })
               })
             }
@@ -362,7 +363,7 @@ import { mapState } from 'vuex'
       // 휴지통 클릭시 삭제
       deleteItem(item) {
         var prompStr = prompt(
-          '정보가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+          '회원정보가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
         );
         if (prompStr == null) {
           return;
@@ -389,7 +390,7 @@ import { mapState } from 'vuex'
             .patch(url, payload, config)
             .then(res => {
               if (res.data.success === true) {
-                alert("성공적으로 삭제되었습니다.");
+                alert("회원정보가 성공적으로 삭제되었습니다.");
                 this.$parent.$parent.$parent.$parent.deleteItem(item);
               } else {
                 alert(res.data.message);
