@@ -7,7 +7,6 @@
       >
       <!--강의실 상단 box-->
         <v-card>
-          
             <v-toolbar
               class="overflow-hidden mx-auto"
               color="light-blue darken-4"
@@ -19,7 +18,7 @@
               <v-btn
               icon
               dark
-              @click="dialog = !dialog"
+              @click="mainDialogClose()"
               >
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -29,15 +28,15 @@
             <v-dialog
               transition="dialog-bottom-transition"
               max-width="600"
+              v-model="mainDialog"
             >
-            <v-list>
+            <!--<v-list>
               <v-list-item
                 v-for="(item, index) in maplist"
                 :key=index
-
               > <v-btn>{{ item.id }}</v-btn>
               </v-list-item>
-            </v-list>
+            </v-list>-->
               <template v-slot:activator="{ on, attrs }">
                 
                 <v-list>
@@ -73,8 +72,7 @@
                       :counter="10"
                       label="강좌명 입력"
                       required
-                      @input="$v.CreateClassModalTitle.$touch()"
-                      @blur="$v.CreateClassModalTitle.$touch()"
+                      
                       solo-inverted
                       color="white"
                     >
@@ -106,8 +104,8 @@
                           </template>
                           <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
                             <v-spacer></v-spacer>
-                            <v-btn flat color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
-                            <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
                           </v-date-picker> 
                         </v-dialog>
 
@@ -126,8 +124,8 @@
                             full-width
                           >
                             <v-spacer></v-spacer>
-                            <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
-                            <v-btn flat color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
                           </v-time-picker>
                         </v-dialog>
                       </v-col>
@@ -157,8 +155,8 @@
                           </template>  
                           <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
                             <v-spacer></v-spacer>
-                            <v-btn flat color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
-                            <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
                           </v-date-picker> 
                         </v-dialog>
                         <v-dialog
@@ -176,8 +174,8 @@
                             full-width
                           >
                             <v-spacer></v-spacer>
-                            <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
-                            <v-btn flat color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
                           </v-time-picker>
                         </v-dialog>
                       </v-col>
@@ -226,8 +224,7 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="컨텐츠 파일 선택"
-                        @input="$v.CreateClassModalFile.$touch()"
-                        @blur="$v.CreateClassModalFile.$touch()"
+                      
                         solo-inverted
                         color="white"
                       >    
@@ -240,8 +237,7 @@
                         v-model="CreateClassModalQuiz"
                         :items="CreateClassModalQuizItem"
                         label="퀴즈 선택"
-                        @input="$v.CreateClassModalQuiz.$touch()"
-                        @blur="$v.CreateClassModalQuiz.$touch()"
+                       
                         solo-inverted
                         color="white"
                       >    
@@ -286,7 +282,7 @@
   export default {
     data () {
         return {
-
+            mainDialog: false,
             maplist: [],
             ButtonValue: "",
             selectedMap: "",
@@ -347,6 +343,9 @@
       selectstudent() {
         console.log(this.selectedStudents)
       },
+      mainDialogClose(){
+      this.CreateClassModalDialog = false
+       },
       fetchContent() {
         var url = "http://163.180.117.47:8088/api/content/post/contentlist";
 
