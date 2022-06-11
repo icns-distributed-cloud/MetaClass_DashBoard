@@ -131,11 +131,8 @@
                 color="blue-grey"
                 fab
                 small
-                @click=editAllItem(item);
+                @click=editAllItem();
               >
-                <v-icon >
-                  <!--mdi-close-->
-                </v-icon>
                 <v-icon>
                   mdi-pencil
                 </v-icon>
@@ -151,29 +148,29 @@
                     v-model="CreateClassModalDialog"
                     max-width="500px"
                   >
-                    <!--강의실 A 클릭 후에 나타나는 page-->
-                    <template v-slot:default="CreateClassModalDialog">
+                    <!--강좌명 수정-->
+                    <template>
                       <v-card>
                         <v-toolbar
                           color="primary"
                           dark
-                        >강좌 생성
+                        >강좌명 수정
                         </v-toolbar>
                         
-                        <!--강좌명 입력-->
+                        <!--강좌명-->
                         <div>
                         <v-card-text>
                           <v-text-field
-                            v-model="CalendarFrontSelectedEvent.name"
+                            v-model="editLectureName"
                             :counter="10"
-                            label="강좌명 입력"
+                            label="강좌명"
                             required
                             solo-inverted
                             color="white"
                           >
                           </v-text-field>    
 
-                        <!--강의 시작 날짜 및 시간-->
+                        <!--강의 시작 날짜 및 시간
                           <v-row>
                             <v-col cols="12" sm="6">
                               <v-dialog
@@ -223,9 +220,9 @@
                                   <v-btn flat color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
                                 </v-time-picker>
                               </v-dialog>
-                            </v-col>
+                            </v-col>-->
                             
-                            <!--강의 종료 날짜 및 시간--> 
+                            <!--강의 종료 날짜 및 시간
                             <v-col cols="12" sm="6">
                               <v-dialog
                                 ref="CreateClassModalFinishDateDialog3"
@@ -274,8 +271,7 @@
                                 </v-time-picker>
                               </v-dialog>
                             </v-col>
-                          </v-row>
-
+                          </v-row>-->
                         </v-card-text>
                         <!--강의 타입-->
                         <!--참여 인원수-->
@@ -285,8 +281,8 @@
                           :items="ClassFrontMapTypeItem"
                           label="강의실 유형"
                           color="white"
-                        ></v-autocomplete>    --> 
-                        <!--강의실 참여 인원-->
+                        ></v-autocomplete>--> 
+                        <!--강의실 참여 인원
                         <v-text-field
                           v-model="CalendarFrontSelectedEvent.showevent[4]"
                           label="강의실 참여 인원수"
@@ -294,7 +290,7 @@
                           color="white"
                           required
                         >
-                        </v-text-field>      
+                        </v-text-field>   -->   
                         </div>
                         <!--창 닫기/ 생성-->
                         <v-card-actions>
@@ -302,13 +298,13 @@
                           <v-btn
                             color="primary"
                             text
-                            @click=CreateClass()
+                            @click=saveLectureName()
                           >등록 확인
                           </v-btn>
                           <v-btn
                             color="primary"
                             text
-                            @click=SetSelectClassActive(CreateClassModalDialog)
+                            @click=closeLectureName()
                           >닫기
                           </v-btn>
 
@@ -316,8 +312,6 @@
                         </v-card>
                     </template> 
                     <!--강의실 A 클릭 후 sumit 끝 부분-->
-                   
-
                   </v-dialog>
                
                   </v-col>      
@@ -407,15 +401,72 @@
                   small
                   class="mr-2"
                   @click="editItem(item)"
+                  v-if="checkIndex(item)"
                 >
                   mdi-pencil
                 </v-icon>
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="popupLecturelist()"
+                  v-else-if="isLecturename(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+
               </template>
             </v-data-table>
 
 
-
-
+            <!--전체 강의실 선택하는 부분 (추가)-->
+            <v-dialog
+              v-model="popupMaplistDialog"
+              max-width="500px"
+            >
+            <!--강의실 상단 box-->
+              <v-card>
+                  <v-toolbar
+                    class="overflow-hidden mx-auto"
+                    color="light-blue darken-4"
+                    dark  
+                  >
+                  
+                  <v-toolbar-title>강의실 선택</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                    <v-btn
+                    icon
+                    dark
+                    @click="closeLectureList"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <!--강의실 A--> 
+                <v-col cols="auto">
+                  <v-dialog
+                    transition="dialog-bottom-transition"
+                    max-width="600"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-list>
+                        <v-list-item
+                          v-for="(item, index) in maplist"
+                          :key=index
+                        > 
+                        <v-btn
+                          width=98%
+                          color="light-blue lighten-2"
+                          v-bind="attrs"
+                          v-on=on
+                          @click="Setmapdata(item)"
+                        >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
+                        </v-list-item>
+                      </v-list>
+                    </template>
+                  </v-dialog>
+                </v-col>
+              </v-card>
+            </v-dialog>
 
             <!--과목명 안에 있는 card-text 시작
             
@@ -545,8 +596,11 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     data: () => ({
       //test
       dialog: false,
+      popupMaplistDialog: false,
       dialogDelete: false,
       CreateClassModalDialog: false,
+      maplist: [],
+      editLectureName: "",
       headers: [
         {
           text: '강의 정보', 
@@ -558,31 +612,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         {  text: '정보 수정 ', value: 'actions', sortable: false }, // 
     
       ],
-      /*showevent: [
-          {
-            CalendarClassnameTitle: '강의 시작 일자',
-            CalendarClassnameAction: '2022-06-09 14:00',
-            test:1
-          },
-          {
-            CalendarClassnameTitle: '강의 끝 일자',
-            CalendarClassnameAction: '2022-06-09 15:00',
-          },
-          {
-            CalendarClassnameTitle: '강의자',
-            CalendarClassnameAction: '최인훈',
-          },
-          {
-            CalendarClassnameTitle: '강의실 유형',
-            CalendarClassnameAction: '계단식',
-          },
-          {
-            CalendarClassnameTitle: '참여 인원수',
-            CalendarClassnameAction: '2/300',
-          },
-          
-        ],*/
-      //desserts: [],
+      
       editedIndex: -1,
       editedItem: {
         CalendarClassnameTitle: '',
@@ -593,9 +623,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
 
       computed: {
-     /* formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },*/
     },
 
     created () {
@@ -691,7 +718,33 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      
+      checkIndex(item){
+        if(2 <= this.CalendarFrontSelectedEvent.showevent.indexOf(item)){
+          return false
+        }
+        else{return true}
+      },
+      isLecturename(item){
+        if(3 === this.CalendarFrontSelectedEvent.showevent.indexOf(item)){
+          return true
+        }
+        else{return false}
+      },
+      popupLecturelist() {
+        this.fetchMapData()
+        this.popupMaplistDialog = true
+      },
+      closeLectureList(){
+        this.popupMaplistDialog = false
+      },
+      Setmapdata(item){
+        this.CalendarFrontSelectedEvent.showevent[3].CalendarClassnameAction = item.name
+        this.CalendarFrontSelectedEvent.showevent[4].CalendarClassnameAction = item.typename
+        this.CalendarFrontSelectedEvent.showevent[5].CalendarClassnameAction = item.maxUser
+        this.popupMaplistDialog=false
+        this.CalendarFrontSelectedOpen=false
+        this.CalendarFrontSelectedOpen=true
+      },
       close () {
         this.dialog = false
         this.$nextTick(() => {
@@ -699,10 +752,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           this.editedIndex = -1
         })
       },
-
-      editAllItem(item){
-        this.editedIndex = this.CalendarFrontSelectedEvent.showevent.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+      
+      editAllItem(){
+        this.editLectureName = this.CalendarFrontSelectedEvent.name
         this.CreateClassModalDialog = true
       },
       editAllclose () {
@@ -724,7 +776,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
         this.close()
       },
-      
+      closeLectureName () {
+        this.CreateClassModalDialog = false
+      },
+      saveLectureName () {
+        this.CalendarFrontSelectedEvent.name = this.editLectureName
+        this.closeLectureName()
+      },
 
       //test 끝
 
@@ -746,7 +804,48 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       next () {
         this.$refs.calendar.next() // CalendarFrontNext
       },
-      
+      fetchMapData() {
+        this.maplist = [];
+
+        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.data.length > 0) {
+              res.data.data.forEach(element => {
+                var maptype = ""
+                if (element.type === 0) {
+                  maptype = "오픈형";
+                } else if (element.type ===1){ 
+                  maptype = "계단식";
+                } else if (element.type === 2) {
+                  maptype = "소회의실";
+                }
+                this.maplist.push({
+                  id: element.id,
+                  name: element.name,
+                  type: element.type,
+                  maxUser: element.maxUser,
+                  typename: maptype
+                })
+              })
+            }
+
+
+          })
+      },
       CalendarFrontUpdateRange ({ start, end }) {
         this.beforestart = start;
         this.beforeend = end;
@@ -805,6 +904,10 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                     {
                       CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: element.mapName,
+                      CalendarClassnameTitle: '강의실 이름',
                     },
                     {
                       CalendarClassnameAction: maptype,
@@ -876,6 +979,10 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                     {
                       CalendarClassnameAction: element.instructorName,
                       CalendarClassnameTitle: '강의자',
+                    },
+                    {
+                      CalendarClassnameAction: element.mapName,
+                      CalendarClassnameTitle: '강의실 이름',
                     },
                     {
                       CalendarClassnameAction: maptype,
@@ -992,7 +1099,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
 
       var userId = this.$store.getters.getUserInfo.id;
-      var Maxnum = parseInt(a.showevent[4].CalendarClassnameAction)
+      var Maxnum = parseInt(a.showevent[5].CalendarClassnameAction)
       var payload = {
         instructorId: userId,
         id: a.mapId,
