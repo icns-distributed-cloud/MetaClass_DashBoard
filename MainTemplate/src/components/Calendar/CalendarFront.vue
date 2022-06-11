@@ -109,6 +109,7 @@
           :close-on-content-click="false"
           :activator="CalendarFrontSelectedElement"
           offset-x
+          CalendarFrontUpdateRange
         >
         
         <!---->
@@ -130,95 +131,287 @@
                 color="blue-grey"
                 fab
                 small
-                @click="isEditing = !isEditing"
+                @click=editAllItem(item);
               >
-                <v-icon v-if="isEditing">
-                  mdi-close
+                <v-icon >
+                  <!--mdi-close-->
                 </v-icon>
-                <v-icon v-else>
+                <v-icon>
                   mdi-pencil
                 </v-icon>
               </v-btn>
             </v-toolbar>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
+            
+            <template>
+              <v-row>
+                <v-col>
+                 
+                  <v-dialog
+                    v-model="CreateClassModalDialog"
+                    max-width="500px"
+                  >
+                    <!--강의실 A 클릭 후에 나타나는 page-->
+                    <template v-slot:default="CreateClassModalDialog">
+                      <v-card>
+                        <v-toolbar
+                          color="primary"
+                          dark
+                        >강좌 생성
+                        </v-toolbar>
+                        
+                        <!--강좌명 입력-->
+                        <div>
+                        <v-card-text>
+                          <v-text-field
+                            v-model="CalendarFrontSelectedEvent.name"
+                            :counter="10"
+                            label="강좌명 입력"
+                            required
+                            solo-inverted
+                            color="white"
+                          >
+                          </v-text-field>    
+
+                        <!--강의 시작 날짜 및 시간-->
+                          <v-row>
+                            <v-col cols="12" sm="6">
+                              <v-dialog
+                                ref="CreateClassModalStartDateDialog1"
+                                v-model="CreateClassModalStartDateModal"
+                                :return-value.sync="CreateClassModalStartDate1"
+                                persistent
+                                lazy
+                                full-width
+                                width="290px"
+                                solo-inverted
+                              >  
+                                <template v-slot:activator="{ on }">
+                                  <v-text-field
+                                    v-model="CreateClassModalStartDate1"
+                                    label="강의 시작 날짜 및 시간"
+                                    solo-inverted
+                                    color="white"
+                                    readonly
+                                    v-on="on"
+                                  >
+                                  </v-text-field>
+                                </template>
+                                <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
+                                  <v-spacer></v-spacer>
+                                  <v-btn flat color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
+                                  <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
+                                </v-date-picker> 
+                              </v-dialog>
+
+                              <v-dialog
+                                ref="CreateClassModalStartTimeDialog2"
+                                v-model="CreateClassModalStartTimeModal"
+                                :return-value.sync="CreateClassModalStartTime2"
+                                persistent
+                                lazy
+                                full-width
+                                width="290px"
+                              >
+                                <v-time-picker
+                                  v-if="CreateClassModalStartTimeModal"
+                                  v-model="CreateClassModalStartTime2"
+                                  full-width
+                                >
+                                  <v-spacer></v-spacer>
+                                  <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
+                                  <v-btn flat color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
+                                </v-time-picker>
+                              </v-dialog>
+                            </v-col>
+                            
+                            <!--강의 종료 날짜 및 시간--> 
+                            <v-col cols="12" sm="6">
+                              <v-dialog
+                                ref="CreateClassModalFinishDateDialog3"
+                                v-model="CreateClassModalFinishDateModal"
+                                :return-value.sync="CreateClassModalFinishDate3"
+                                persistent
+                                lazy
+                                full-width
+                                width="290px"
+                                solo-inverted
+                              >
+                                <template v-slot:activator="{ on }">
+                                  <v-text-field
+                                    v-model="CreateClassModalFinishDate3"
+                                    label="강의 종료 날짜 및 시간"
+                                    solo-inverted
+                                    color="white"
+                                    readonly
+                                    v-on="on"
+                                  >  
+                                  </v-text-field>
+                                </template>  
+                                <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
+                                  <v-spacer></v-spacer>
+                                  <v-btn flat color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
+                                  <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
+                                </v-date-picker> 
+                              </v-dialog>
+                              <v-dialog
+                                ref="CreateClassModalFinishTimeDialog4"
+                                v-model="CreateClassModalFinishTimeModal"
+                                :return-value.sync="CreateClassModalFinishTime4"
+                                persistent
+                                lazy
+                                full-width
+                                width="290px"
+                              >
+                                <v-time-picker
+                                  v-if="CreateClassModalFinishTimeModal"
+                                  v-model="CreateClassModalFinishTime4"
+                                  full-width
+                                >
+                                  <v-spacer></v-spacer>
+                                  <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
+                                  <v-btn flat color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
+                                </v-time-picker>
+                              </v-dialog>
+                            </v-col>
+                          </v-row>
+
+                        </v-card-text>
+                        <!--강의 타입-->
+                        <!--참여 인원수-->
+                        <!--강의실 유형 (type)-->
+                        <!--<v-autocomplete
+                          v-model="ClassFrontMapType"
+                          :items="ClassFrontMapTypeItem"
+                          label="강의실 유형"
+                          color="white"
+                        ></v-autocomplete>    --> 
+                        <!--강의실 참여 인원-->
+                        <v-text-field
+                          v-model="CalendarFrontSelectedEvent.showevent[4]"
+                          label="강의실 참여 인원수"
+                          type="number"
+                          color="white"
+                          required
+                        >
+                        </v-text-field>      
+                        </div>
+                        <!--창 닫기/ 생성-->
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="primary"
+                            text
+                            @click=CreateClass()
+                          >등록 확인
+                          </v-btn>
+                          <v-btn
+                            color="primary"
+                            text
+                            @click=SetSelectClassActive(CreateClassModalDialog)
+                          >닫기
+                          </v-btn>
+
+                        </v-card-actions>
+                        </v-card>
+                    </template> 
+                    <!--강의실 A 클릭 후 sumit 끝 부분-->
+                   
+
+                  </v-dialog>
+               
+                  </v-col>      
+              </v-row> 
+            </template>
+
+
+
+
+
+
+
+
+
 
             
             <!--v-data table-->
             <v-data-table
               :headers="headers"
-              :items="desserts"
-              sort-by="calories"
+              :items="CalendarFrontSelectedEvent.showevent"
               class="elevation-1"
               hide-default-footer
             >
-     
-             <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
+              <template v-slot:top>
+                <v-dialog
+                  v-model="dialog"
+                  max-width="500px"
+                >
+                  <v-card>
+                    <!--
+                    <v-card-title>
+                      <span class="text-h5">{{ formTitle }}</span>
+                    </v-card-title>-->
 
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Dessert name"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col
+                            cols="12"
+                            sm="6"
+                            md="4"
+                          >
+                            <v-text-field
+                              v-model="editedItem.CalendarClassnameTitle"
+                              label="강의 정보"
+                              solo
+                              readonly
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                            cols="12"
+                            sm="6"
+                            md="4"
+                          >
+                            <v-text-field
+                              v-model="editedItem.CalendarClassnameAction"
+                              label="강의 상세정보"
+                            ></v-text-field>
+                          </v-col>
+                         
+                        </v-row>
+                      </v-container>
+                    </v-card-text>
 
-              <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="close"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="save"
-              >
-                Save
-              </v-btn>
-             </v-card-actions>
-            </v-card>
-    
-
-
-
-
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-icon
-               color="blue-grey"
-                fab
-                small
-                class="mr-2"
-                @click="editItem(item)"
-              >
-                mdi-pencil
-              </v-icon>
-            </template>
-          </v-data-table>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="close"
+                      >
+                        닫기
+                      </v-btn>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="save"
+                      >
+                        확인
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+              <template v-slot:[`item.actions`]="{ item }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="editItem(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+              </template>
+            </v-data-table>
 
 
 
@@ -298,12 +491,19 @@
               </v-btn>
               </template>
               <v-btn
-              
+                color="indigo lighten-3"
+                @click="patchEditedClass(CalendarFrontSelectedEvent), patchEditedClassLectureMap(CalendarFrontSelectedEvent)"
+              >
+                강의 수정
+              </v-btn>
+
+              <v-btn
                 color="indigo lighten-3"
                 @click=ClassDelete(CalendarFrontSelectedEvent)
               >
                 강의 취소
               </v-btn>
+              
             </v-card-actions>
             </v-list>
 
@@ -346,55 +546,59 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       //test
       dialog: false,
       dialogDelete: false,
+      CreateClassModalDialog: false,
       headers: [
         {
-          text: '강의 정보', // 강의 정보 Dessert (100g serving)
+          text: '강의 정보', 
           align: 'start',
-          value: 'name',
+          value: 'CalendarClassnameTitle',
           sortable: false
         },
-        { text: '강의 상세정보', value: 'calories', sortable: false }, // 강의 상세정보 Calories
-        { text: '정보 수정', value: 'actions', sortable: false }, // 정보수정 Actions
+        {  text: '강의 상세정보', value: 'CalendarClassnameAction', sortable: false }, // 
+        {  text: '정보 수정 ', value: 'actions', sortable: false }, // 
+    
       ],
-      desserts: [
+      /*showevent: [
           {
-            name: '강의 시작 일자',
-            calories: '2022-06-09 14:00',
+            CalendarClassnameTitle: '강의 시작 일자',
+            CalendarClassnameAction: '2022-06-09 14:00',
+            test:1
           },
           {
-            name: '강의 끝 일자',
-            calories: '2022-06-09 15:00',
+            CalendarClassnameTitle: '강의 끝 일자',
+            CalendarClassnameAction: '2022-06-09 15:00',
           },
           {
-            name: '강의자',
-            calories: '최인훈',
+            CalendarClassnameTitle: '강의자',
+            CalendarClassnameAction: '최인훈',
           },
           {
-            name: '강의자 타입',
-            calories: '계단식',
+            CalendarClassnameTitle: '강의실 유형',
+            CalendarClassnameAction: '계단식',
           },
           {
-            name: '참여 인원수',
-            calories: '2/300',
+            CalendarClassnameTitle: '참여 인원수',
+            CalendarClassnameAction: '2/300',
           },
-],
+          
+        ],*/
       //desserts: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
-        calories: 0,
+        CalendarClassnameTitle: '',
+        CalendarClassnameAction: 0,
         fat: 0,
         carbs: 0,
         protein: 0,
       },
 
       computed: {
-      formTitle () {
+     /* formTitle () {
         return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },
+      },*/
     },
 
-      created () {
+    created () {
       this.initialize()
        },
 
@@ -418,6 +622,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CreateClassModal : false, //  CreateClassModal 
       CalendarFrontMessageLoader: null, // 강의 메세지 전송
       CalendarFrontMessageLoaderloading: false, // 강의 메세지 전송
+
    
       // 과목명 안에 있는 card-text 시작
       selected: [2],
@@ -466,11 +671,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     mounted () {
       this.$refs.calendar.checkChange()
     },
+
     methods: {
 
       //test
       initialize () {
-        this.desserts = [
+        this.showevent = [
           {
             name: 'Frozen Yogurt',
             calories: 159,
@@ -481,7 +687,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           ]
       },
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.CalendarFrontSelectedEvent.showevent.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
@@ -494,6 +700,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         })
       },
 
+      editAllItem(item){
+        this.editedIndex = this.CalendarFrontSelectedEvent.showevent.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.CreateClassModalDialog = true
+      },
+      editAllclose () {
+        this.CreateClassModalDialog = false
+      },
       closeDelete () {
         this.dialogDelete = false
         this.$nextTick(() => {
@@ -504,9 +718,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.CalendarFrontSelectedEvent.showevent[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.CalendarFrontSelectedEvent.showevent.push(this.editedItem)
         }
         this.close()
       },
@@ -532,22 +746,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       next () {
         this.$refs.calendar.next() // CalendarFrontNext
       },
-      CalendarFrontShowEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.CalendarFrontSelectedEvent = event
-          this.CalendarFrontSelectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.CalendarFrontSelectedOpen = true))
-        }
-
-        if (this.CalendarFrontSelectedOpen) {
-          this.CalendarFrontSelectedOpen = false
-          requestAnimationFrame(() => requestAnimationFrame(() => open()))
-        } else {
-          open()
-        }
-
-        nativeEvent.stopPropagation()
-      },
+      
       CalendarFrontUpdateRange ({ start, end }) {
         this.beforestart = start;
         this.beforeend = end;
@@ -592,6 +791,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   color: this.CalendarFrontColors[0],
                   timed: true,
                   classid: element.id,
+                  mapId: element.mapId,
+                  mapName: element.mapName,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -610,7 +811,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 타입',
                     },
                     {
-                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      //CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      //CalendarClassnameTitle: '참여 인원수',
+                      CalendarClassnameAction: element.mapMaxUser,
                       CalendarClassnameTitle: '참여 인원수',
                     },
                   ]
@@ -620,7 +823,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             }
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
-
       },
       refreshData() { 
         const CalendarFrontEvents = []
@@ -660,6 +862,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   color: this.CalendarFrontColors[0],
                   timed: true,
                   classid: element.id,
+                  mapId: element.mapId,
+                  mapName: element.mapName,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -678,7 +882,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 타입',
                     },
                     {
-                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      //CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
+                      //CalendarClassnameTitle: '참여 인원수',
+                      CalendarClassnameAction: element.mapMaxUser,
                       CalendarClassnameTitle: '참여 인원수',
                     },
                   ]
@@ -688,6 +894,22 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             }
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
+      },
+      CalendarFrontShowEvent ({ nativeEvent, event }) {
+        const open = () => {
+          this.CalendarFrontSelectedEvent = event
+          this.CalendarFrontSelectedElement = nativeEvent.target
+          requestAnimationFrame(() => requestAnimationFrame(() => this.CalendarFrontSelectedOpen = true))
+        }
+
+        if (this.CalendarFrontSelectedOpen) {
+          this.CalendarFrontSelectedOpen = false
+          requestAnimationFrame(() => requestAnimationFrame(() => open()))
+        } else {
+          open()
+        }
+
+        nativeEvent.stopPropagation()
       },
       ClassDelete(a) {
         var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
@@ -729,16 +951,78 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         {
           this.CreateClassModal = true; 
         }
-
       },
-      
-    // 수정 클릭 시, 정보 수정이 가능하게!!
-    // 
 
 
-   
+      // 강좌 수정
+    patchEditedClass(a){
+      var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
+
+      var userId = this.$store.getters.getUserInfo.id;
+
+      var payload = {
+          id: a.classid,
+          name: a.name,
+          instructorId: userId,
+          startTime: a.showevent[0].CalendarClassnameAction,
+          endTime: a.showevent[1].CalendarClassnameAction,
+      }
+
+      var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+      this.$http
+          .patch(url, payload, config)
+          .then(res => {
+            if (res.data.success === true) {
+              //alert("강좌 수정이 완료되었습니다.")
+              this.CalendarFrontSelectedOpen = false;
+              this.refreshData();
+            } else if (res.data.success === false) {
+              alert(res.data.message);
+            }
+          })
+          console.log(a.classid);
     },
-  }
+
+    patchEditedClassLectureMap(a){
+      var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
+
+      var userId = this.$store.getters.getUserInfo.id;
+      var Maxnum = parseInt(a.showevent[4].CalendarClassnameAction)
+      var payload = {
+        instructorId: userId,
+        id: a.mapId,
+        name: a.mapName,
+        type: a.maptype,
+        maxUser: Maxnum,
+      }
+      var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+      this.$http
+        .patch(url, payload, config)
+        .then(res => {
+          if (res.data.success === true) {
+            alert("강좌 수정이 완료되었습니다.")
+            this.CalendarFrontSelectedOpen = false;
+            this.refreshData();
+          } else if (res.data.success === false) {
+            alert(res.data.message);
+          }
+        })
+        console.log(a.classid);
+    } 
+  },
+}
+  
+
 </script>
 
 
