@@ -488,12 +488,19 @@
             studentId: element.studentId
           })
         })
-        
+
+        var contentId = ""
+        if (this.CreateClassModalFile === "") {
+          contentId = null;
+        } else {
+          contentId = this.CreateClassModalFile;
+        }
+
         var payload = {
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
-          contentId: this.CreateClassModalFile,
+          contentId: contentId,
           stulist: studentlist,
           startTime: this.CreateClassModalStartDate1+":00",
           endTime: this.CreateClassModalFinishDate3+":00"

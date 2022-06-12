@@ -873,6 +873,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.$http
           .post(url, payload, config)
           .then(res => {
+            console.log(res);
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 var maptype = "";

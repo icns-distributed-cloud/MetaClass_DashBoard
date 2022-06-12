@@ -12,7 +12,6 @@
       dark
     >
     <div> 
-      <compo-nent :is="ServerModal"></compo-nent>        
        <v-row>
               <v-col
                 v-for="(item, index) in ServerFrontModalList"
@@ -51,6 +50,7 @@
                             dark
                             v-bind="attrs"
                             v-on="on"
+                            @click=hello()
                         >
                             서버 등록
                         </v-btn>  
@@ -72,13 +72,30 @@
 
                         <v-card-text>
                           <v-text-field
-                           v-model="ServerIPaddress"
-                           :counter="10"
-                           label="IP 주소"
+                           v-model="ServerName"
+                           label="서버 이름"
                            required
                            color="white"
                           >
                           </v-text-field>
+
+                          <v-text-field
+                           v-model="ServerIPaddress"
+                           label="아이피 주소"
+                           required
+                           color="white"
+                          >
+                          </v-text-field>
+
+                          <v-text-field
+                           v-model="ServerMaxUser"
+                           label="서버 최대 인원수"
+                           required
+                           color="white"
+                          >
+                          </v-text-field>
+
+                          <!--
                           <v-autocomplete
                             v-model="ServerTeacherList"
                             :items="ServerTeacherListItem"
@@ -91,20 +108,23 @@
                             label="강좌 리스트"
                             color="white"   
                           ></v-autocomplete>
+                          -->
+
+
                         </v-card-text>
-                       
+                        
 
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn
                             color="blue-grey"
-                            @click="ClassFrontDialog = false"
+                            @click="ServerFrontDialog = false"
                             >
                             취소
                             </v-btn>
                            <v-btn
                             color="green"
-                            @click=save()
+                            @click=ServerFrontRegister()
                           >
                             확인
                           </v-btn>
@@ -149,7 +169,9 @@ import ServerModal from './ServerModal.vue'
   components: { ServerModal },
     data: () => ({
       
-      ServerIPaddress : "",
+      ServerName : "",
+      ServerIPaddress: "",
+      ServerMaxUser: "",
       ServerFrontDialog: false,
       ServerTeacherList: [], // 강의자 리스트 
       ServerTeacherListItem: ['손덕인', '최인훈', '노설', '서유리'],  // 강의자 리스트 아이템
@@ -193,23 +215,20 @@ import ServerModal from './ServerModal.vue'
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
-    deleteMap() {
+    deleteIP() {
       this.fetchData();
     },
-    save () {
-        this.ServerSaved = true
+    hello () {
+        this.ServerName = "";
+        this.ServerIPaddress = "";
+        this.ServerMaxUser = "";
       },
   
    
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/map/post/maplist";
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId
-      }
+      var url = "http://163.180.117.47:8088/api/ip/get/list";
 
       var config = {
         headers: {
@@ -218,7 +237,7 @@ import ServerModal from './ServerModal.vue'
       }
 
       this.$http
-        .post(url, payload, config)
+        .get(url, config)
         .then((res) => {
           // console.log(res);
           if (res.data.data.length > 0) {
@@ -227,7 +246,7 @@ import ServerModal from './ServerModal.vue'
                 id: element.id,
                 maxUser: element.maxUser,
                 name: element.name,
-                type: element.type
+                address: element.address
               })
             })
           }
@@ -240,28 +259,14 @@ import ServerModal from './ServerModal.vue'
     },
 
 
-      ServerFrontCreateClassModal()
+      ServerFrontRegister()
       {
-        var url = "http://163.180.117.47:8088/api/map/post/createmap";
-        var maptype = 0;
-        if (this.ServerTeacherList === "손덕인") {
-          maptype = 0
-        } else if (this.ServerTeacherList === "최인훈") {
-          maptype = 1
-        } else if (this.ServerTeacherList === "노설") {
-          maptype = 2
-        } else {
-          alert("강의실 유형을 정확하게 입력해주세요.")
-          console.log(maptype);
-          return;
-        }
-         
-        var userId = this.$store.getters.getUserInfo.id;
+        var url = "http://163.180.117.47:8088/api/ip/post/create";
+
         var payload = {
-          name: this.ServerIPaddress,
-          type: maptype,
-          maxUser: this.ServerFrontNumValue,
-          instructorId: userId
+          address: this.ServerIPaddress,
+          name: this.ServerName,
+          maxUser: this.ServerMaxUser
         }
 
         var config = {
@@ -273,7 +278,6 @@ import ServerModal from './ServerModal.vue'
         this.$http
           .post(url, payload, config)
           .then(res => {
-            console.log(res.data.success);
             if (res.data.success === true) {
               alert("강의실 생성이 완료되었습니다.");
               this.ServerFrontDialog = false;
@@ -282,6 +286,9 @@ import ServerModal from './ServerModal.vue'
               alert("강의실 이름이 중복되었습니다");
               return;
             }
+          })
+          .catch(err => {
+            alert(err.response.data.message);
           })
 
 
