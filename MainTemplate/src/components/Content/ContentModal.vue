@@ -25,17 +25,12 @@
             <v-spacer></v-spacer> 
             <v-btn
                 class="mr-4"
-                color="indigo darken-4"
+                color="green"
                 @click=DeleteContent()
             >
                 삭제
             </v-btn>
-            <v-btn
-                class="mr-4"
-                color="green"     
-            >
-                수정
-            </v-btn>
+            
         </v-card-actions> 
     </v-list>
   </v-card>

@@ -1,5 +1,5 @@
 <template>
-<v-col>
+  <v-col>
   <v-card>
     <v-toolbar
       color="indigo"
@@ -7,28 +7,26 @@
       extended
     >
       <v-toolbar-title class="white--text">
-        <h2>{{info.ipName}}</h2>
+        <h2>{{info.name}}</h2>
       </v-toolbar-title>
-    </v-toolbar>
-    <v-list
+      </v-toolbar>
+      <v-list
       two-line
       subheader
       color="indigo lighten-5"
-    >
-
+      >
       <v-subheader inset class="indigo--text">
-        <h2>{{info.lectureName}}</h2>
-        
+        <h3>{{info.filename}}</h3>
       </v-subheader>
-    </v-list>
-
+      </v-list>
+    
     <v-list two-line color="indigo lighten-5">
         <v-card-actions>
             <v-spacer></v-spacer> 
             <v-btn
-              class="mr-4"
-              color="indigo darken-4"
-              @click=Deletemap();
+                class="mr-4"
+                color="green"
+                @click=DeleteDepartment()
             >
                 삭제
             </v-btn>
@@ -36,7 +34,7 @@
         </v-card-actions> 
     </v-list>
   </v-card>
-</v-col>
+  </v-col>
 </template>
 
 
@@ -45,7 +43,6 @@
 <!---->
 <script>
   export default {
-    
     props: {
       info: {
         type: Object,
@@ -53,50 +50,52 @@
       }
     },
 
-    computed: {
+    data() {
+      return {
+        
+      }
+    },
 
-    },
-    created() {
-    },
     methods: {
-      Deletemap() {
+      DeleteDepartment() {
         var prompStr = prompt(
-          '아이피가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+          '부서가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
         );
         if (prompStr == null) {
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.47:8088/api/server/delete/deleteserver";
+          var url = "http://163.180.117.47:8088/api/department/patch/deletedepartment";
 
           var payload = {
-            data: {
-              id: this.info.id
+            id: this.info.id
+          }
+
+          var config = {
+            headers: {
+              "Content-Type": "application/json"
             }
           }
 
-
           this.$http
-            .delete(url, payload)
+            .patch(url, payload, config)
             .then(res => {
               if (res.data.success === true) {
                 alert("성공적으로 삭제되었습니다.");
-                this.$parent.$parent.$parent.$parent.deleteServer();
+                this.$parent.$parent.$parent.$parent.fetchData();
               } else {
                 alert(res.data.message);
               }
               
             })
-            console.log("delete server");
-          } else {
-            alert("정확하게 입력해주세요.");
-            return;
-          }
+        } else {
+          alert("정확하게 입력해주세요.");
+          return;
+        }
 
-
+        
       }
     }
   }
 
 </script>
-

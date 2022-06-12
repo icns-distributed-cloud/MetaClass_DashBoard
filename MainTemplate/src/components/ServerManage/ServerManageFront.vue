@@ -51,8 +51,9 @@
                             dark
                             v-bind="attrs"
                             v-on="on"
+                            @click=empty()
                         >
-                            서버 등록
+                            서버 관리
                         </v-btn>  
                     </template>
 
@@ -71,23 +72,30 @@
                         </v-toolbar>
 
                         <v-card-text>
-                          <v-text-field
-                           v-model="ServerIPaddress"
-                           :counter="10"
-                           label="IP 주소"
-                           required
-                           color="white"
-                          >
-                          </v-text-field>
+                          
+                          <v-autocomplete
+                            v-model="ServerIpList"
+                            :items="ServerIpListItem"
+                            item-text="name"
+                            item-value="value"
+                            label="아이피 주소"
+                            color="white"   
+                          ></v-autocomplete>
+
                           <v-autocomplete
                             v-model="ServerTeacherList"
                             :items="ServerTeacherListItem"
+                            item-text="name"
+                            item-value="value"
                             label="강의자 리스트"
                             color="white"   
                           ></v-autocomplete>
+
                           <v-autocomplete
                             v-model="ServerSubjectList"
                             :items="ServerSubjectListItem"
+                            item-text="name"
+                            item-value="value"
                             label="강좌 리스트"
                             color="white"   
                           ></v-autocomplete>
@@ -98,7 +106,7 @@
                           <v-spacer></v-spacer>
                           <v-btn
                             color="blue-grey"
-                            @click="ClassFrontDialog = false"
+                            @click="ServerFrontDialog = false"
                             >
                             취소
                             </v-btn>
@@ -112,15 +120,7 @@
                         </v-card-actions>
 
 
-                        <v-snackbar
-                          v-model="ServerSaved"
-                          :timeout="2000"
-                          absolute
-                          bottom
-                          left
-                        >
-                          서버 등록이 완료되었습니다.
-                        </v-snackbar>
+                        
                       </v-card>
                     </template>
 
@@ -148,13 +148,14 @@ import ServerManageModal from './ServerManageModal.vue'
   export default {
   components: { ServerManageModal },
     data: () => ({
-      
       ServerIPaddress : "",
       ServerFrontDialog: false,
-      ServerTeacherList: [], // 강의자 리스트 
-      ServerTeacherListItem: ['손덕인', '최인훈', '노설', '서유리'],  // 강의자 리스트 아이템
-      ServerSubjectList: [], // 강좌 리스트
-      ServerSubjectListItem: ['수치해석', '네트워크론'], //  강좌 리스트 아이템
+      ServerIpList: "",
+      ServerIpListItem: [],
+      ServerTeacherList: "", // 강의자 리스트 
+      ServerTeacherListItem: [],  // 강의자 리스트 아이템
+      ServerSubjectList: "", // 강좌 리스트
+      ServerSubjectListItem: [], //  강좌 리스트 아이템
       // ServerSaved
       ServerSaved: false,
       // model
@@ -179,8 +180,17 @@ import ServerManageModal from './ServerManageModal.vue'
 
   created() {
     this.fetchData();
+    this.fetchIP();
+    this.fetchTeacher();
   },
-
+  watch: {
+    ServerTeacherList() {
+      if (this.ServerTeacherList != "") {
+        this.ServerSubjectList = "";
+        this.fetchSubject();
+      }
+    }
+  },
 
   methods: {
     ServerFrontIncrement() {
@@ -193,22 +203,122 @@ import ServerManageModal from './ServerManageModal.vue'
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
-    deleteMap() {
+    deleteServer() {
       this.fetchData();
     },
     save () {
+        var url = "http://163.180.117.47:8088/api/server/post/createserver";
+
+        var payload = {
+          lectureId: this.ServerSubjectList,
+          ipId: this.ServerIpList
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then((res) => {
+            if (res.data.success === true) {
+              alert("서버-강좌 등록 완료");
+              this.ServerSaved = true;
+              this.fetchData();
+            }
+          })
+          .catch((err) => {
+            alert(err);
+          })
+
+
+
+
         this.ServerSaved = true
       },
-  
+
+    fetchIP() {
+      var url = "http://163.180.117.47:8088/api/ip/get/list";
+
+      var config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+
+      this.$http
+        .get(url, config)
+        .then((res) => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              console.log(element);
+              this.ServerIpListItem.push({
+                name: element.address,
+                value: element.id
+              })
+            })
+          }
+        })
+
+    },
+    fetchTeacher() {
+      var url = "http://163.180.117.47:8088/api/users/get/allInstructor";
+
+      var config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+
+      this.$http
+        .get(url, config)
+        .then((res) => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              this.ServerTeacherListItem.push({
+                name: element.name,
+                value: element.id
+              })
+            }) 
+          }
+        })
+    },
+    fetchSubject() {
+      this.ServerSubjectListItem = [];
+      var url = "http://163.180.117.47:8088/api/server/get/findlectureinfo?instructorId=" + this.ServerTeacherList;
+      var config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+
+      this.$http
+        .get(url, config)
+        .then((res) => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              console.log(element)
+              this.ServerSubjectListItem.push({
+                name: element.lectureName,
+                value: element.lecturId
+              })
+            })
+          }
+        })
+
+
+    },
+
    
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/map/post/maplist";
+      var url = "http://163.180.117.47:8088/api/server/post/listserver";
 
-      var userId = this.$store.getters.getUserInfo.id;
       var payload = {
-        instructorId: userId
+        instructorId: 0
       }
 
       var config = {
@@ -225,9 +335,11 @@ import ServerManageModal from './ServerManageModal.vue'
             res.data.data.forEach(element => {
               this.ServerFrontModalList.push({
                 id: element.id,
-                maxUser: element.maxUser,
-                name: element.name,
-                type: element.type
+                ipId: element.ipId,
+                ipAddress: element.ipAddress,
+                ipName: element.ipName,
+                lectureId: element.lectureId,
+                lectureName: element.lectureName
               })
             })
           }
@@ -240,7 +352,7 @@ import ServerManageModal from './ServerManageModal.vue'
     },
 
 
-      ServerFrontCreateClassModal()
+      ServerFrontManage()
       {
         var url = "http://163.180.117.47:8088/api/map/post/createmap";
         var maptype = 0;
@@ -292,6 +404,11 @@ import ServerManageModal from './ServerManageModal.vue'
       {
         this.ServerFrontModalList.splice(this.ServerFrontModalList.length, 1)
       },
+      empty() {
+        this.ServerIpList = "",
+        this.ServerTeacherList = "",
+        this.ServerSubjectList = ""
+      }
   },
   
   }

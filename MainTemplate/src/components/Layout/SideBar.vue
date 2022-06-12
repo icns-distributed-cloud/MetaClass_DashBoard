@@ -1,5 +1,6 @@
 
 <template>
+  <div>
     <!--가장 위 상단의 bar, 색은 primary-->
 
       
@@ -7,7 +8,8 @@
       <!-- <v-footer color="blue lighten-1" dark app>Project</v-footer> -->
       
     <!--왼쪽에 bar 생성-->
-    <v-navigation-drawer permanet app clipped color="#313a46">
+    <v-navigation-drawer 
+    class="light-blue darken-1" dark permanet app clipped>
     <v-container>
       <v-list-item>
         <v-list-item-content style="back">
@@ -64,6 +66,7 @@
         </v-list>
     </v-container>
     </v-navigation-drawer>
+  </div>
 </template>
 
 
@@ -83,6 +86,7 @@
             { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" },
             { title: '퀴즈 등록', icon: 'quiz' , action: "Quiz"},
             { title: '회원 관리', icon: 'mdi-account-circle' , action: "Member"},
+            { title: '부서 관리', icon: 'mdi-clipboard-text', action: "Department" }
         ],
         serverManagerMenus: [
             { title: "서버 등록", icon: 'mdi-server', action: "serverRegister" },
@@ -98,7 +102,6 @@
         },
         isStudent: function() {
             var userInfo = this.$store.getters.getUserInfo;
-            console.log(userInfo);
             return userInfo.userMode == 1;
         },
         isServerManager: function() {
@@ -141,6 +144,10 @@
         else if(action=="Member")
         {
           this.$router.push('/MemberPage');
+        }
+        else if(action=="Department")
+        {
+          this.$router.push('/Department');
         }
         else if(action=="Server")
         {

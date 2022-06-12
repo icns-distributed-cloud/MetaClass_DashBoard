@@ -7,6 +7,7 @@ import StudentPage from "../components/Student/StudentPage.vue";
 import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
 import ContentPgae from "../components/Content/ContentPage.vue";
+import DepartmentPage from "../components/Department/DepartmentPage.vue"
 import DashboardLayout from "../components/Layout/DashboardLayout.vue";
 // 추가 : ServerPage
 import ServerPage from "../components/ServerRegister/ServerPage.vue";
@@ -123,6 +124,12 @@ const routes = [
                 path: "/ContentPage",
                 name: ContentPgae,
                 component: ContentPgae,
+                beforeEnter: teacherAuth()
+            },
+            {
+                path: "/Department",
+                name: DepartmentPage,
+                component: DepartmentPage,
                 beforeEnter: teacherAuth()
             },
             {
