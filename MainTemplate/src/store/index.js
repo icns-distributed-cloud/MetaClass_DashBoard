@@ -67,14 +67,20 @@ export default new Vuex.Store({
                     }
                 )
                 .then(res => {
-                    var parsedData = res.data.data;
-                    console.log(parsedData);
+                    if (res.data.success === true) {
+                        var parsedData = res.data.data;
+                        console.log(parsedData);
 
-                    commit("LOGIN", {
-                        id: parsedData.id,
-                        name: parsedData.name,
-                        userMode: userMode
-                    })
+                        commit("LOGIN", {
+                            id: parsedData.id,
+                            name: parsedData.name,
+                            userMode: userMode
+                        })
+                        return "success";
+                    } else {
+                        return "fail";
+                    }
+                    
                 })
                 .catch(error => {
                     console.log(error);

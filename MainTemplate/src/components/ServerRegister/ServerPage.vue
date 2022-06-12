@@ -1,20 +1,21 @@
 <template>
-  <div id="MemberCom">
-    <Member-Com></Member-Com>
+  <div id="ServerCom">
+    <Server-Com></Server-Com>
   </div>
+
 </template>
 
 
 <!--script-->
 <script>
-import MemberCom from './MemberCom.vue'
+import ServerCom from './ServerCom.vue'
 
 export default {
    components:
   {
-    MemberCom
+    ServerCom
   },
-    name: "MemberPage",
+    name: "ServerPage",
   data() {
         return {
         

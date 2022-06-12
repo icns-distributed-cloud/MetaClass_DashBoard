@@ -1,4 +1,5 @@
 <template>
+    <v-app>
     <div>
         <side-bar>
         </side-bar>
@@ -7,6 +8,7 @@
             <dashboard-content> </dashboard-content>
         </div>
     </div>
+    </v-app>
 </template>
 
 <script>

@@ -105,7 +105,8 @@ export default {
 
         items: [
           {name: "instructor", value: 0},
-          {name: "student", value: 1}
+          {name: "student", value: 1},
+          {name: "server manager", value: 2}
         ],
 
         id : "",
@@ -124,7 +125,6 @@ export default {
 
         // signin
         onSubmit(id, password, userMode) {
-          console.log(userMode);
           this.overlay = true;
 
           setTimeout(() => {
@@ -134,9 +134,19 @@ export default {
 
             this.$store
             .dispatch("LOGIN", {id, password, userMode})
-            .then(() => {
+            .then((res) => {
+              if (res === "success") {
+                this.overlay = false;
+                this.redirect();
+              } else {
+                alert("로그인 실패!");
+                this.overlay = false;
+              }
+            })
+            .catch(({message}) => {
+              console.log(message);
+              alert("로그인 실패!");
               this.overlay = false;
-              this.redirect();
             })
 
           }, 1000);
@@ -150,6 +160,8 @@ export default {
             redirectPath = "/CalendarPage"
           } else if (userMode === 1) {
             redirectPath = "/StudentCalendar"
+          } else if (userMode === 2) {
+            redirectPath = "/ServerRegister"
           } else {
             alert("직업을 선택해주세요.");
             return;

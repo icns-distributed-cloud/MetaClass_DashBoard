@@ -1,39 +1,19 @@
 <template>
-  <v-app id="inspire">
-    <div>
-      <v-layout>
-        <v-row>
-          <v-sheet rounded="lg">
-              <div id="SideBar">
-              <side-bar></side-bar>
-              </div>
-            </v-sheet>
-          <v-col cols="12">
-            <v-sheet
-              min-height="70vh"
-              rounded="lg"
-            >
-               <div id="StudentCom">
-                <Student-Com></Student-Com>
-                </div>
-            </v-sheet>
-          </v-col>
-        </v-row>
-       </v-layout>
-    </div>
-  </v-app>
+  <div id="StudentCom">
+    <Student-Com></Student-Com>
+  </div>
+
 </template>
 
 
 <!--script-->
 <script>
-import SideBar from '../SideBar/SideBar.vue'
 import StudentCom from './StudentCom.vue'
 
 export default {
    components:
   {
-    SideBar,StudentCom
+    StudentCom
   },
     name: "StudentPage",
   data() {

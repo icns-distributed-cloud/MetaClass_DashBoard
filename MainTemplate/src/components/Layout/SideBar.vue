@@ -17,11 +17,41 @@
       </v-list-item>
       <v-divider></v-divider>
      <!--item-->
-      <v-list nav dense>
-          <v-list-item
-          v-for="item in items"
+      <v-list nav dense v-if="isStudent">
+        <v-list-item
+          v-for="item in studentMenus"
           :key="item.title"
-          link  
+          link 
+          @click="menuActionClick(item.action)"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-list nav dense v-if="isTeacher">
+        <v-list-item
+          v-for="item in teacherMenus"
+          :key="item.title"
+          link 
+          @click="menuActionClick(item.action)"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-list nav dense v-if="isServerManager">
+        <v-list-item
+          v-for="item in serverManagerMenus"
+          :key="item.title"
+          link 
           @click="menuActionClick(item.action)"
         >
           <v-list-item-icon>
@@ -41,17 +71,40 @@
   export default {
     data () {
       return {
-        items: [
-          { title: '강좌 관리', icon: 'mdi-view-dashboard', action: "Calendar" },
-          { title: '학생 평가 관리', icon: 'mdi-view-dashboard', action: "Student" },
-          { title: '강의실 등록', icon: 'mdi-view-dashboard', action: "ClassMap" },
-          { title: '컨텐츠 등록', icon: 'mdi-view-dashboard', action: "Content" },
-          { title: '퀴즈 등록', icon: 'mdi-view-dashboard' , action: "Quiz"},
-          { title: '회원 관리', icon: 'mdi-view-dashboard' , action: "Member"}, 
-          { title: '서버 관리', icon: 'mdi-view-dashboard' , action: "Server"},  
+        studentMenus: [
+            { title: '강좌 정보', icon: 'event', action: "StudentCalendar" },
+            { title: '학생 평가 정보', icon: 'mdi-clipboard-text', action: "StudentEvaluation" },
+            { title: '회원 정보', icon: 'mdi-account-circle', action: "StudentInformation" },
+        ],
+        teacherMenus: [
+            { title: '강좌 관리', icon: 'event', action: "Calendar" },
+            { title: '학생 평가 관리', icon: 'mdi-clipboard-text', action: "Student" },
+            { title: '강의실 등록', icon: 'class', action: "ClassMap" },
+            { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" },
+            { title: '퀴즈 등록', icon: 'quiz' , action: "Quiz"},
+            { title: '회원 관리', icon: 'mdi-account-circle' , action: "Member"},
+        ],
+        serverManagerMenus: [
+            { title: "서버 등록", icon: 'mdi-server', action: "serverRegister" },
+            { title: "서버 관리", icon: 'mdi-server', action: "serverManage" }
         ],
         right: null,
       }
+    },
+    computed: {
+        isTeacher: function() {
+            var userInfo = this.$store.getters.getUserInfo;
+            return userInfo.userMode == 0;
+        },
+        isStudent: function() {
+            var userInfo = this.$store.getters.getUserInfo;
+            console.log(userInfo);
+            return userInfo.userMode == 1;
+        },
+        isServerManager: function() {
+            var userInfo = this.$store.getters.getUserInfo;
+            return userInfo.userMode == 2;
+        }
     },
     methods:{
       signout() {
@@ -91,9 +144,28 @@
         }
         else if(action=="Server")
         {
-          this.$router.push('/ServerPage');
+          this.$router.push('/ServerManage');
         }
-      
+        else if(action=="StudentCalendar")
+        {
+            this.$router.push('/StudentCalendar');
+        }
+        else if(action=="StudentEvaluation")
+        {
+            this.$router.push('/StudentEvaluation');
+        }
+        else if(action=="StudentInformation")
+        {
+            this.$router.push('/StudentInformation');
+        }
+        else if(action=="serverRegister")
+        {
+            this.$router.push('/ServerRegister');
+        }
+        else if(action=="serverManage")
+        {
+            this.$router.push('/ServerManage');
+        }
       }
     }
   }

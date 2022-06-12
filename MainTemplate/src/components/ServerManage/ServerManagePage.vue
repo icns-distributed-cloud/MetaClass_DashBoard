@@ -1,20 +1,21 @@
 <template>
-  <div id="ContentCom">
-    <Content-Com></Content-Com>
+  <div id="ServerCom">
+    <Server-Manage-Com></Server-Manage-Com>
   </div>
+
 </template>
 
 
 <!--script-->
 <script>
-import ContentCom from './ContentCom.vue'
+import ServerManageCom from './ServerManageCom.vue'
 
 export default {
    components:
   {
-    ContentCom
+    ServerManageCom
   },
-    name: "ContentPage",
+    name: "ServerManagePage",
   data() {
         return {
         

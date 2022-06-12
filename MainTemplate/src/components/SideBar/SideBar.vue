@@ -94,7 +94,7 @@
         }
         else if(action=="Server")
         {
-          this.$router.push('/ServerPage');
+          this.$router.push('/ServerManage');
         }
       
       }

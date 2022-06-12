@@ -1,9 +1,10 @@
+<!--ServerFront-->
 <template>
   <v-app id="inspire">
    <v-layout>
     <v-flex>
-          <div id="StudentFront">
-        <Content-Front></Content-Front>
+          <div id="ServerFront">
+        <Server-Manage-Front></Server-Manage-Front>
       </div>
     </v-flex>
    </v-layout>
@@ -12,14 +13,14 @@
 
 
 <script>
-import ContentFront from './StudentFront.vue'
+import ServerManageFront from './ServerManageFront.vue'
 
 export default {
    components:
   {
-    ContentFront
+    ServerManageFront
   },
-    name: "StudentCom",
+    name: "ServerManageCom",
   data() {
         return {
         
