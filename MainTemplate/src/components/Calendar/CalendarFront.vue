@@ -400,8 +400,16 @@
                 <v-icon
                   small
                   class="mr-2"
-                  @click="editItem(item)"
-                  v-if="checkIndex(item)"
+                  @click="popupStartTime()"
+                  v-if="isStartTime(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="popupEndTime()"
+                  v-else-if="isEndTime(item)"
                 >
                   mdi-pencil
                 </v-icon>
@@ -467,6 +475,91 @@
                 </v-col>
               </v-card>
             </v-dialog>
+
+
+
+
+            <v-dialog
+              ref="CreateClassModalStartDateDialog1"
+              v-model="CreateClassModalStartDateModal"
+              :return-value.sync="CreateClassModalStartDate1"
+              persistent
+              lazy
+              full-width
+              width="290px"
+              solo-inverted
+            >  
+            
+              <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
+                <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
+              </v-date-picker> 
+            </v-dialog>
+
+
+
+            <v-dialog
+              ref="CreateClassModalStartTimeDialog2"
+              v-model="CreateClassModalStartTimeModal"
+              :return-value.sync="CreateClassModalStartTime2"
+              persistent
+              lazy
+              full-width
+              width="290px"
+            >
+              <v-time-picker
+                v-if="CreateClassModalStartTimeModal"
+                v-model="CreateClassModalStartTime2"
+                full-width
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
+                <v-btn text color="primary" @click="setStartTime()">OK</v-btn>
+              </v-time-picker>
+            </v-dialog>
+
+
+            <v-dialog
+              ref="CreateClassModalFinishDateDialog3"
+              v-model="CreateClassModalFinishDateModal"
+              :return-value.sync="CreateClassModalFinishDate3"
+              persistent
+              lazy
+              full-width
+              width="290px"
+              solo-inverted
+            >
+              <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
+                <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
+              </v-date-picker> 
+            </v-dialog>
+            <v-dialog
+              ref="CreateClassModalFinishTimeDialog4"
+              v-model="CreateClassModalFinishTimeModal"
+              :return-value.sync="CreateClassModalFinishTime4"
+              persistent
+              lazy
+              full-width
+              width="290px"
+            >
+              <v-time-picker
+                v-if="CreateClassModalFinishTimeModal"
+                v-model="CreateClassModalFinishTime4"
+                full-width
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
+                <v-btn text color="primary" @click="setEndTime()">OK</v-btn>
+              </v-time-picker>
+            </v-dialog>
+
+
+
+
+
 
             <!--과목명 안에 있는 card-text 시작
             
@@ -598,7 +691,20 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       dialog: false,
       popupMaplistDialog: false,
       dialogDelete: false,
+
       CreateClassModalDialog: false,
+
+      CreateClassModalStartDate1: "",
+      CreateClassModalStartDateModal: false,
+      CreateClassModalStartTime2: "",
+      CreateClassModalStartTimeModal: false,
+      // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
+      CreateClassModalFinishDate3: "",
+      CreateClassModalFinishDateModal: false,
+      CreateClassModalFinishTime4: "",
+      CreateClassModalFinishTimeModal: false, 
+
+
       maplist: [],
       editLectureName: "",
       headers: [
@@ -718,6 +824,20 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
+      isStartTime(item) {
+        if (this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 0){
+          return true
+        } else {
+          return false
+        }
+      },
+      isEndTime(item) {
+        if (this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 1) {
+          return true
+        } else {
+          return false
+        }
+      },
       checkIndex(item){
         if(2 <= this.CalendarFrontSelectedEvent.showevent.indexOf(item)){
           return false
@@ -729,6 +849,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           return true
         }
         else{return false}
+      },
+      popupStartTime() {
+        this.CreateClassModalStartDateModal = true
+      },
+      popupEndTime() {
+        this.CreateClassModalFinishDateModal = true
       },
       popupLecturelist() {
         this.fetchMapData()
@@ -744,6 +870,16 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.popupMaplistDialog=false
         this.CalendarFrontSelectedOpen=false
         this.CalendarFrontSelectedOpen=true
+      },
+      setStartTime() {
+        this.CalendarFrontSelectedEvent.showevent[0].CalendarClassnameAction = this.CreateClassModalStartDate1 + " " + this.CreateClassModalStartTime2 + ":00";
+        this.CreateClassModalStartDateModal = false;
+        this.CreateClassModalStartTimeModal = false;
+      },
+      setEndTime() {
+        this.CalendarFrontSelectedEvent.showevent[1].CalendarClassnameAction = this.CreateClassModalFinishDate3 + " " + this.CreateClassModalFinishTime4 + ":00";
+        this.CreateClassModalFinishDateModal = false;
+        this.CreateClassModalFinishTimeModal = false;
       },
       close () {
         this.dialog = false
@@ -873,7 +1009,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.$http
           .post(url, payload, config)
           .then(res => {
-            console.log(res);
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 var maptype = "";
@@ -1043,7 +1178,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
               alert(res.data.message);
             }
           })
-          console.log(a.classid);
       },
 
       rnd (a, b) {
@@ -1093,7 +1227,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
               alert(res.data.message);
             }
           })
-          console.log(a.classid);
     },
 
     patchEditedClassLectureMap(a){
@@ -1125,8 +1258,10 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             alert(res.data.message);
           }
         })
-        console.log(a.classid);
-    } 
+    },
+    test1() {
+      console.log(this.CreateClassModalStartDate1);
+    }
   },
 }
   
