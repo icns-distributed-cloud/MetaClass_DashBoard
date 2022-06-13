@@ -422,6 +422,17 @@
                   mdi-pencil
                 </v-icon>
 
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="popupContentList()"
+                  v-else-if="isContent(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+
+                
+
               </template>
             </v-data-table>
 
@@ -468,6 +479,58 @@
                           v-on=on
                           @click="Setmapdata(item)"
                         >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
+                        </v-list-item>
+                      </v-list>
+                    </template>
+                  </v-dialog>
+                </v-col>
+              </v-card>
+            </v-dialog>
+
+
+
+
+            <v-dialog
+              v-model="popupContentListDialog"
+              max-width="500px"
+            >
+            <!--강의실 상단 box-->
+              <v-card>
+                  <v-toolbar
+                    class="overflow-hidden mx-auto"
+                    color="light-blue darken-4"
+                    dark  
+                  >
+                  
+                  <v-toolbar-title>컨텐츠 선택</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                    <v-btn
+                    icon
+                    dark
+                    @click="closeLectureList"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <!--강의실 A--> 
+                <v-col cols="auto">
+                  <v-dialog
+                    transition="dialog-bottom-transition"
+                    max-width="600"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-list>
+                        <v-list-item
+                          v-for="(item, index) in contentlist"
+                          :key=index
+                        > 
+                        <v-btn
+                          width=98%
+                          color="light-blue lighten-2"
+                          v-bind="attrs"
+                          v-on=on
+                          @click="SetContentData(item)"
+                        >{{ item.name }}</v-btn>
                         </v-list-item>
                       </v-list>
                     </template>
@@ -636,7 +699,7 @@
               </template>
               <v-btn
                 color="indigo lighten-3"
-                @click="patchEditedClass(CalendarFrontSelectedEvent), patchEditedClassLectureMap(CalendarFrontSelectedEvent)"
+                @click="patchEditedClass(CalendarFrontSelectedEvent)"
               >
                 강의 수정
               </v-btn>
@@ -690,6 +753,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       //test
       dialog: false,
       popupMaplistDialog: false,
+      popupContentListDialog: false,
       dialogDelete: false,
 
       CreateClassModalDialog: false,
@@ -706,6 +770,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
 
       maplist: [],
+      contentlist: [],
       editLectureName: "",
       headers: [
         {
@@ -850,6 +915,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
         else{return false}
       },
+      isContent(item) {
+        if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 6) {
+          return true
+        } else {
+          return false
+        }
+      },
       popupStartTime() {
         this.CreateClassModalStartDateModal = true
       },
@@ -860,16 +932,26 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.fetchMapData()
         this.popupMaplistDialog = true
       },
+      popupContentList() {
+        this.fetchContentData()
+        this.popupContentListDialog = true
+      },
       closeLectureList(){
         this.popupMaplistDialog = false
       },
       Setmapdata(item){
         this.CalendarFrontSelectedEvent.showevent[3].CalendarClassnameAction = item.name
         this.CalendarFrontSelectedEvent.showevent[4].CalendarClassnameAction = item.typename
-        this.CalendarFrontSelectedEvent.showevent[5].CalendarClassnameAction = item.maxUser
+        this.CalendarFrontSelectedEvent.showevent[5].CalendarClassnameAction = this.CalendarFrontSelectedEvent.showevent[5].CalendarClassnameAction.slice(0, 1) + "/" + item.maxUser
+        this.CalendarFrontSelectedEvent.mapId = item.id;
         this.popupMaplistDialog=false
         this.CalendarFrontSelectedOpen=false
         this.CalendarFrontSelectedOpen=true
+      },
+      SetContentData(item) {
+        this.CalendarFrontSelectedEvent.showevent[6].CalendarClassnameAction = item.name
+        this.CalendarFrontSelectedEvent.contentId = item.id
+        this.popupContentListDialog=false
       },
       setStartTime() {
         this.CalendarFrontSelectedEvent.showevent[0].CalendarClassnameAction = this.CreateClassModalStartDate1 + " " + this.CreateClassModalStartTime2 + ":00";
@@ -982,6 +1064,43 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
           })
       },
+
+      fetchContentData() {
+        this.contentlist = []
+
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .post(url, payload, config)
+          .then((res => {
+            this.contentlist.push({
+              id: null,
+              name: "컨텐츠 없음"
+            })
+            if (res.data.data.length >= 0) {
+              res.data.data.forEach(element => {
+                this.contentlist.push({
+                  id: element.id,
+                  name: element.name
+                })
+              })
+            }
+          }))
+
+
+
+      },
       CalendarFrontUpdateRange ({ start, end }) {
         this.beforestart = start;
         this.beforeend = end;
@@ -1028,6 +1147,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   classid: element.id,
                   mapId: element.mapId,
                   mapName: element.mapName,
+                  contentId: element.contentId,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -1050,10 +1170,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 타입',
                     },
                     {
-                      //CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                      //CalendarClassnameTitle: '참여 인원수',
-                      CalendarClassnameAction: element.mapMaxUser,
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
                       CalendarClassnameTitle: '참여 인원수',
+                      //CalendarClassnameAction: element.mapMaxUser,
+                      //CalendarClassnameTitle: '참여 인원수',
+                    },
+                    {
+                      CalendarClassnameAction: element.contentName,
+                      CalendarClassnameTitle: '컨텐츠 이름'
                     },
                   ]
                 })
@@ -1103,6 +1227,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   classid: element.id,
                   mapId: element.mapId,
                   mapName: element.mapName,
+                  contentId: element.contentId,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -1125,10 +1250,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameTitle: '강의 타입',
                     },
                     {
-                      //CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                      //CalendarClassnameTitle: '참여 인원수',
-                      CalendarClassnameAction: element.mapMaxUser,
+                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
                       CalendarClassnameTitle: '참여 인원수',
+                      //CalendarClassnameAction: element.mapMaxUser,
+                      //CalendarClassnameTitle: '참여 인원수',
+                    },
+                    {
+                      CalendarClassnameAction: element.contentName,
+                      CalendarClassnameTitle: '컨텐츠 이름'
                     },
                   ]
                 })
@@ -1199,6 +1328,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       // 강좌 수정
     patchEditedClass(a){
       var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
+      console.log(a.showevent[6].contentId);
+      console.log(a.showevent[3].mapId);
 
       var userId = this.$store.getters.getUserInfo.id;
 
@@ -1208,6 +1339,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           instructorId: userId,
           startTime: a.showevent[0].CalendarClassnameAction,
           endTime: a.showevent[1].CalendarClassnameAction,
+          contentId: a.contentId,
+          mapId: a.mapId
       }
 
       var config = {
@@ -1220,12 +1353,15 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           .patch(url, payload, config)
           .then(res => {
             if (res.data.success === true) {
-              //alert("강좌 수정이 완료되었습니다.")
+              alert("강좌 수정이 완료되었습니다.")
               this.CalendarFrontSelectedOpen = false;
               this.refreshData();
             } else if (res.data.success === false) {
               alert(res.data.message);
             }
+          })
+          .catch(res => {
+            alert(res);
           })
     },
 

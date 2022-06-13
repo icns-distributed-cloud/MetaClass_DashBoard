@@ -24,7 +24,7 @@ const teacherAuth = () => (from, to, next) => {
     if (
         store.getters.getUserInfo.userMode != null
     ) {
-        if (store.getters.getUserInfo.userMode == 0) {
+        if (store.getters.getUserInfo.userMode === 0) {
             return next();
         } else {
             console.log("Unauthorized. (Only teachers are authorized)");
@@ -42,7 +42,7 @@ const studentAuth = () => (from, to, next) => {
     if (
         store.getters.getUserInfo.userMode != null
     ) {
-        if (store.getters.getUserInfo.userMode == 1) {
+        if (store.getters.getUserInfo.userMode === 1) {
             return next();
         } else {
             console.log("Unauthorized. (Only students are authorized)");
@@ -60,7 +60,7 @@ const serverManagerAuth = () => (from, to, next) => {
     if (
         store.getters.getUserInfo.userMode != null
     ) {
-        if (store.getters.getUserInfo.userMode == 2) {
+        if (store.getters.getUserInfo.userMode === 2) {
             return next();
         } else {
             console.log("Unauthorized. (Only server managers are authorized)");
