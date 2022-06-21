@@ -180,7 +180,9 @@ export default {
           name: this.name,
           userMode: usermode,
           email: this.email,
-          departmentId: this.selectedDepartment.item_value
+          departmentId: this.selectedDepartment.item_value,
+          phone: "01000000000",
+          contactType: 0
         }
 
         var config = {
