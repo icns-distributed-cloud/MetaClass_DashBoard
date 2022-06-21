@@ -5,7 +5,7 @@
          <v-card color="blue lighten-5">
     <!--card-title : 학생평가관리 -> 가장 위의 상단-->
     <v-card-title>
-      학생 평가 관리
+      <h2>학생 평가 관리</h2>
        <!--search 부분을 우측으로 밀기-->
       <v-spacer></v-spacer>
        <!--search-->
