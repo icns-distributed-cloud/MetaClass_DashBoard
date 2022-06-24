@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col cols="12">
-         <v-card color="blue lighten-5">
+         <v-card color="teal lighten-2">
     <!--card-title : 학생평가관리 -> 가장 위의 상단-->
     <v-card-title>
       <h2>학생 평가 관리</h2>
@@ -13,8 +13,11 @@
         v-model="search"
         append-icon="mdi-magnify"
         label="Search"
-        single-line
         hide-details
+        class="mx-4"
+        flat
+        solo-inverted
+        dark
       ></v-text-field>
     </v-card-title>
   <!--StudentManager가 header--> 

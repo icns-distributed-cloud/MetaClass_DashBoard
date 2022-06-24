@@ -1,5 +1,6 @@
 <!--Content front-->
 <template>
+<v-container fluid>
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
@@ -137,10 +138,6 @@
                                 확인
                             </v-btn>
                         </v-card-actions>  
-                        
-    
-
-
                     </v-card>
                 </v-dialog>
                 <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
@@ -150,6 +147,7 @@
     </template>   
     </v-responsive>   
   </v-card> 
+  </v-container>
 </template>
 
 
@@ -165,7 +163,6 @@ import ContentModal from './ContentModal.vue'
   components: { ContentModal },
     data: () => ({
       contentId: "",
-
       ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
       ContentFrontMapName: "", // 컨텐츠 이름
       ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값

@@ -1,5 +1,6 @@
 <!--Class front-->
 <template>
+<v-container fluid>
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
@@ -13,17 +14,6 @@
     >
     <div>     
        <v-row>
-              <!--
-              <ClassMap-Modal
-                v-for="(item, index) in ClassFrontModalList"
-                :key="index"
-                :item="item"
-                cols="4"
-              ></ClassMap-Modal>
-              -->
-
-              <!--클릭시 나오는 화면
-              즉, ClassMap-Modal에 정보를 보내겠다는 의미-->
               <v-col
                 v-for="(item, index) in ClassFrontModalList"
                 :key="index"
@@ -133,6 +123,7 @@
     </template>
     </v-responsive>        
   </v-card>
+  </v-container>
 </template>
 
 

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
 
-  <v-card color="cyan">
+  <v-card color="cyan lighten-2">
     <!--card-title : 회원 관리-->
     <v-card-title>
       <h2>회원관리</h2>
@@ -209,6 +209,7 @@ import { mapState } from 'vuex'
         },
         { text: 'ID', value: 'id' }, // 아이디
         { text: 'Email', value: 'email' }, // 이메일
+        { text: 'Phone', value: 'phone' }, // 핸드폰 번호
         { text: '부서', value: 'group' }, // grop
         { text: '정보삭제', value: 'actions', sortable: false },
       ],
@@ -352,6 +353,7 @@ import { mapState } from 'vuex'
                   name: element.name,
                   id: element.loginId,
                   email: element.email,
+                  //phone: element.phone,
                   group:element.departmentName,
                   userMode: element.userMode
                 })

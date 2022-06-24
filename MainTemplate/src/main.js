@@ -2,8 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router/router'
-
-
+import 'vuetify/dist/vuetify.min.css'
 
 // vuetify-dialog
 // data tables 항목에 crud actions를 하기 위해서 

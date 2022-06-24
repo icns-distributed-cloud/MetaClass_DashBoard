@@ -7,12 +7,12 @@ import StudentPage from "../components/Student/StudentPage.vue";
 import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
 import ContentPgae from "../components/Content/ContentPage.vue";
+import QuizPage from "../components/Quiz/QuizPage.vue";
 import DepartmentPage from "../components/Department/DepartmentPage.vue"
 import DashboardLayout from "../components/Layout/DashboardLayout.vue";
 // 추가 : ServerPage
 import ServerPage from "../components/ServerRegister/ServerPage.vue";
 import ServerManagePage from "../components/ServerManage/ServerManagePage.vue";
-
 // 학생 홈페이지
 import StudentCalendarPage from "../components/StudentFolder/StudentCalendar/StudentCalendarPage.vue";
 import StudentEvaluationPage from "../components/StudentFolder/StudentEvaluation/StudentEvaluationPage.vue";
@@ -95,8 +95,7 @@ const routes = [
         path: "/aaa",
         component: DashboardLayout,
         redirect: "/home",
-        children: [
-            {
+        children: [{
                 path: "/CalendarPage",
                 name: CalendarPage,
                 component: CalendarPage,
@@ -161,6 +160,12 @@ const routes = [
                 name: serverManagerAuth,
                 component: ServerManagePage,
                 beforeEnter: serverManagerAuth()
+            },
+            {
+                path: "/QuizPage",
+                name: QuizPage,
+                component: QuizPage,
+                beforeEnter: teacherAuth()
             }
         ]
     },
