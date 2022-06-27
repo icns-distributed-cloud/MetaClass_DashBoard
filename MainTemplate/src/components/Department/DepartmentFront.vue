@@ -48,7 +48,7 @@
                             dark
                             v-bind="attrs"
                             v-on="on"
-                            @click=empty()
+                            @click="empty()"
                         >
                             부서 등록
                         </v-btn>  
@@ -92,7 +92,7 @@
                             </v-btn>
                             <v-btn
                                 color="green"
-                                @click=RegisterDepartment()
+                                @click="RegisterDepartment()"
                             >
                                 확인
                             </v-btn>
@@ -123,7 +123,7 @@ import DepartmentModal from './DepartmentModal.vue'
       contentId: "",
 
       ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
-      DepartmentName: "", // 컨텐츠 이름
+      DepartmentName: "", //  이름
       ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
     // ContentFrontModalList
       DepartmentModalList:[],

@@ -3,38 +3,44 @@
 <!--학생 개인이 수강하는 모든 과목이 나타난다-->
 
 <template>
-  <v-card>
-    <v-toolbar
-      dark
-      color="primary"
+  <v-row justify="center">
+    <v-dialog 
+      v-model ="dialog"
     >
-      <v-toolbar-title>{{infoinfo.name}}</v-toolbar-title>
-      <v-spacer></v-spacer>
-       <v-btn
-            icon
-            dark
-            @click="dialog = !dialog"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          </v-toolbar>
-        <v-card-title>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-          </v-card-title>
-          <v-data-table
-            :headers="StudentIndividualHeaders"
-            :items="StudentIndividualText"
-            :search="search"
-            class="elevation-1"
-          >
-    </v-data-table>
-</v-card>
+    <v-card>
+      <v-toolbar
+        dark
+        color="primary"
+      >
+        <v-toolbar-title>{{infoinfo.name}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+            <v-btn
+              icon
+              dark
+              @click="dialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+      </v-toolbar>
+          <v-card-title>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            </v-card-title>
+            <v-data-table
+              :headers="StudentIndividualHeaders"
+              :items="StudentIndividualText"
+              :search="search"
+              class="elevation-1"
+            >
+      </v-data-table>
+    </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 

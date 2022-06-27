@@ -1,242 +1,417 @@
 <template>
-  <div class="container-app">
-    <div class = "container-quiz">
-      <div class = "quiz-header">
-        <h1>퀴즈 등록</h1>
-      </div>
+  <v-col>
+    <v-card>
+      <v-toolbar
+        color="indigo"
+        light
+        extended
+      >
+        <v-toolbar-title class="white--text">
+          <h2>{{info.name}}</h2>
+        </v-toolbar-title>
+      </v-toolbar>
+      <v-list
+        two-line
+        subheader
+        color="indigo lighten-5"
+      >  
+      </v-list>
 
-      <div class = quiz-main v-for = "(element,index) in questions.slice(a,b)" :key="index" v-show="quiz">
-        <div class = "box-question">
-          <div>
-            <h2>Question {{ b }} / {{ questions.length }}</h2>
-            <!--점수-->
-              <v-text-field
-                v-model="ClassFrontNumValue"
-                label="점수"
-                class="numer"
-                :ClassFrontRules="[ClassFrontRules.required, ClassFrontRules.min, ClassFrontRules.max]"
-                type="number"
-                @click:append-outer="ClassFrontIncrement"
-                @click:prepend="ClassFrontDecrement"
-                color="white"
-                required
+      <v-list two-line color="indigo lighten-5">
+          <v-card-actions>
+            <v-spacer></v-spacer> 
+              <v-btn
+                class="mr-4"
+                color="indigo darken-4"
+                @click="DeleteQuiz()"
               >
-              </v-text-field>
-          </div>
-            <v-list></v-list>
+                  삭제
+              </v-btn>
+              <v-btn
+                class="mr-4"
+                color="green"
+                @click="popupUpdateQuiz()"
+                >
+                  수정
+              </v-btn>
+          </v-card-actions> 
+      </v-list>
+    </v-card>
 
-             <v-card
-                class="mx-auto"
-                max-width="90%"
-              >
-                <v-card-text>
-                  <v-text-field 
-                  v-model="questions[a]['question']"
-                  label="퀴즈 입력"
-                  > 
-                  </v-text-field>
-                </v-card-text>
-            </v-card>   
-        </div>
-
-        <v-list></v-list>
-        <v-card class = "box-suggestions" max-width="90%">
-          
-          <ul class = "quiz_ul">
-            <li class = "quiz_li" v-for="(item, index) in element.suggestions" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
-                <v-app-bar>
-                  <div class = "checkbox-div">
-                  <v-checkbox
-                    v-model = "questions[a]['suggestions'][index]['correct']"
-                    hide-details
-                    class="shrink mr-2 mt-0"
-                  >
-                  </v-checkbox>
-                  </div>
-                  <div class = "textfield-div">
-                    <v-text-field 
-                      v-model = "questions[a]['suggestions'][index]['suggestion']"
-                      label = "정답 입력"
-                    > 
-                    </v-text-field>
-                  </div>
-
-                  <div class = "box-button-delete">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      dark
-                      x-small
-                      color="primary"
-                      @click="quiz_delete_list(index)"
-                      >
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </div>
-                </v-app-bar>
-              
-            </li>
-          </ul>
-        </v-card> 
-        
-        <div class = "box-button">
-          <v-btn
-            class="mx-2"
-            fab
-            dark
-            small
-            color="red lighten-1"
-            @click="quiz_create_list()"
-            >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </div>
-
-      </div>
-      <!--점수 등록 
-      <div class = "box-score" v-if="score_show">
-        <h2>점수 등록</h2>
-        <h2>{{ score }}/{{ questions.length }}</h2>
-        <div class = "btn-restart">
-          <v-btn>Restart <i class="fas fa-sync-alt"></i></v-btn>
-        </div>
-      </div>-->
-
-      <v-list></v-list>
-
-      <template>
-        <div class = "quiz-footer">
-          <div class = "box-button">
-            <v-btn rounded color="primary" dark width=25% @click="backQuestion">Back</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn rounded color="primary" dark width=25% @click="nextQuestion">Next</v-btn> 
-          </div>
-        </div>
-        </template>
-        <template>
-          <div class = "quiz-footer">
-            <div class = "box-button create_quiz">
-              <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="conformQuestion"><h3>확인</h3></v-btn>
+    <!--퀴즈 모달 시작-->
+    <template>
+      <v-dialog v-model = "QuizModalView">
+        <div class="container-app">
+          <div class = "container-quiz">
+            <div class = "quiz-header">
+              <div class = "box-button">
+                <v-spacer></v-spacer>
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  color="indigo"
+                  @click="quizDialogClose()"
+                >
+                <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </div>
             </div>
-          </div>
-        </template>
+              
+            <div class = "quiz-header">
+              <div class = "box-button">
+                <h1>퀴즈 등록</h1>
+              </div>
+            </div>
 
-    </div>
-  </div>
+            <div class = quiz-main v-for = "(element,index) in data.slice(a,b)" :key="index" v-show="quiz">
+              <div class = "box-question">
+                <h2>Question {{ b }} / {{ data.length }}</h2>
+                <v-list></v-list>
+                  <v-card
+                    class="mx-auto"
+                    max-width="90%"
+                  >
+                    <v-card-text>
+                      <v-text-field 
+                      v-model="data[a]['title']"
+                      label="퀴즈 입력"
+                      > 
+                      </v-text-field>
+                    </v-card-text>
+                </v-card>   
+              </div>
+
+              <v-list></v-list>
+              <v-card class = "box-suggestions" max-width="90%">
+                <ul class = "quiz_ul">
+                  <li class = "quiz_li" v-for="(item, index) in element.quizContext" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
+                      <v-app-bar>
+                        <div class = "checkbox-div">
+                        <v-checkbox
+                          v-model = "data[a]['answerYN'][index]"
+                          hide-details
+                          class="shrink mr-2 mt-0"
+                        >
+                        </v-checkbox>
+                        </div>
+                        <div class = "textfield-div">
+                          <v-text-field 
+                            v-model = "data[a]['quizContext'][index]"
+                            label = "정답 입력"
+                          > 
+                          </v-text-field>
+                        </div>
+
+                        <div class = "box-button-delete">
+                          <v-btn
+                            class="mx-2"
+                            fab
+                            dark
+                            x-small
+                            color="primary"
+                            @click="quiz_delete_list(index)"
+                            >
+                            <v-icon>mdi-delete</v-icon>
+                          </v-btn>
+                        </div>
+                      </v-app-bar>
+                    
+                  </li>
+                </ul>
+              </v-card> 
+              
+              <div class="box-button">
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  color="red lighten-1"
+                  @click="quiz_create_list()"
+                  >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </div>
+
+            </div>
+            <!--점수 등록 
+            <div class = "box-score" v-if="score_show">
+              <h2>점수 등록</h2>
+              <h2>{{ score }}/{{ questions.length }}</h2>
+              <div class = "btn-restart">
+                <v-btn>Restart <i class="fas fa-sync-alt"></i></v-btn>
+              </div>
+            </div>-->
+
+            <v-list></v-list>
+            <template>
+              <div class = "quiz-footer-next">
+                <div class = "box-button">
+                  <v-btn rounded color="primary" dark width=25% @click="backQuestion">Back</v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn rounded color="primary" dark width=25% @click="nextQuestion">Next</v-btn> 
+                </div>
+              </div>
+              </template>
+
+              <!--배점-->
+              <template>
+                <div class = "quiz-footer">
+                  <div class = "box-button create_quiz">
+                    <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="popUpQuizScoreModal()"><h3>배점</h3></v-btn>
+                  </div>
+                </div>
+              </template>
+              
+              <!--수정 완료-->
+              <template>
+                <div class = "quiz-footer">
+                  <div class = "box-button create_quiz">
+                    <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="updateQuestion()"><h3>수정 완료</h3></v-btn>
+                  </div>
+                </div>
+              </template>
+
+              <!--점수입력-->
+              <template>
+                <v-row>
+                  <v-col>
+                    <v-dialog
+                      v-model="QuizScoreModal"
+                      max-width="500px"
+                    >
+                    <!--퀴즈 등록-->
+                      <template>
+                        <v-card>
+                          <v-toolbar
+                            color="primary"
+                            dark
+                          ><h2>점수 등록</h2>
+                          <v-spacer></v-spacer>
+                            <v-btn
+                              icon
+                              dark
+                              @click="QuizScoreDialogClose()"
+                            >
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                          </v-toolbar>
+                          <!--scroll-->
+                          <v-sheet 
+                            id="classmap-mainscroll"
+                            class="overflow-y-auto"
+                            max-height="500"
+                          >
+                            <v-list></v-list>
+                            <!--문제당 점수항목-->
+                            <v-card class = "box-suggestions" max-width="90%">
+                              <ul class = "quiz_ul">
+                                <li class = "quiz_li" v-for="(item, index) in data.length" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
+                                  <v-app-bar>
+                                    <div 
+                                      class = "score-index" 
+                                      hide-details
+                                    ><h3>{{index + 1}}번</h3> 
+                                    </div>
+                                      <div class = "textfield-div">
+                                        <v-text-field 
+                                          v-model = "data[index]['score']"
+                                          @input = "GetTotalScore()"
+                                        > 
+                                        </v-text-field>
+                                    </div>
+                                  </v-app-bar>   
+                                </li>
+                              </ul>
+                            </v-card> 
+                          </v-sheet>
+                          <!--이전 / N/1-->
+                          <template>
+                            <div class = "quiz-footer-next">
+                              <div class = "box-button">
+                              
+                                <v-btn
+                                  rounded
+                                  color="blue lighten-1"
+                                  depressed
+                                  dark
+                                  width="20%"
+                                  @click="QuizScoreModal = false"
+                                >이전
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                  <h3>총점: {{ totalscore }}</h3>
+                                  <v-spacer></v-spacer>
+                                <v-btn
+                                  rounded
+                                  color="blue lighten-1"
+                                  depressed
+                                  dark
+                                  width="20%"
+                                  @click="QuizScoreDeviedN(), GetTotalScore()"
+                                >N/1
+                                </v-btn>
+                              </div>
+                            </div>
+                          </template>
+                        
+                          <template>
+                            <div class = "quiz-footer">
+                              <div class = "box-button create_quiz">
+                                <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="updateQuestion()"><h3>수정 완료</h3></v-btn>
+                              </div>
+                            </div>
+                          </template>
+
+                        </v-card>
+                      </template> 
+                      <!--sumit 끝 부분-->
+                    </v-dialog>
+                  </v-col>      
+                </v-row> 
+              </template>
+
+          </div>
+        </div>
+      </v-dialog>
+    </template>
+    <!--퀴즈 모달 끝-->
+  </v-col>
 </template>
 
+ 
 
 
 
+<!---->
 <script>
-export default {
-  name: 'QuizFront',
-  data(){
-    return{
-      questions: [
-        {
-          question: '문제 이름',
-          suggestions: []
-        },
+  export default {
+    
+    props: {
+      info: {
+        type: Object,
+        require: true
+      }
+    },
 
-       /* {
-          question: '안전 장치로 옳지 않은 것은?',
-          suggestions: [
-            {suggestion:'장비를 장갑을 끼고 만진다'},
-            {suggestion:'장비를 맨손으로 만진다', correct:true},
-            {suggestion:'안전모를 착용한다'},
-            {suggestion:'안전장비인지 확인 후 사용한다'},
-          ]
-        },*/
+    computed: {
+    },
 
-      ],
+    created() {
+    },
+
+    data:() => ({
+      QuizId: "",
+      QuizFrontMapName: "", // 퀴즈 이름
+      QuizFrontDialog: false, //QuizFrontDialog 선택시, 입력 값
+    // QuizFrontModalList
+      QuizFrontModalList:[],
+      QuizModalView:false,
+
+      data: [],
 
       a:0,
       b:1,
       select:false,
-      score:0,
+      //score:0,
       quiz:true,
-      score_show:false
+      QuizScoreModal:false,
+      totalscore: 0,
+    
+    }),
 
-   }
- },
- methods: {
+    methods: {
+      // 퀴즈 모달
+      selecResponse(e){
+        this.select = true;
+        if (e.correct) {
+          this.score++;
+        }
+      },
 
-   selecResponse(e){
-     this.select = true;
-     if (e.correct) {
-       this.score++;
-     }
-   },
+      check(status) {
+        if (status.correct) {
+          return 'correct'
+        } else {
+          return 'incorrect'
+        }
+      },
 
-   check(status) {
-     if (status.correct) {
-       return 'correct'
-     } else {
-       return 'incorrect'
-     }
-   },
-
-   nextQuestion(){
+      nextQuestion(){
         this.a++;
         this.b++;
-        if(this.questions.length -1 < this.a) {
-          this.questions.push( {
-            question: '',
-            suggestions: []
+        if(this.data.length - 1 < this.a) {
+          this.data.push( {
+            title: '',
+            quizContext: [],
+            answerYN: [],
+            score: 0,
           });
         }
-   },
+      },
 
-    backQuestion(){
-     if(this.a > 0){
-      this.a--;
-      this.b--;
-      }
-   },
-
-
-   // 퀴즈 리스트 생성 (리스트는 4개까지만!)
-   quiz_create_list(){
-    if(this.questions[this.a]["suggestions"].length < 4 ) {
-       this.questions[this.a]["suggestions"].push({suggestion:'', correct:false})
-       //this.questions[this.a]["question"] = "테스트 입니다"
-   } 
-  },
-
-   // 퀴즈 리스트 생성 (리스트는 4개까지만!)
-  quiz_delete_list(index){
-    if(this.questions[this.a]["suggestions"].length > -1 ) {
-       this.questions[this.a]["suggestions"].splice(index, 1);
-   } 
-  },
-   
-  conformQuestion(){
-    this.score_show = true;
-  },
-  
-  ClassFrontIncrement() {
-      if (this.ClassFrontNumValue < this.ClassFrontForm .max) {
-        this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) + 1;
-      }
-    },
-
-  ClassFrontDecrement() {
-    if (this.ClassFrontNumValue > this.ClassFrontForm .min) {
-      this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) - 1;
-    }
-  },
+      backQuestion(){
+        if(this.a > 0){
+            this.a--;
+            this.b--;
+          }
+      },
 
 
+      // 퀴즈 리스트 생성 (리스트는 4개까지만!)
+      quiz_create_list(){
+        if(this.data[this.a]["quizContext"].length < 4 ) {
+          this.data[this.a]["quizContext"].push('');
+          this.data[this.a]["answerYN"].push(false);
+      } 
+      },
 
-   // 퀴즈 생성하기
-   /* createQuestion()
-    {
-      var url = "http://163.180.117.47:8088/api/quiz/post/createquiz";
+      // 퀴즈 리스트 삭제 (리스트는 4개까지만!)
+      quiz_delete_list(index){
+        if(this.data[this.a]["quizContext"].length > -1 ) {
+          this.data[this.a]["quizContext"].splice(index, 1);
+          this.data[this.a]["answerYN"].splice(index, 1);
+      } 
+      },
+    
+      popUpQuizScoreModal() {
+        this.QuizScoreModal = true
+        this.GetTotalScore()
+      },
+
+      GetTotalScore() {
+        this.totalscore = 0;
+        for (var i=0; i<this.data.length; i++)
+        {
+          this.totalscore += parseFloat(this.data[i]['score']);
+        }
+
+        if ((this.totalscore % 1)>0) {
+          this.totalscore = this.totalscore.toFixed(1);
+        }
+      },
+
+      QuizScoreDeviedN() {
+        var length = this.data.length;
+        for (var i=0; i<length; i++)
+        {
+          if (100% length) {
+            this.data[i]['score'] = (100/this.data.length).toFixed(1);
+          } else {
+            this.data[i]['score'] = Math.round(100/this.data.length);
+          }
+        }
+      },
+
+      // 47. 퀴즈 아이디에 따른 퀴즈 정보 -->  http://localhost:8088/api/quiz/get/listbyquizid?quizId=9
+      popupUpdateQuiz() {
+        this.data = [];
+        this.a = 0;
+        this.b = 1;
+        var url = "http://163.180.117.22:8088/api/quiz/get/listbyquizid?quizId="+this.info.id;
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
-          data: 데이터 넣기 
           instructorId: userId
         }
 
@@ -247,28 +422,126 @@ export default {
         }
 
         this.$http
-          .post(url, payload, config)
+          .get(url, payload, config)
           .then(res => {
-            console.log(res.data.success);
             if (res.data.success === true) {
-              alert("퀴즈 등록이 완료되었습니다.");
-              this.score_show = true;
-              this.fetchData();
+              if (res.data.data.length > 0) {
+                this.QuizModalView = true;
+                res.data.data.forEach(element => {
+                  this.data.push({
+                    title: element.title,
+                    quizContext: element.quizContext,
+                    answerYN: [],
+                    score: element.score,
+                  })
+                });
+                //this.data = this.data.splice(1, this.data.length+1);
+                console.log(this.data);
+                //this.score_show = true; // score_show
+              }
             } else {
               alert(res.data.message);
               return;
             }
           })
-      },*/
+      },
 
+      // 41. 퀴즈 삭제 http://163.180.117.47:8088/api/quiz/get/deletequiz?id=1 (id 는 quiz의 id값)
+      DeleteQuiz() {
+        var prompStr = prompt(
+          '퀴즈가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+        );
+        if (prompStr == null) {
+          return;
+        }
+        if (prompStr == "삭제") {
+          var id = this.info.id;
+          var url = "http://163.180.117.47:8088/api/quiz/get/deletequiz?id="+id;
 
- }
-}
+          var payload = {
+            id: this.info.id
+          }
+
+          var config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+
+          this.$http
+            .get(url, payload, config)
+            .then(res => {
+              if (res.data.success === true) {
+                alert("성공적으로 삭제되었습니다.");
+                this.$parent.$parent.$parent.$parent.fetchData();
+              } else {
+                alert(res.data.message);
+              }
+              
+            })
+            console.log("Delete Quiz");
+          } else {
+            alert("정확하게 입력해주세요.");
+            return;
+          }
+      },
+
+      // 43. http://163.180.117.47:8088/api/quiz/post/updatequiz
+      updateQuestion()
+      {
+        
+        var url = "http://163.180.117.22:8088/api/quiz/post/updatequiz";
+        var userId = this.$store.getters.getUserInfo.id;
+        var payload = {
+          id: this.info.id,
+          name: this.info.name,
+          data: this.data,
+          instructorId: userId
+        }
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+        if(this.totalscore > 100){
+          alert("점수는 100점을 초과할 수 없습니다.");
+        }
+        else{
+          console.log(payload);
+          this.$http
+            .post(url, payload, config)
+            .then(res => {
+              console.log(res.data.success);
+              if (res.data.success === true) {
+                alert("퀴즈 수정이 완료되었습니다.");
+                this.QuizModalView = false;
+                this.QuizScoreModal = false; 
+                this.$parent.$parent.$parent.$parent.fetchData();
+              } else {
+                alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
+                return;
+              }
+          })
+        }
+      },
+
+      // 퀴즈 등록 창 닫기
+      quizDialogClose () {
+        this.QuizModalView = false
+      },
+
+      // 점수 등록 창 닫기
+      QuizScoreDialogClose() {
+        this.QuizScoreModal = false
+      },
+    }
+  }
+
 </script>
 
 
-
-
+<!--스타일-->
 <style>
 /*{
   font-family: 'Poppins, sans-serif';
@@ -326,6 +599,15 @@ export default {
   border-top: 1px solid #e7eae0;
   background-color: #e7eae0;
   border-radius: 0px 0px 10px 10px;
+}
+
+.quiz-footer-next {
+  display: flex;
+  width: 100%;
+  height: 10%;
+  justify-content: center;
+  border-top: 1px solid #e7eae0;
+  background-color: #e7eae0;
 }
 
 .box-suggestions {
@@ -506,12 +788,14 @@ i {
 
 .checkbox-div {
   width: 10%;
+}
 
+.score-index {
+  width: 15%;
 }
 
 .textfield-div {
   width: 80%;
-
 }
 
 .box-button-delete {
@@ -521,6 +805,7 @@ i {
 
 .create_quiz {
   height: 70px;
+  border-radius: 0px 0px 10px 10px;
 }
 
 @media screen and (max-width: 900px) {

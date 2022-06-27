@@ -168,129 +168,8 @@
                             solo-inverted
                             color="white"
                           >
-                          </v-text-field>    
-
-                        <!--강의 시작 날짜 및 시간
-                          <v-row>
-                            <v-col cols="12" sm="6">
-                              <v-dialog
-                                ref="CreateClassModalStartDateDialog1"
-                                v-model="CreateClassModalStartDateModal"
-                                :return-value.sync="CreateClassModalStartDate1"
-                                persistent
-                                lazy
-                                full-width
-                                width="290px"
-                                solo-inverted
-                              >  
-                                <template v-slot:activator="{ on }">
-                                  <v-text-field
-                                    v-model="CreateClassModalStartDate1"
-                                    label="강의 시작 날짜 및 시간"
-                                    solo-inverted
-                                    color="white"
-                                    readonly
-                                    v-on="on"
-                                  >
-                                  </v-text-field>
-                                </template>
-                                <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
-                                  <v-spacer></v-spacer>
-                                  <v-btn flat color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
-                                  <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
-                                </v-date-picker> 
-                              </v-dialog>
-
-                              <v-dialog
-                                ref="CreateClassModalStartTimeDialog2"
-                                v-model="CreateClassModalStartTimeModal"
-                                :return-value.sync="CreateClassModalStartTime2"
-                                persistent
-                                lazy
-                                full-width
-                                width="290px"
-                              >
-                                <v-time-picker
-                                  v-if="CreateClassModalStartTimeModal"
-                                  v-model="CreateClassModalStartTime2"
-                                  full-width
-                                >
-                                  <v-spacer></v-spacer>
-                                  <v-btn flat color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
-                                  <v-btn flat color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
-                                </v-time-picker>
-                              </v-dialog>
-                            </v-col>-->
-                            
-                            <!--강의 종료 날짜 및 시간
-                            <v-col cols="12" sm="6">
-                              <v-dialog
-                                ref="CreateClassModalFinishDateDialog3"
-                                v-model="CreateClassModalFinishDateModal"
-                                :return-value.sync="CreateClassModalFinishDate3"
-                                persistent
-                                lazy
-                                full-width
-                                width="290px"
-                                solo-inverted
-                              >
-                                <template v-slot:activator="{ on }">
-                                  <v-text-field
-                                    v-model="CreateClassModalFinishDate3"
-                                    label="강의 종료 날짜 및 시간"
-                                    solo-inverted
-                                    color="white"
-                                    readonly
-                                    v-on="on"
-                                  >  
-                                  </v-text-field>
-                                </template>  
-                                <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
-                                  <v-spacer></v-spacer>
-                                  <v-btn flat color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
-                                  <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
-                                </v-date-picker> 
-                              </v-dialog>
-                              <v-dialog
-                                ref="CreateClassModalFinishTimeDialog4"
-                                v-model="CreateClassModalFinishTimeModal"
-                                :return-value.sync="CreateClassModalFinishTime4"
-                                persistent
-                                lazy
-                                full-width
-                                width="290px"
-                              >
-                                <v-time-picker
-                                  v-if="CreateClassModalFinishTimeModal"
-                                  v-model="CreateClassModalFinishTime4"
-                                  full-width
-                                >
-                                  <v-spacer></v-spacer>
-                                  <v-btn flat color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
-                                  <v-btn flat color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
-                                </v-time-picker>
-                              </v-dialog>
-                            </v-col>
-                          </v-row>-->
-                        </v-card-text>
-                        <!--강의 타입-->
-                        <!--참여 인원수-->
-                        <!--강의실 유형 (type)-->
-                        <!--<v-autocomplete
-                          v-model="ClassFrontMapType"
-                          :items="ClassFrontMapTypeItem"
-                          label="강의실 유형"
-                          color="white"
-                        ></v-autocomplete>--> 
-                        <!--강의실 참여 인원
-                        <v-text-field
-                          v-model="CalendarFrontSelectedEvent.showevent[4]"
-                          label="강의실 참여 인원수"
-                          type="number"
-                          color="white"
-                          required
-                        >
-                        </v-text-field>   -->   
+                          </v-text-field>   
+                        </v-card-text> 
                         </div>
                         <!--창 닫기/ 생성-->
                         <v-card-actions>
@@ -318,16 +197,7 @@
               </v-row> 
             </template>
 
-
-
-
-
-
-
-
-
-
-            
+            <!--footer-->            
             <!--v-data table-->
             <v-data-table
               :headers="headers"
@@ -618,44 +488,6 @@
                 <v-btn text color="primary" @click="setEndTime()">OK</v-btn>
               </v-time-picker>
             </v-dialog>
-
-
-
-
-
-
-            <!--과목명 안에 있는 card-text 시작
-            
-            <v-card-text>
-              <v-list two-line>
-                <v-list-item-group
-                  v-model="selected"
-                  active-class="pink--text"
-                  multiple
-                >
-                <template v-for="(CalendarClassnameItem, CalendarClassnameIndex) in CalendarFrontSelectedEvent.showevent">
-                  <v-list-item :key="CalendarClassnameItem.CalendarClassnameTitle">
-                    <v-list-item-content>
-                      <v-list-item-title v-text="CalendarClassnameItem.CalendarClassnameTitle"></v-list-item-title>
-                        <v-list-item-subtitle
-                          class="text--primary"
-                          v-text="CalendarClassnameItem.headline"
-                        ></v-list-item-subtitle>
-                        <v-list-item-subtitle v-text="CalendarClassnameItem.CalendarClassnameSubTitle"></v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        <v-list-item-action-text v-text="CalendarClassnameItem.CalendarClassnameAction"></v-list-item-action-text>
-                        </v-list-item-action>
-                        </v-list-item>
-                        <v-divider
-                          v-if="CalendarClassnameIndex < CalendarFrontSelectedEvent.showevent.length - 1"
-                          :key="CalendarClassnameIndex"
-                        ></v-divider>
-                    </template>
-                    </v-list-item-group>
-                    </v-list>
-                  </v-card-text>
-                  과목명 안에 있는 card-text 끝-->
         
            <span v-html="CalendarFrontSelectedEvent.details"></span>
             <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
@@ -666,13 +498,11 @@
              
                <!--강의 메세지 전송-->
               <v-btn
-                :loading="CalendarFrontMessageLoaderloading"
-                :disabled="CalendarFrontMessageLoaderloading"
                 color="teal darken-4"
                 class="ma-2 white--text"
-                @click="CalendarFrontMessageLoader = 'CalendarFrontMessageLoaderloading'"
+                @click="popUpCalendarFrontMessage()"
               >
-                메일 전송
+                강의 메세지 전송
                 <v-icon
                   right
                   dark
@@ -680,8 +510,56 @@
                   mdi-email
                 </v-icon>
               </v-btn>
+              <!--강의 메세지 전송 클릭 후 dialog-->
+            <template>
+              <v-row>
+                <v-col>
+                  <v-dialog
+                    v-model="CalendarFrontMessageDialog"
+                    max-width="500px"
+                  >
+                    <v-card
+                      color="grey lighten-4"
+                      min-width="300px"
+                      flat
+                    >
+                      <v-toolbar
+                        :color="CalendarFrontSelectedEvent.color"
+                        dark
+                        flat
+                      >
+                        <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <!--강의 메시지 전송 dialog 닫기 버튼-->
+                        <v-btn
+                          icon
+                          dark
+                          @click="popUpCalendarFrontMessage()"
+                        >
+                          <v-icon>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-toolbar>
+                      <v-card-title>
+
+                        
+                      </v-card-title>
+                      </v-card>
+                      <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
+            
+                    <!--강의실 A 클릭 후 sumit 끝 부분-->
+                  </v-dialog>
+                  </v-col>
+                  </v-row>
+                  </template>
+               
+
+
               </v-card-actions>
             </v-list>
+            
+            
        
             <!--test-->
 
@@ -768,6 +646,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CreateClassModalFinishTime4: "",
       CreateClassModalFinishTimeModal: false, 
 
+      CalendarFrontMessageDialog: false,
+
 
       maplist: [],
       contentlist: [],
@@ -818,8 +698,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CalendarFrontColors: ['green', 'red lighten-1'], // 색도 랜덤 값
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
       CreateClassModal : false, //  CreateClassModal 
-      CalendarFrontMessageLoader: null, // 강의 메세지 전송
-      CalendarFrontMessageLoaderloading: false, // 강의 메세지 전송
+    
 
    
       // 과목명 안에 있는 card-text 시작
@@ -854,13 +733,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     
     // 강의 메세지 전송
     watch: {
-      CalendarFrontMessageLoader () {
-        const l = this.CalendarFrontMessageLoader
+      popUpCalendarFrontMessage () {
+        const l = this.popUpCalendarFrontMessage
         this[l] = !this[l]
 
         setTimeout(() => (this[l] = false), 3000)
 
-        this.CalendarFrontMessageLoader = null
+        this.popUpCalendarFrontMessage = null
       },
     },
    // CalendarFront
@@ -871,6 +750,11 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     },
 
     methods: {
+      // CalendarFrontMessageDialog
+      popUpCalendarFrontMessage() {
+        this.CalendarFrontMessageDialog= true
+
+      },
 
       //test
       initialize () {

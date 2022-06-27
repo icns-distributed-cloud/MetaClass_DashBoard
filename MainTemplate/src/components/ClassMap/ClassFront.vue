@@ -264,10 +264,7 @@ import ClassMapModal from './ClassMapModal.vue'
               alert("강의실 이름이 중복되었습니다");
               return;
             }
-          })
-
-
-        
+          }) 
       },
 
       ClassFrontDeleteClassModal()

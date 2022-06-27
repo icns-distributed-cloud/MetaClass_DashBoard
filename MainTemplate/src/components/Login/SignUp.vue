@@ -17,7 +17,7 @@
           <v-toolbar
             color="primary"
             dark
-            flat
+           
           >
           
             <v-toolbar-title>메타 클래스</v-toolbar-title>
@@ -29,39 +29,42 @@
               <form>
                 <v-text-field
                   v-model="name"
-                  :error-messages="nameErrors"
                   :counter="10"
                   label="이름"
                   required
-                  @input="$v.name.$touch()"
-                  @blur="$v.name.$touch()"
                 ></v-text-field>
+
+                
+                <!--아이디 중복확인-->
                 <v-text-field
                   v-model="userid"
-                  :error-messages="idErros"
                   :counter="10"
                   label="아이디"
                   required
-                  @input="$v.userid.$touch()"
-                  @blur="$v.userid.$touch()"
-                ></v-text-field>
+                >
+                  <template #append>
+                    <v-btn 
+                      small 
+                      color="primary"
+                      @click="checkLoginId"
+                    >
+                      중복확인
+                    </v-btn>
+                  </template>
+                </v-text-field>
+                     
+
                 <v-text-field
                   v-model="userpass"
                   type="password"
-                  :error-messages="passErros"
                   :counter="10"
                   label="비밀번호"
                   required
-                  @input="$v.userpass.$touch()"
-                  @blur="$v.userpass.$touch()"
                 ></v-text-field>
                 <v-text-field
                   v-model="email"
-                  :error-messages="emailErrors"
                   label="이메일"
                   required
-                  @input="$v.email.$touch()"
-                  @blur="$v.email.$touch()"
                 ></v-text-field>
 
                 <v-radio-group v-model="role">
@@ -130,14 +133,19 @@ export default {
           name: "",
           userid: "",
           userpass: "",
-          email: ""
+          email: "",
+
+          // 중복체크 검사
+          IDCHECKED:false,
+
+         
         
         }
     },
 
     created() {
       var vm = this;
-      var url = "http://163.180.117.47:8088/api/department/get/departmentlist"
+      var url = "http://163.180.117.22:8088/api/department/get/departmentlist"
 
       var config = {
         headers: {
@@ -161,54 +169,88 @@ export default {
     },
 
     methods: {
-      submit() {
-        var url = "http://163.180.117.47:8088/api/users/post/register";
-
-        var usermode = 0;
-        if (this.role === "instructor") {
-          usermode = 0;
-        } else if (this.role === "student") {
-          usermode = 1;
-        } else {
-          alert("정확하게 입력해주세요.");
-          return;
-        }
-
+      // 48. 아이디 중복 체크 http://localhost:8088/api/users/post/checkLoginId
+      checkLoginId() {
+        var url = "http://163.180.117.22:8088/api/users/post/checkLoginId";
+      
         var payload = {
           loginId: this.userid,
-          password: this.userpass,
-          name: this.name,
-          userMode: usermode,
-          email: this.email,
-          departmentId: this.selectedDepartment.item_value,
-          phone: "01000000000",
-          contactType: 0
         }
-
+        
         var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
+        headers: {
+          "Content-Type": "application/json"
         }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            console.log(res);
-            if (res.data.success === true) {
-              alert("회원가입이 완료되었습니다.")
-              this.redirect();
-            }
-          })
 
         
+      }
+
+      this.$http
+        .post(url, payload, config)
+        .then(res => {
+          console.log(res);
+          if (res.data.success == true) {
+            this.IDCHECKED = true;
+            alert("사용가능한 ID 입니다.");
+          } else if (res.data.success == false) {
+            alert("사용중인 ID 입니다.");
+          }
+      
+        })
       },
+
+      submit() {
+        if(this.IDCHECKED){
+          var url = "http://163.180.117.22:8088/api/users/post/register";
+
+          var usermode = 0;
+          if (this.role === "instructor") {
+            usermode = 0;
+          } else if (this.role === "student") {
+            usermode = 1;
+          } else {
+            alert("정확하게 입력해주세요.");
+            return;
+          }
+
+          var payload = {
+            loginId: this.userid,
+            password: this.userpass,
+            name: this.name,
+            userMode: usermode,
+            email: this.email,
+            departmentId: this.selectedDepartment.item_value
+          }
+
+          var config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+
+          this.$http
+            .post(url, payload, config)
+            .then(res => {
+              console.log(res);
+              if (res.data.data.success === true) {
+                alert("회원가입이 완료되었습니다.")
+                this.redirect();
+              }
+          })
+        }
+        else{
+          alert("중복체크를 해주세요.");
+        }
+        
+        
+      },
+
       redirect() {
         var redirectPath = "/";
           
           this.$router.push(redirectPath);
-      }
+      },
+      
     }
 }
 </script>
-

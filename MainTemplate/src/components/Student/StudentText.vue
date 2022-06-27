@@ -1,83 +1,68 @@
 <!--StudentText-->
 <!--해당 과목 클릭시, "학생 참여율" & "학생 지각율" 오름차순과 내림차순으로 나타남-->
-<!--template-->
+
 <template>
   <v-card>    
     <v-toolbar
+      dark
+      color="primary"
+    >
+      <v-toolbar-title>학생 참여율 & 학생 지각율</v-toolbar-title>
+      <v-spacer></v-spacer>
+        <v-btn
+          icon
           dark
-          color="primary"
+          @click="dialog = !dialog"
         >
-        <v-toolbar-title>학생 참여율 & 학생 지각율</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn
-            icon
-            dark
-            @click="dialog = !dialog"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          </v-toolbar>
-        <v-card-title>
-     
-      
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-            ></v-text-field>
-        </v-card-title>
-        <v-data-table
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+        
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        >
+        </v-text-field>
+      </v-card-title>
+      <v-data-table
         :headers="StudentSubjectHeaders"
         :items="StudentSubjectText"
         :search="search"
         class="elevation-1"
-         
-      
-        >
-
-      
-
-
-      <!--상세보기 안에 있는 사람 아이콘을 클릭-->
-     <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-        color="cyan lighten-3"
-        depressed
-        @click="StudentIndividualModalItem(item)"
-        >
-        <v-icon
-        left
-        @click="StudentIndividualModalItem(item)"
       >
-         mdi-account
-      </v-icon>
-      상세보기
-      </v-btn>
-      
-      </template>
 
-      <template v-slot:top>
-        <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
-          <Student-Individual-Modal
-            :individualInfo="individualinfo"
-          />
-        </v-dialog>
-      </template>
+        <!--상세보기 안에 있는 사람 아이콘을 클릭-->
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn
+            color="cyan lighten-3"
+            depressed
+            @click="StudentIndividualModalItem(item)"
+            >
+            <v-icon
+              left
+              @click="StudentIndividualModalItem(item)"
+            >
+              mdi-account
+            </v-icon>
+              상세보기
+          </v-btn>
+         </template>
 
-     <!--Student-Individual-Modal안에 들어가기-->  
-    
-    </v-data-table>
-    
+        <template v-slot:top>
+          <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
+            <Student-Individual-Modal
+              :individualInfo="individualinfo"
+            />
+          </v-dialog>
+        </template>
   
-  </v-card>
- 
-  
-
- 
-
-</template>
+      </v-data-table>  
+    </v-card>
+  </template>
 
 
 <!--script-->

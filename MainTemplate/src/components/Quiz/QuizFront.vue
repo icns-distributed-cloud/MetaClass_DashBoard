@@ -13,8 +13,8 @@
       dark
     >
     <div> 
-      <compo-nent :is="QuizModal"></compo-nent>
-       <v-row>
+      <!--<compo-nent :is="QuizModal"></compo-nent>-->
+      <v-row>
         <v-col
           v-for="(item, index) in QuizFrontModalList"
           :key="index"
@@ -63,8 +63,8 @@
                     >
                     <!--상단 퀴즈 등록-->   
                         <v-toolbar
-                            flat
-                            color="purple"
+                          flat
+                          color="purple"
                         >
                         <v-toolbar-title class="front-weight-light">퀴즈 등록</v-toolbar-title> 
                         </v-toolbar>
@@ -85,7 +85,6 @@
                       
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                           
                             <v-btn
                                 color="blue-grey"
                                 @click="QuizFrontDialog = false"
@@ -107,180 +106,205 @@
                   <v-dialog v-model = "QuizModalView">
                     <div class="container-app">
                       <div class = "container-quiz">
-                        <div class = "quiz-header">
-                          <h1>퀴즈 등록</h1>
-                        </div>
-
-                        <div class = quiz-main v-for = "(element,index) in data.slice(a,b)" :key="index" v-show="quiz">
-                          <div class = "box-question">
-                            <h2>Question {{ b }} / {{ data.length }}</h2>
-                            <v-list></v-list>
-                              <v-card
-                                class="mx-auto"
-                                max-width="90%"
-                              >
-                                <v-card-text>
-                                  <v-text-field 
-                                  v-model="data[a]['title']"
-                                  label="퀴즈 입력"
-                                  > 
-                                  </v-text-field>
-                                </v-card-text>
-                            </v-card>   
+                    <div class = "quiz-header">
+                        <div class = "box-button">
+                        <v-spacer></v-spacer>
+                          <v-btn
+                            class="mx-2"
+                            fab
+                            dark
+                            color="indigo"
+                            @click="quizDialogClose()"
+                          >
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
                           </div>
+                          </div>
+                          
+                          <div class = "quiz-header">
+                            <div class = "box-button">
+                              <h1>퀴즈 등록</h1>
+                            </div>
+                          </div>
+
+                          <div class = quiz-main v-for = "(element,index) in data.slice(a,b)" :key="index" v-show="quiz">
+                            <div class = "box-question">
+                              <h2>Question {{ b }} / {{ data.length }}</h2>
+                              <v-list></v-list>
+                                <v-card
+                                  class="mx-auto"
+                                  max-width="90%"
+                                >
+                                  <v-card-text>
+                                    <v-text-field 
+                                    v-model="data[a]['title']"
+                                    label="퀴즈 입력"
+                                    > 
+                                    </v-text-field>
+                                  </v-card-text>
+                              </v-card>   
+                            </div>
+
+                            <v-list></v-list>
+                            <v-card class = "box-suggestions" max-width="90%">
+                              <ul class = "quiz_ul">
+                                <li class = "quiz_li" v-for="(item, index) in element.quizContext" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
+                                    <v-app-bar>
+                                      <div class = "checkbox-div">
+                                      <v-checkbox
+                                        v-model = "data[a]['answerYN'][index]"
+                                        hide-details
+                                        class="shrink mr-2 mt-0"
+                                      >
+                                      </v-checkbox>
+                                      </div>
+                                      <div class = "textfield-div">
+                                        <v-text-field 
+                                          v-model = "data[a]['quizContext'][index]"
+                                          label = "정답 입력"
+                                        > 
+                                        </v-text-field>
+                                      </div>
+
+                                      <div class = "box-button-delete">
+                                        <v-btn
+                                          class="mx-2"
+                                          fab
+                                          dark
+                                          x-small
+                                          color="primary"
+                                          @click="quiz_delete_list(index)"
+                                          >
+                                          <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                      </div>
+                                    </v-app-bar>
+                                  
+                                </li>
+                              </ul>
+                            </v-card> 
+                            
+                            <div class="box-button">
+                              <v-btn
+                                class="mx-2"
+                                fab
+                                dark
+                                color="red lighten-1"
+                                @click="quiz_create_list()"
+                                >
+                                <v-icon>mdi-plus</v-icon>
+                              </v-btn>
+                            </div>
+
+                          </div>
+                          <!--점수 등록 
+                          <div class = "box-score" v-if="score_show">
+                            <h2>점수 등록</h2>
+                            <h2>{{ score }}/{{ questions.length }}</h2>
+                            <div class = "btn-restart">
+                              <v-btn>Restart <i class="fas fa-sync-alt"></i></v-btn>
+                            </div>
+                          </div>-->
 
                           <v-list></v-list>
-                          <v-card class = "box-suggestions" max-width="90%">
-                            
-                            <ul class = "quiz_ul">
-                              <li class = "quiz_li" v-for="(item, index) in element.quizContext" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
-                                  <v-app-bar>
-                                    <div class = "checkbox-div">
-                                    <v-checkbox
-                                      v-model = "data[a]['answerYN'][index]"
-                                      hide-details
-                                      class="shrink mr-2 mt-0"
-                                    >
-                                    </v-checkbox>
-                                    </div>
-                                    <div class = "textfield-div">
-                                      <v-text-field 
-                                        v-model = "data[a]['quizContext'][index]"
-                                        label = "정답 입력"
-                                      > 
-                                      </v-text-field>
-                                    </div>
-
-                                    <div class = "box-button-delete">
-                                      <v-btn
-                                        class="mx-2"
-                                        fab
-                                        dark
-                                        x-small
-                                        color="primary"
-                                        @click="quiz_delete_list(index)"
-                                        >
-                                        <v-icon>mdi-delete</v-icon>
-                                      </v-btn>
-                                    </div>
-                                  </v-app-bar>
-                                
-                              </li>
-                            </ul>
-                          </v-card> 
-                          
-                          <div class = "box-button">
-                            <v-btn
-                              class="mx-2"
-                              fab
-                              dark
-                              small
-                              color="red lighten-1"
-                              @click="quiz_create_list()"
-                              >
-                              <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                          </div>
-
-                        </div>
-                        <!--점수 등록 
-                        <div class = "box-score" v-if="score_show">
-                          <h2>점수 등록</h2>
-                          <h2>{{ score }}/{{ questions.length }}</h2>
-                          <div class = "btn-restart">
-                            <v-btn>Restart <i class="fas fa-sync-alt"></i></v-btn>
-                          </div>
-                        </div>-->
-
-                        <v-list></v-list>
-                        <template>
-                          <div class = "quiz-footer-next">
-                            <div class = "box-button">
-                              <v-btn rounded color="primary" dark width=25% @click="backQuestion">Back</v-btn>
-                              <v-spacer></v-spacer>
-                              <v-btn rounded color="primary" dark width=25% @click="nextQuestion">Next</v-btn> 
-                            </div>
-                          </div>
-                          </template>
                           <template>
-                            <div class = "quiz-footer">
-                              <div class = "box-button create_quiz">
-                                <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="popUpQuizScoreModal()"><h3>배점</h3></v-btn>
+                            <div class = "quiz-footer-next">
+                              <div class = "box-button">
+                                <v-btn rounded color="primary" dark width=25% @click="backQuestion">Back</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn rounded color="primary" dark width=25% @click="nextQuestion">Next</v-btn> 
                               </div>
                             </div>
-                          </template>
+                            </template>
 
-                          <!--점수입력-->
-                          <template>
-                            <v-row>
-                              <v-col>
-                                <v-dialog
-                                  v-model="QuizScoreModal"
-                                  max-width="500px"
-                                >
-                                <!--퀴즈 등록-->
-                                  <template>
-                                    <v-card>
-                                      <v-toolbar
-                                        color="primary"
-                                        dark
-                                      ><h2>점수 등록</h2>
-                                      </v-toolbar>
-                                      <!--scroll-->
-                                      <v-sheet 
-                                        id="classmap-mainscroll"
-                                        class="overflow-y-auto"
-                                        max-height="500"
-                                      >
-                                      <v-list></v-list>
-                                      <!--문제당 점수항목-->
-                                      <v-card class = "box-suggestions" max-width="90%">
-                                        <ul class = "quiz_ul">
-                                          <li class = "quiz_li" v-for="(item, index) in data.length" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
-                                            <v-app-bar>
-                                              <div 
-                                                class = "score-index" 
-                                                hide-details
-                                              ><h3>{{index + 1}}번</h3> 
-                                              </div>
-                                                <div class = "textfield-div">
-                                                  <v-text-field 
-                                                    v-model = "data[index]['score']"
-                                                    @input = "GetTotalScore()"
-                                                  > 
-                                                  </v-text-field>
-                                              </div>
-                                            </v-app-bar>   
-                                          </li>
-                                        </ul>
-                                      </v-card> 
-                                    </v-sheet>
-                                    <!--이전 / N/1-->
+                            <!--배점-->
+                            <template>
+                              <div class = "quiz-footer">
+                                <div class = "box-button create_quiz">
+                                  <v-btn rounded color="orange lighten-1" dark width=100% height="65%" @click="popUpQuizScoreModal()"><h3>배점</h3></v-btn>
+                                </div>
+                              </div>
+                            </template>
+
+                            <!--점수입력-->
+                            <template>
+                              <v-row>
+                                <v-col>
+                                  <v-dialog
+                                    v-model="QuizScoreModal"
+                                    max-width="500px"
+                                  >
+                                  <!--점수 등록-->
                                     <template>
-                                      <div class = "quiz-footer-next">
-                                        <div class = "box-button">
-                                        
+                                      <v-card>
+                                        <v-toolbar
+                                          color="primary"
+                                          dark
+                                        ><h2>점수 등록</h2>
+                                        <v-spacer></v-spacer>
                                           <v-btn
-                                            rounded
-                                            color="blue lighten-1"
-                                            depressed
+                                            icon
                                             dark
-                                            width="20%"
-                                            @click="QuizScoreModal = false"
-                                          >이전
+                                            @click="QuizScoreDialogClose()"
+                                          >
+                                            <v-icon>mdi-close</v-icon>
                                           </v-btn>
-                                          <v-spacer></v-spacer>
-                                            <h3>총점: {{ totalscore }}</h3>
+                                        </v-toolbar>
+                                        <!--scroll-->
+                                        <v-sheet 
+                                          id="classmap-mainscroll"
+                                          class="overflow-y-auto"
+                                          max-height="500"
+                                        >
+                                        <v-list></v-list>
+                                        <!--문제당 점수항목-->
+                                        <v-card class = "box-suggestions" max-width="90%">
+                                          <ul class = "quiz_ul">
+                                            <li class = "quiz_li" v-for="(item, index) in data.length" :key="index" :class = "select? check(item) : ''" click="selectResponse(item)">
+                                              <v-app-bar>
+                                                <div 
+                                                  class = "score-index" 
+                                                  hide-details
+                                                ><h3>{{index + 1}}번</h3> 
+                                                </div>
+                                                  <div class = "textfield-div">
+                                                    <v-text-field 
+                                                      v-model = "data[index]['score']"
+                                                      @input = "GetTotalScore()"
+                                                    > 
+                                                    </v-text-field>
+                                                </div>
+                                              </v-app-bar>   
+                                            </li>
+                                          </ul>
+                                        </v-card> 
+                                      </v-sheet>
+                                      <!--이전 / N/1-->
+                                      <template>
+                                        <div class = "quiz-footer-next">
+                                          <div class = "box-button">
+                                          
+                                            <v-btn
+                                              rounded
+                                              color="blue lighten-1"
+                                              depressed
+                                              dark
+                                              width="20%"
+                                              @click="QuizScoreModal = false"
+                                            >이전
+                                            </v-btn>
                                             <v-spacer></v-spacer>
-                                          <v-btn
-                                            rounded
-                                            color="blue lighten-1"
-                                            depressed
-                                            dark
-                                            width="20%"
-                                            @click="QuizScoreDeviedN(), GetTotalScore()"
-                                          >N/1
-                                          </v-btn>
+                                              <h3>총점: {{ totalscore }}</h3>
+                                              <v-spacer></v-spacer>
+                                            <v-btn
+                                              rounded
+                                              color="blue lighten-1"
+                                              depressed
+                                              dark
+                                              width="20%"
+                                              @click="QuizScoreDeviedN(), GetTotalScore()"
+                                            >N/1
+                                            </v-btn>
                           
                                         </div>
                                       </div>
@@ -368,12 +392,12 @@ import QuizModal from './QuizModal.vue'
   },    
 
   methods: {
+    // 42. 퀴즈 리스트 http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
       fetchData() {
         this.QuizFrontModalList = [];
-
-        var url = "";
-
         var userId = this.$store.getters.getUserInfo.id;
+        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId="+userId;
+        //var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=userId";
         var payload = {
           instructorId: userId
         }
@@ -385,18 +409,16 @@ import QuizModal from './QuizModal.vue'
         }
 
         this.$http
-          .post(url, payload, config)
+          .get(url, payload, config)
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
-      
-                  this.QuizFrontModalList.push({
-                  id: element.id,
-                  name: element.name,
-                })  
-              })
-            }
-            console.log(this.QuizFrontModalList);
+                this.QuizFrontModalList.push({
+                id: element.id,
+                name: element.name,
+              })  
+            })
+          }
           })
       },
 
@@ -482,6 +504,10 @@ import QuizModal from './QuizModal.vue'
     {
       this.totalscore += parseFloat(this.data[i]['score']);
     }
+
+    if (this.totalscore % 100) {
+      this.totalscore = this.totalscore.toFixed(1);
+    }
   },
 
   QuizScoreDeviedN() {
@@ -496,39 +522,63 @@ import QuizModal from './QuizModal.vue'
     }
   },
 
-   // 퀴즈 생성하기
-    createQuestion()
-    {
-      var url = "http://163.180.117.47:8088/api/quiz/post/createquiz";
+   // 40. 퀴즈 생성하기
+  createQuestion()
+  {
+    var url = "http://163.180.117.22:8088/api/quiz/post/createquiz";
 
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          name: this.QuizFrontMapName,
-          data: this.data,
-          instructorId: userId
+    var userId = this.$store.getters.getUserInfo.id;
+    var payload = {
+      name: this.QuizFrontMapName,
+      data: this.data,
+      instructorId: userId
+    }
+
+    var config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+
+    console.log(this.data);
+    this.$http
+      .post(url, payload, config)
+      .then(res => {
+        console.log(res.data.success);
+        if (res.data.success === true) {
+          alert("퀴즈 등록이 완료되었습니다.");
+          this.QuizScoreModal = false;
+          this.QuizModalView = false;
+          //this.score_show = true; // score_show
+          this.fetchData();
+        } else {
+          alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
+          return;
         }
+      })
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            console.log(res.data.success);
-            if (res.data.success === true) {
-              alert("퀴즈 등록이 완료되었습니다.");
-              this.score_show = true;
-              this.fetchData();
-            } else {
-              alert(res.data.message);
-              return;
-            }
-          })
-      },
+      // data 초기화
+      this.data = [
+        {
+          title: '',
+          quizContext: [],
+          answerYN: [],
+          score: 0,
+        },
+      ]
+      this.QuizFrontMapName = "";
+    },
       
+      // 퀴즈 등록 창 닫기
+      quizDialogClose (){
+        this.QuizModalView = false
+      },
+
+      // 점수 등록 창 닫기
+      QuizScoreDialogClose(){
+        this.QuizScoreModal = false
+      },
+       
   },
   }
 </script>
