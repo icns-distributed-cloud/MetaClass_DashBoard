@@ -541,12 +541,44 @@
                           </v-icon>
                         </v-btn>
                       </v-toolbar>
-                      <v-card-title>
 
-                        
+                      <v-card-title>
+                        <v-container fluid>
+                          <v-textarea
+                            filled
+                            auto-grow
+                            rows="4"
+                            row-height="30"
+                            shaped
+                            clearable
+                            clear-icon="mdi-close-circle"
+                            label="내용을 입력해주세요."
+                            value="강의실이 변경되었으니 참고바랍니다."
+                          ></v-textarea>
+                        </v-container>
                       </v-card-title>
-                      </v-card>
-                      <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
+
+                      <!--강의 메세지 전송 내용입력 아래에 있는 강의 메세지-->
+                      <v-card-subtitle>
+                        <v-card-actions> 
+                          <v-btn
+                            color="teal darken-4"
+                            class="ma-2 white--text"
+                            @click="popUpCalendarFrontMessage()"
+                          >
+                            강의 메세지 전송
+                            <v-icon
+                              right
+                              dark
+                            >
+                              mdi-email
+                            </v-icon>
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card-subtitle>
+                    </v-card>
+
+                  <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
             
                     <!--강의실 A 클릭 후 sumit 끝 부분-->
                   </v-dialog>
