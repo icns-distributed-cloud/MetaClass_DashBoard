@@ -102,7 +102,7 @@
                             >
                             </v-text-field>
                           </template>
-                          <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
+                          <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="CreateClassModalFinishDate3">
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
                             <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
@@ -153,7 +153,7 @@
                             >  
                             </v-text-field>
                           </template>  
-                          <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
+                          <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
                             <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
@@ -170,7 +170,7 @@
                         >
                           <v-time-picker
                             v-if="CreateClassModalFinishTimeModal"
-                            v-model="CreateClassModalFinishTime4"
+                            v-model="CreateClassModalFinishTime4" :minHour="CreateClassModalStartTime2" :minMinute="CreateClassModalStartTime2"
                             full-width
                           >
                             <v-spacer></v-spacer>
@@ -305,12 +305,12 @@
             // 강의실 선택
             CreateClassModalDialog: true,
             // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
-            CreateClassModalStartDate1: "",
+            //CreateClassModalStartDate1: "",
             CreateClassModalStartDateModal: false,
             CreateClassModalStartTime2: "",
             CreateClassModalStartTimeModal: false,
             // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
-            CreateClassModalFinishDate3: "",
+            //CreateClassModalFinishDate3: "",
             CreateClassModalFinishDateModal: false,
             CreateClassModalFinishTime4: "",
             CreateClassModalFinishTimeModal: false, 
@@ -324,8 +324,14 @@
             // 퀴즈 선택
             CreateClassModalQuiz: [],
             CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'], // 퀴즈 item 선택
-            CreateClassModalTitle: ""
-            // 창 닫기
+            CreateClassModalTitle: "",
+         
+
+            // 시간 시작, 종료 지정
+            date: new Date().toISOString().substr(0, 10),
+            CreateClassModalStartDate1: new Date().toISOString().substr(0, 10),
+            CreateClassModalFinishDate3: new Date().toISOString().substr(0, 10),
+
             
             
             // 콘텐츠 파일 첨부
@@ -340,6 +346,7 @@
   
 
     methods: {
+
       selectstudent() {
         console.log(this.selectedStudents)
       },
@@ -488,19 +495,12 @@
             studentId: element.studentId
           })
         })
-
-        var contentId = ""
-        if (this.CreateClassModalFile === "") {
-          contentId = null;
-        } else {
-          contentId = this.CreateClassModalFile;
-        }
-
+        
         var payload = {
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
-          contentId: contentId,
+          contentId: this.CreateClassModalFile,
           stulist: studentlist,
           startTime: this.CreateClassModalStartDate1+":00",
           endTime: this.CreateClassModalFinishDate3+":00"

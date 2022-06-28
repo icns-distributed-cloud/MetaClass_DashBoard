@@ -510,6 +510,7 @@
                   mdi-email
                 </v-icon>
               </v-btn>
+
               <!--강의 메세지 전송 클릭 후 dialog-->
             <template>
               <v-row>
@@ -530,11 +531,13 @@
                       >
                         <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
                         <v-spacer></v-spacer>
+
+
                         <!--강의 메시지 전송 dialog 닫기 버튼-->
                         <v-btn
                           icon
                           dark
-                          @click="popUpCalendarFrontMessage()"
+                          @click="closeCalendarFrontMessage"
                         >
                           <v-icon>
                             mdi-close
@@ -553,38 +556,67 @@
                             clearable
                             clear-icon="mdi-close-circle"
                             label="내용을 입력해주세요."
-                            value="강의실이 변경되었으니 참고바랍니다."
+                            v-model="MessageContext"
                           ></v-textarea>
                         </v-container>
                       </v-card-title>
 
                       <!--강의 메세지 전송 내용입력 아래에 있는 강의 메세지-->
                       <v-card-subtitle>
-                        <v-card-actions> 
-                          <v-btn
-                            color="teal darken-4"
-                            class="ma-2 white--text"
-                            @click="popUpCalendarFrontMessage()"
-                          >
-                            강의 메세지 전송
-                            <v-icon
-                              right
-                              dark
+                        <v-row class="ma-2" justify="center">
+                          <v-card-actions> 
+                            <v-btn
+                              color="teal darken-4"
+                              class="ma-2 white--text"
+                              large
+                              @click="appendCalendarFrontMessage()"
                             >
-                              mdi-email
-                            </v-icon>
-                          </v-btn>
+                              <h3>강의 메세지 전송</h3>
+                              <v-icon
+                                right
+                                dark
+                              >
+                                mdi-email
+                              </v-icon>
+                            </v-btn>
+                          </v-card-actions>
+                        </v-row>
+
+                        <!--이메일, sms 문자-->
+                        <v-card-actions>
+                          <v-row class="ma-2" justify="space-around">
+                            <v-checkbox
+                              v-model="emailClick"
+                              color="blue darken-1"
+                            >
+                              <template v-slot:label>
+                                <h3>이메일</h3>
+                              </template>
+                            </v-checkbox>
+                        
+                            <v-checkbox
+                              v-model="messageClick"
+                              color="blue darken-1"
+                            >
+                              <template v-slot:label>
+                                <h3>SMS 문자</h3>
+                              </template>
+                            </v-checkbox>
+                          </v-row>
                         </v-card-actions>
                       </v-card-subtitle>
+                      
+               
+          
                     </v-card>
 
                   <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
             
                     <!--강의실 A 클릭 후 sumit 끝 부분-->
                   </v-dialog>
-                  </v-col>
-                  </v-row>
-                  </template>
+                </v-col>
+              </v-row>
+            </template>
                
 
 
@@ -677,8 +709,14 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CreateClassModalFinishDateModal: false,
       CreateClassModalFinishTime4: "",
       CreateClassModalFinishTimeModal: false, 
-
+      // 강의 메세지 전송 dialog 닫기 버튼
       CalendarFrontMessageDialog: false,
+      // 이메일 클릭(선택) 
+      emailClick: false,
+      // 메세지 클릭(선택) 
+      messageClick: false,
+      // 메세지 내용
+      MessageContext:"",
 
 
       maplist: [],
@@ -787,6 +825,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CalendarFrontMessageDialog= true
 
       },
+      // CalendarFrontMessageDialog
+      closeCalendarFrontMessage() {
+        this.CalendarFrontMessageDialog= false
+        },
+
+  
+
 
       //test
       initialize () {
@@ -853,7 +898,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.popupContentListDialog = true
       },
       closeLectureList(){
-        this.popupMaplistDialog = false
+        this.popupContentListDialog = false
       },
       Setmapdata(item){
         this.CalendarFrontSelectedEvent.showevent[3].CalendarClassnameAction = item.name
@@ -1313,7 +1358,67 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     },
     test1() {
       console.log(this.CreateClassModalStartDate1);
-    }
+    },
+
+    // 강의 메시지 전송 appendCalendarFrontMessage
+    // (1) 이메일 전송 http://localhost:8088/api/mail/send 
+    
+    appendCalendarFrontMessage() {
+      if(this.emailClick) {
+        let url = "http://163.180.117.22:8088/api/mail/send";
+
+        let userId = this.$store.getters.getUserInfo.id;
+        let payload = {
+          instructorId: userId,
+          context: this.MessageContext,
+        }
+
+        let config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            if (res.data.success === true) {
+              alert("메일 전송이 완료되었습니다.")
+              this.closeCalendarFrontMessage();
+            } else if (res.data.success === false) {
+              alert(res.data.message);
+            }
+          }) 
+      } else if(this.messageClick) {
+          let url = "http://163.180.117.22:8088/api/sms/send"; // http://localhost:8088/api/sms/send 
+
+          //var userId = this.$store.getters.getUserInfo.id;
+          let payload = {
+            //instructorId: userId,
+            context: this.MessageContext,
+          }
+
+          let config = {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+
+          this.$http
+            .post(url, payload, config)
+            .then(res => {
+              if (res.data.success === true) {
+                alert("메세지 전송이 완료되었습니다.")
+                this.closeCalendarFrontMessage();
+              } else if (res.data.success === false) {
+                alert(res.data.message);
+              }
+            })
+      }
+      
+    },
+
+
   },
 }
   

@@ -1,6 +1,5 @@
 <!--Content front-->
 <template>
-<v-container fluid>
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
@@ -86,6 +85,7 @@
                         <!-- 콘텐츠 파일 첨부-->
                         <v-file-input
                           v-model="ContentFrontFiles"
+                          :accept="fileAccept"
                           color="blue lighten-3"
                           counter
                           label="File input"
@@ -95,7 +95,7 @@
                           outlined
                           :show-size="1000"
                           loading=true
-                          @change=Upload()
+                          @change="Upload()"
                         >
                         
                         <template v-slot:selection="{ index, text }">
@@ -147,7 +147,6 @@
     </template>   
     </v-responsive>   
   </v-card> 
-  </v-container>
 </template>
 
 
@@ -162,8 +161,10 @@ import ContentModal from './ContentModal.vue'
 
   components: { ContentModal },
     data: () => ({
+      // 컨텐츠 파일업로드 형식 지정
+      ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
+      fileAccept: 'video/*',
       contentId: "",
-      ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
       ContentFrontMapName: "", // 컨텐츠 이름
       ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
     // ContentFrontModalList
