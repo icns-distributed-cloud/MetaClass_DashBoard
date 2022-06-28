@@ -408,6 +408,9 @@
 
 
       },
+      fetchQuizData() {
+
+      },
      
       fetchMapData() {
         this.maplist = [];

@@ -67,6 +67,12 @@
                   required
                 ></v-text-field>
 
+                <v-text-field
+                  v-model="phone"
+                  label="핸드폰 번호"
+                  required
+                ></v-text-field>
+
                 <v-radio-group v-model="role">
                   <v-radio
                     label="강의자"
@@ -134,6 +140,7 @@ export default {
           userid: "",
           userpass: "",
           email: "",
+          phone: "",
 
           // 중복체크 검사
           IDCHECKED:false,
@@ -219,7 +226,8 @@ export default {
             name: this.name,
             userMode: usermode,
             email: this.email,
-            departmentId: this.selectedDepartment.item_value
+            departmentId: this.selectedDepartment.item_value,
+            phone: this.phone
           }
 
           var config = {
@@ -232,11 +240,14 @@ export default {
             .post(url, payload, config)
             .then(res => {
               console.log(res);
-              if (res.data.data.success === true) {
+              if (res.data.success === true) {
                 alert("회원가입이 완료되었습니다.")
                 this.redirect();
               }
           })
+            .catch(res => {
+              alert(res);
+            })
         }
         else{
           alert("중복체크를 해주세요.");
