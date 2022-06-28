@@ -237,6 +237,8 @@
                         v-model="CreateClassModalQuiz"
                         :items="CreateClassModalQuizItem"
                         label="퀴즈 선택"
+                        item-text="item_text"
+                        item-value="item_value"
                        
                         solo-inverted
                         color="white"
@@ -323,7 +325,7 @@
             CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
             // 퀴즈 선택
             CreateClassModalQuiz: [],
-            CreateClassModalQuizItem: ['퀴즈 1', '퀴즈 2'], // 퀴즈 item 선택
+            CreateClassModalQuizItem: [], // 퀴즈 item 선택
             CreateClassModalTitle: "",
          
 
@@ -342,6 +344,7 @@
       this.fetchMapData();
       this.fecthDepartment();
       this.fetchContent();
+      this.fetchQuizData();
     },
   
 
@@ -409,7 +412,27 @@
 
       },
       fetchQuizData() {
+        var userId = this.$store.getters.getUserInfo.id;
+        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
 
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .get(url, config)
+          .then(res => {
+            if (res.data.data.length >0) {
+              res.data.data.forEach(element => {
+                this.CreateClassModalQuizItem.push({
+                  item_text: element.name,
+                  item_value: element.id
+                })
+              })
+            }
+          })
       },
      
       fetchMapData() {
@@ -500,6 +523,7 @@
         })
         
         var payload = {
+          quizId: this.CreateClassModalQuiz,
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
