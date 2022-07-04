@@ -31,7 +31,7 @@ Vue.use(VuetifyDialog), {
         allowModifiers: true,
     }],
 
-
+Vue.use
 
     Vue.config.productionTip = false
 Vue.prototype.$http = axios;

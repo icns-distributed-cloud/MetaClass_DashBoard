@@ -325,7 +325,7 @@
                     <v-btn
                     icon
                     dark
-                    @click="closeLectureList"
+                    @click="closeMapList"
                     >
                       <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -896,6 +896,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       popupContentList() {
         this.fetchContentData()
         this.popupContentListDialog = true
+      },
+      closeMapList() {
+        this.popupMaplistDialog = false
       },
       closeLectureList(){
         this.popupContentListDialog = false

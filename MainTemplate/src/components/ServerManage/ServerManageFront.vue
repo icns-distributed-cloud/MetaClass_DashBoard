@@ -68,7 +68,7 @@
                           flat
                           color="purple"
                         >
-                          <v-toolbar-title class="font-weight-light"> 서버 등록 </v-toolbar-title>
+                          <v-toolbar-title class="font-weight-light"> 서버 관리 </v-toolbar-title>
                         </v-toolbar>
 
                         <v-card-text>
@@ -97,7 +97,8 @@
                             item-text="name"
                             item-value="value"
                             label="강좌 리스트"
-                            color="white"   
+                            color="white"
+                            no-data-text="생성한 강좌가 없습니다"
                           ></v-autocomplete>
                         </v-card-text>
                        

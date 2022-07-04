@@ -72,9 +72,7 @@
                         <v-card-text>
                           <v-text-field
                             v-model="ClassFrontMapName"
-                            :counter="10"
                             label="강의실 이름"
-                            required
                             color="white"
                           >
                           </v-text-field>

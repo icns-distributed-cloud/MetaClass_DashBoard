@@ -128,24 +128,7 @@
       >
         mdi-pencil
       </v-icon>
-     <!--휴지통 아이콘 생성-->
-      <v-icon
-        elevation="4"
-        fab
-        class="cyan"
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-trash-can-outline
-      </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
+     
     </template>
   </v-data-table>
   </v-card>
