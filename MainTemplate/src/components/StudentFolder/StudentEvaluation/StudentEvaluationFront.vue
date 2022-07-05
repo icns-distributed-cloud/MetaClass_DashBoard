@@ -19,6 +19,7 @@
              :headers="StudentIndividualHeaders"
              :items="StudentIndividualText"
              :search="search"
+              no-data-text="신청한 강의가 없습니다"
             >
             
     </v-data-table>
