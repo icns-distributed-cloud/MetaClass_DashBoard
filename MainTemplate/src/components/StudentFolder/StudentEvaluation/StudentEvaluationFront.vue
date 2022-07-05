@@ -5,7 +5,7 @@
 <template>
   <v-card>
           <v-card-title>
-            강의 참여율 & 강의 지각율
+            강좌 참여율 & 강좌 지각율
             <v-spacer></v-spacer>
            <v-text-field
             v-model="search"
@@ -19,7 +19,7 @@
              :headers="StudentIndividualHeaders"
              :items="StudentIndividualText"
              :search="search"
-              no-data-text="신청한 강의가 없습니다"
+              no-data-text="신청한 강좌가 없습니다"
             >
             
     </v-data-table>
