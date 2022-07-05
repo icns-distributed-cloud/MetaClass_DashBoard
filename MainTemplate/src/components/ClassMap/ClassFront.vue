@@ -252,8 +252,7 @@ import ClassMapModal from './ClassMapModal.vue'
 
         this.$http
           .post(url, payload, config)
-          .then(res => {
-            console.log(res.data.success);
+          .then(res => {  
             if (res.data.success === true) {
               alert("강의실 생성이 완료되었습니다.");
               this.ClassFrontDialog = false;

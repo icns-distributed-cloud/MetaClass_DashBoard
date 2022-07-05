@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.47:8088"
+const resourceHost = "http://163.180.117.22:8088"
 
 export default new Vuex.Store({
     plugins: [
@@ -17,7 +17,11 @@ export default new Vuex.Store({
     state: {
         id: null,
         name: null,
-        userMode: null
+        userMode: null,
+        loginId: null,
+        email: null,
+        departmentName: null,
+        phone: null
     },
     getters: {
         isLogin(state){
@@ -27,24 +31,40 @@ export default new Vuex.Store({
             return {
                 id: state.id,
                 name: state.name,
-                userMode: state.userMode
+                userMode: state.userMode,
+                loginId: state.loginId,
+                email: state.email,
+                departmentName: state.departmentName,
+                phone: state.phone
             }
         }
     },
     mutations: {
-        LOGIN(state, {id, name, userMode}) {
+        LOGIN(state, {id, name, userMode, loginId, email, departmentName, phone}) {
             state.id = id;
             state.name = name;
             state.userMode = userMode;
+            state.loginId = loginId;
+            state.email = email;
+            state.departmentName = departmentName;
+            state.phone = phone;
 
             localStorage.id = id;
             localStorage.name = name;
             localStorage.userMode = userMode;
+            localStorage.loginId = loginId;
+            localStorage.email = email;
+            localStorage.departmentName = departmentName;
+            localStorage.phone = phone;
         },
         LOGOUT(state) {
             state.id = null;
             state.name = null;
             state.userMode = null;
+            state.loginId = null;
+            state.email = null;
+            state.departmentName = null;
+            state.phone = null;
 
             localStorage.clear();
         }
@@ -74,7 +94,11 @@ export default new Vuex.Store({
                         commit("LOGIN", {
                             id: parsedData.id,
                             name: parsedData.name,
-                            userMode: userMode
+                            userMode: userMode,
+                            loginId: parsedData.loginId,
+                            email: parsedData.email,
+                            departmentName: parsedData.departmentName,
+                            phone: parsedData.phone
                         })
                         return "success";
                     } else {

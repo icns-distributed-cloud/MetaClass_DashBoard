@@ -33,6 +33,7 @@
       return {
         search: '',
         subjectlist: [],
+        StudentIndividualText: [],
        
         // headers
         StudentIndividualHeaders: [
@@ -47,39 +48,7 @@
           { text: '지각여부', value: 'tardy' },  // tardy (지각율)
          
         ],
-        StudentIndividualText: [
-          {
-            subject: '컴퓨터개론',
-            participation: 80,
-            tardy: 10,
-          },
-          {
-            subject: '선형대수',
-            participation: 70,
-            tardy: 20,
-          },
-          {
-            subject: '컴퓨터구조',
-            participation: 50,
-            tardy: 30,
-          },
-          {
-            subject: '데이터센터프로그래밍',
-            participation: 95,
-            tardy: 0.5,
-          },
-          {
-            subject: '컴퓨터네트워크',
-            participation: 65,
-            tardy: 35,
-          },
-          {
-            subject: '인공지능',
-            participation: 75,
-            tardy: 10,
-          },
-          
-        ],
+ 
         
 
       }
