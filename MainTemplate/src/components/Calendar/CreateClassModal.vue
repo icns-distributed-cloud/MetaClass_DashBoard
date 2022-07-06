@@ -42,10 +42,10 @@
                 <v-list>
                   <v-list-item
                     v-for="(item, index) in maplist"
-                    :key=index
+                    :key=index,
                   > 
                   <v-btn
-                    width=98%
+                    width="98%"
                     color="light-blue lighten-2"
                     v-bind="attrs"
                     v-on=on
@@ -122,6 +122,7 @@
                             v-if="CreateClassModalStartTimeModal"
                             v-model="CreateClassModalStartTime2"
                             full-width
+                            :allowed-minutes="allowedInterval"
                           >
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
@@ -170,7 +171,7 @@
                         >
                           <v-time-picker
                             v-if="CreateClassModalFinishTimeModal"
-                            v-model="CreateClassModalFinishTime4" :minHour="CreateClassModalStartTime2" :minMinute="CreateClassModalStartTime2"
+                            v-model="CreateClassModalFinishTime4"
                             full-width
                           >
                             <v-spacer></v-spacer>
@@ -189,7 +190,7 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="소속 선택"
-                        @change=test()
+                        @change="test()"
                         solo-inverted
                         color="white"
                       >    
@@ -203,7 +204,7 @@
                       item-key="name"
                       hide-default-footer
                       show-select
-                      @click:row=selectstudent()
+                      @click:row="selectstudent()"
                     >
                       <template v-slot:top>
                         <v-switch
@@ -253,13 +254,13 @@
                     <v-btn
                       color="primary"
                       text
-                      @click=CreateClass()
+                      @click="CreateClass()"
                     >등록 확인
                     </v-btn>
                     <v-btn
                       color="primary"
                       text
-                      @click=SetSelectClassActive(CreateClassModalDialog)
+                      @click="SetSelectClassActive(CreateClassModalDialog)"
                     >닫기
                     </v-btn>
 
@@ -349,15 +350,18 @@
   
 
     methods: {
-
+      // 시간 5분 간격으로 나눠질 때 TRUE
+      allowedInterval: m => m % 5 == 0,
       selectstudent() {
         console.log(this.selectedStudents)
       },
       mainDialogClose(){
       this.CreateClassModalDialog = false
        },
+
+      // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
       fetchContent() {
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+        var url = "http://163.180.117.22:8088/api/content/post/contentlist"; 
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -373,6 +377,10 @@
         this.$http
           .post(url, payload, config)
           .then(res => {
+            this.CreateClassModalFileItem.push({
+              item_value: null,
+              item_text: "컨텐츠 없음"
+            })
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 this.CreateClassModalFileItem.push({
@@ -382,11 +390,10 @@
               })
             }
           })
+       },
 
-
-      },
       fecthDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+        var url = "http://163.180.117.22:8088/api/department/get/departmentlist";
 
         var config = {
           headers: {
@@ -407,13 +414,12 @@
               })
             }
           })
-
-
-
       },
+      
+      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
       fetchQuizData() {
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=" + userId;
 
         var config = {
           headers: {
@@ -424,6 +430,10 @@
         this.$http
           .get(url, config)
           .then(res => {
+            this.CreateClassModalQuizItem.push({
+              item_value: null,
+              item_text: "퀴즈 없음"
+            })
             if (res.data.data.length >0) {
               res.data.data.forEach(element => {
                 this.CreateClassModalQuizItem.push({
@@ -438,7 +448,7 @@
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        var url = "http://163.180.117.22:8088/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -504,6 +514,8 @@
               this.CreateClassModalDialog = false;
           }
       },
+
+      // 강좌 생성 : 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture 
       CreateClass() {
         if (this.CreateClassModalBelong === "") {
           alert("부서를 선택하세요.");
@@ -511,7 +523,7 @@
         } else {
           console.log("wler");
         }
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/createlecture"
 
         var userId = this.$store.getters.getUserInfo.id;
 
@@ -523,7 +535,7 @@
         })
         
         var payload = {
-          quizId: this.CreateClassModalQuiz,
+          quizId: this.CreateClassModalQuizItem.item_value,
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
@@ -539,7 +551,10 @@
           }
         }
 
-        this.$http
+        var startdate = new Date(this.CreateClassModalStartDate1+":00");
+        var enddate = new Date(this.CreateClassModalFinishDate3+":00");
+        if (startdate < enddate) {
+          this.$http
           .post(url, payload, config)
           .then(res => {
             if (res.data.success === true) {
@@ -551,13 +566,18 @@
               return;
             }
           })
+        }
+            else {
+              alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
+          }
 
       },
+
       test() {
         this.belongstudents = []
         
         console.log(this.CreateClassModalBelong);
-        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
+        var url = "http://163.180.117.22:8088/api/users/post/studentlistbydepartment";
 
         var payload = {
           departmentId: this.CreateClassModalBelong

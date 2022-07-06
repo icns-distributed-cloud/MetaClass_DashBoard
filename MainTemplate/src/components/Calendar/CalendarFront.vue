@@ -98,6 +98,7 @@
           @click:date="CalendarFrontViewDay"
           @change="CalendarFrontUpdateRange"
           font-weight-black
+          interval-height="96"
         ></v-calendar>
         <!--class="test-css black--text"-->
        
@@ -131,7 +132,7 @@
                 color="blue-grey"
                 fab
                 small
-                @click=editAllItem();
+                @click="editAllItem()"
               >
                 <v-icon>
                   mdi-pencil
@@ -177,13 +178,13 @@
                           <v-btn
                             color="primary"
                             text
-                            @click=saveLectureName()
+                            @click="saveLectureName()"
                           >등록 확인
                           </v-btn>
                           <v-btn
                             color="primary"
                             text
-                            @click=closeLectureName()
+                            @click="closeLectureName()"
                           >닫기
                           </v-btn>
 
@@ -283,6 +284,7 @@
                 >
                   mdi-pencil
                 </v-icon>
+
                 <v-icon
                   small
                   class="mr-2"
@@ -292,11 +294,32 @@
                   mdi-pencil
                 </v-icon>
 
+                <!--참여인원수 : 회원(학생)리스트-->
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="popupStudentList()"
+                  v-else-if="isStudentList(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+
+                <!--컨텐츠 펜 아이콘-->
                 <v-icon
                   small
                   class="mr-2"
                   @click="popupContentList()"
                   v-else-if="isContent(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+                
+                <!--퀴즈 펜 아이콘-->
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="popupQuizList()"
+                  v-else-if="isQuiz(item)"
                 >
                   mdi-pencil
                 </v-icon>
@@ -325,7 +348,7 @@
                     <v-btn
                     icon
                     dark
-                    @click="closeMapList"
+                    @click="closeClassList"
                     >
                       <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -357,9 +380,53 @@
               </v-card>
             </v-dialog>
 
+             <!-- 참여 인원수 dialog-->
+            <v-dialog
+              v-model="popupStudentListDialog"
+              max-width="500px"
+            >
+            <!--강의실 상단 box-->
+              <v-card>
+                  <v-toolbar
+                    class="overflow-hidden mx-auto"
+                    color="light-blue darken-4"
+                    dark  
+                  >
+                  
+                  <v-toolbar-title>참여자 정보</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                    <v-btn
+                    icon
+                    dark
+                    @click="closeStudentList"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <!--참여자 정보 리스트--> 
+                <v-col cols="auto">
+                  <v-dialog
+                    transition="dialog-bottom-transition"
+                    max-width="600"
+                  >
+                   <!--v-data table-->
+                    <v-data-table
+                      :headers="headers"
+                      :items="CalendarFrontSelectedEvent.showevent"
+                      class="elevation-1"
+                      hide-default-footer
+                    >
+        
+                    </v-data-table>
+                    
+                  </v-dialog>
+                </v-col>
+              </v-card>
+            </v-dialog>
 
 
 
+           <!-- 컨텐츠 dialog-->
             <v-dialog
               v-model="popupContentListDialog"
               max-width="500px"
@@ -377,12 +444,12 @@
                     <v-btn
                     icon
                     dark
-                    @click="closeLectureList"
+                    @click="closeContentsList"
                     >
                       <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-toolbar>
-                <!--강의실 A--> 
+                <!--컨텐츠 이름--> 
                 <v-col cols="auto">
                   <v-dialog
                     transition="dialog-bottom-transition"
@@ -395,7 +462,7 @@
                           :key=index
                         > 
                         <v-btn
-                          width=98%
+                          width="98%"
                           color="light-blue lighten-2"
                           v-bind="attrs"
                           v-on=on
@@ -408,6 +475,58 @@
                 </v-col>
               </v-card>
             </v-dialog>
+
+            <!-- 퀴즈 dialog-->
+            <v-dialog
+              v-model="popupQuizListDialog"
+              max-width="500px"
+            >
+            <!--퀴즈 상단 box-->
+              <v-card>
+                  <v-toolbar
+                    class="overflow-hidden mx-auto"
+                    color="light-blue darken-4"
+                    dark  
+                  >
+                  
+                  <v-toolbar-title>퀴즈 선택</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                    <v-btn
+                    icon
+                    dark
+                    @click="closeQuizList"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <!--퀴즈 이름--> 
+                <v-col cols="auto">
+                  <v-dialog
+                    transition="dialog-bottom-transition"
+                    max-width="600"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-list>
+                        <v-list-item
+                          v-for="(item, index) in quizlist"
+                          :key=index
+                        > 
+                        <v-btn
+                          width="98%"
+                          color="light-blue lighten-2"
+                          v-bind="attrs"
+                          v-on=on
+                          @click="SetQuizData(item)"
+                        >{{ item.name }}</v-btn>
+                        </v-list-item>
+                      </v-list>
+                    </template>
+                  </v-dialog>
+                </v-col>
+              </v-card>
+            </v-dialog>
+
+
 
 
 
@@ -423,7 +542,7 @@
               solo-inverted
             >  
             
-              <v-date-picker v-model="CreateClassModalStartDate1" scrollable>
+              <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="CreateClassModalFinishDate3">
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
                 <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
@@ -441,10 +560,12 @@
               full-width
               width="290px"
             >
+            <!--:allowed-minutes="allowedInterval" -->
               <v-time-picker
                 v-if="CreateClassModalStartTimeModal"
                 v-model="CreateClassModalStartTime2"
                 full-width
+                :allowed-minutes="allowedInterval"
               >
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
@@ -463,7 +584,7 @@
               width="290px"
               solo-inverted
             >
-              <v-date-picker v-model="CreateClassModalFinishDate3" scrollable>
+              <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
                 <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
@@ -480,7 +601,7 @@
             >
               <v-time-picker
                 v-if="CreateClassModalFinishTimeModal"
-                v-model="CreateClassModalFinishTime4"
+                v-model="CreateClassModalFinishTime4" 
                 full-width
               >
                 <v-spacer></v-spacer>
@@ -648,7 +769,7 @@
 
               <v-btn
                 color="indigo lighten-3"
-                @click=ClassDelete(CalendarFrontSelectedEvent)
+                @click="ClassDelete(CalendarFrontSelectedEvent)"
               >
                 강의 취소
               </v-btn>
@@ -668,7 +789,7 @@
           color="light-blue accent-2"
           right
           absolute
-          @click=CalendarFrontSetActivePopup(CreateClassModal);
+          @click="CalendarFrontSetActivePopup(CreateClassModal)"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -695,17 +816,19 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       //test
       dialog: false,
       popupMaplistDialog: false,
-      popupContentListDialog: false,
+      popupStudentListDialog: false, // 학생 리스트
+      popupContentListDialog: false, // 컨텐츠 리스트
+      popupQuizListDialog: false, // 퀴즈 리스트
       dialogDelete: false,
 
       CreateClassModalDialog: false,
 
-      CreateClassModalStartDate1: "",
+      //CreateClassModalStartDate1: "",
       CreateClassModalStartDateModal: false,
       CreateClassModalStartTime2: "",
       CreateClassModalStartTimeModal: false,
       // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
-      CreateClassModalFinishDate3: "",
+      //CreateClassModalFinishDate3: "",
       CreateClassModalFinishDateModal: false,
       CreateClassModalFinishTime4: "",
       CreateClassModalFinishTimeModal: false, 
@@ -718,9 +841,17 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       // 메세지 내용
       MessageContext:"",
 
+      // 시간 시작, 종료 지정
+      date: new Date().toISOString().substr(0, 10),
+      CreateClassModalStartDate1: new Date().toISOString().substr(0, 10),
+      CreateClassModalFinishDate3: new Date().toISOString().substr(0, 10),
+
 
       maplist: [],
-      contentlist: [],
+      studentlist: [], // 학생 리스트
+      contentlist: [], // 컨텐츠 리스트
+      quizlist: [], // 퀴즈 리스트
+
       editLectureName: "",
       headers: [
         {
@@ -820,6 +951,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     },
 
     methods: {
+      // 시간 5분 간격으로 나눠질 때 TRUE
+      allowedInterval: m => m % 5 == 0,
       // CalendarFrontMessageDialog
       popUpCalendarFrontMessage() {
         this.CalendarFrontMessageDialog= true
@@ -827,7 +960,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
       // CalendarFrontMessageDialog
       closeCalendarFrontMessage() {
-        this.CalendarFrontMessageDialog= false
+        this.CalendarFrontMessageDialog= false 
         },
 
   
@@ -876,6 +1009,17 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
         else{return false}
       },
+
+       // 참여 인원수 (펜)
+      isStudentList(item) {
+        if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 5) {
+          return true
+        } else {
+          return false
+        }
+      },
+
+      // 컨텐츠 (펜)
       isContent(item) {
         if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 6) {
           return true
@@ -883,6 +1027,16 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           return false
         }
       },
+      
+      // 퀴즈 (펜)
+       isQuiz(item) {
+        if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 7) {
+          return true
+        } else {
+          return false
+        }
+      },
+
       popupStartTime() {
         this.CreateClassModalStartDateModal = true
       },
@@ -893,16 +1047,41 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.fetchMapData()
         this.popupMaplistDialog = true
       },
+
+      // 학생 리스트
+      popupStudentList() {
+        this.fetchStudentData()
+        this.popupStudentListDialog = true
+      },
+      closeStudentList(){
+        this.popupStudentListDialog = false
+      },
+
+      // 컨텐츠
       popupContentList() {
         this.fetchContentData()
         this.popupContentListDialog = true
       },
-      closeMapList() {
-        this.popupMaplistDialog = false
-      },
-      closeLectureList(){
+      closeContentsList(){
         this.popupContentListDialog = false
       },
+
+      // 강의실 이름 수정할 때, 강의실 선택 창 닫기 
+      closeClassList() {
+        this.popupMaplistDialog = false
+      },
+
+      // 퀴즈
+      popupQuizList() {
+        this.fetchQuizData()
+        this.popupQuizListDialog = true
+      },
+      closeQuizList(){
+        this.popupQuizListDialog = false
+      },
+
+
+
       Setmapdata(item){
         this.CalendarFrontSelectedEvent.showevent[3].CalendarClassnameAction = item.name
         this.CalendarFrontSelectedEvent.showevent[4].CalendarClassnameAction = item.typename
@@ -912,11 +1091,21 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CalendarFrontSelectedOpen=false
         this.CalendarFrontSelectedOpen=true
       },
+      // 컨텐츠 수정본 저장
       SetContentData(item) {
         this.CalendarFrontSelectedEvent.showevent[6].CalendarClassnameAction = item.name
         this.CalendarFrontSelectedEvent.contentId = item.id
         this.popupContentListDialog=false
       },
+
+      // 퀴즈 수정본 저장
+       SetQuizData(item) {
+        this.CalendarFrontSelectedEvent.showevent[7].CalendarClassnameAction = item.name
+        this.CalendarFrontSelectedEvent.quizId = item.id
+        this.popupQuizListDialog=false
+      },
+
+
       setStartTime() {
         this.CalendarFrontSelectedEvent.showevent[0].CalendarClassnameAction = this.CreateClassModalStartDate1 + " " + this.CreateClassModalStartTime2 + ":00";
         this.CreateClassModalStartDateModal = false;
@@ -961,6 +1150,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       closeLectureName () {
         this.CreateClassModalDialog = false
       },
+
+      // 처음 등록 확인
       saveLectureName () {
         this.CalendarFrontSelectedEvent.name = this.editLectureName
         this.closeLectureName()
@@ -989,7 +1180,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        var url = "http://163.180.117.22:8088/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1028,11 +1219,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
           })
       },
-
+      
+  
+      // 컨텐츠 목록 API : 16. Post- http://IPAdress/api/content/post/contentlist
       fetchContentData() {
         this.contentlist = []
 
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+        var url = "http://163.180.117.22:8088/api/content/post/contentlist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1061,10 +1254,40 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
               })
             }
           }))
-
-
-
       },
+
+      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
+      fetchQuizData() {
+        this.quizlist = []; 
+        var userId = this.$store.getters.getUserInfo.id;
+        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=" + userId;
+
+        var config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        this.$http
+          .get(url, config)
+          .then(res => {
+            this.quizlist.push({
+              id: null,
+              name: "퀴즈 없음"
+            })
+            if (res.data.data.length >0) {
+              res.data.data.forEach(element => {
+                this.quizlist.push({
+                  id: element.id,
+                  name: element.name
+                })
+                 //console.log(this.quizlist);
+              })
+            }
+          })
+      },
+     
+      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
       CalendarFrontUpdateRange ({ start, end }) {
         this.beforestart = start;
         this.beforeend = end;
@@ -1074,7 +1297,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
          
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/lecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1112,6 +1335,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   mapId: element.mapId,
                   mapName: element.mapName,
                   contentId: element.contentId,
+                  quizId: element.quizId,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -1143,6 +1367,10 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameAction: element.contentName,
                       CalendarClassnameTitle: '컨텐츠 이름'
                     },
+                    { // 퀴즈 선택 추가
+                      CalendarClassnameAction: element.quizName,
+                      CalendarClassnameTitle: '퀴즈 이름'
+                    },
                   ]
                 })
               })
@@ -1151,10 +1379,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
       },
+
+      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
       refreshData() { 
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/lecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1192,6 +1422,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   mapId: element.mapId,
                   mapName: element.mapName,
                   contentId: element.contentId,
+                  quizId: element.quizId,
+        
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -1223,6 +1455,12 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                       CalendarClassnameAction: element.contentName,
                       CalendarClassnameTitle: '컨텐츠 이름'
                     },
+                    
+                    // 퀴즈 이름
+                    {
+                      CalendarClassnameAction: element.quizName,
+                      CalendarClassnameTitle: '퀴즈 이름'
+                    },
                   ]
                 })
               })
@@ -1248,7 +1486,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         nativeEvent.stopPropagation()
       },
       ClassDelete(a) {
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/patch/deletelecture";
 
         var payload = {
           id: a.classid
@@ -1289,9 +1527,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
 
 
-      // 강좌 수정
-    patchEditedClass(a){
-      var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
+      // 강좌 수정 10. Patch - http://IPAdress/api/lecture/ instructor/patch/updatelecture
+     patchEditedClass(a){
+      var url = "http://163.180.117.22:8088/api/lecture/instructor/patch/updatelecture ";
       console.log(a.showevent[6].contentId);
       console.log(a.showevent[3].mapId);
 
@@ -1304,16 +1542,22 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           startTime: a.showevent[0].CalendarClassnameAction,
           endTime: a.showevent[1].CalendarClassnameAction,
           contentId: a.contentId,
-          mapId: a.mapId
+          quizId: a.quizId,
+          mapId: a.mapId,
       }
-
+      
       var config = {
+        
           headers: {
             "Content-Type": "application/json"
           }
         }
-
-      this.$http
+        
+      var startdate = new Date(a.showevent[0].CalendarClassnameAction);
+      var enddate = new Date(a.showevent[1].CalendarClassnameAction);
+      var nowdate = new Date();
+      if ((startdate < enddate) && (nowdate < enddate)) { 
+        this.$http
           .patch(url, payload, config)
           .then(res => {
             if (res.data.success === true) {
@@ -1326,11 +1570,21 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           })
           .catch(res => {
             alert(res);
-          })
+        })
+      }
+      else if(startdate >= enddate) {
+        alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
+      }
+      else if(nowdate >= enddate) {
+        alert("지난 강의는 수정할 수 없습니다.")
+      }
+
     },
 
+    
+    // 강의실 맵정보 수정 : 8. Patch - http://IPAdress/api/map/patch/updatemap 
     patchEditedClassLectureMap(a){
-      var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
+      var url = "http://163.180.117.22:8088/api/map/patch/updatemap";
 
       var userId = this.$store.getters.getUserInfo.id;
       var Maxnum = parseInt(a.showevent[5].CalendarClassnameAction)
