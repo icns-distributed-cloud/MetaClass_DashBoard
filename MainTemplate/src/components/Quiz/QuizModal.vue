@@ -408,7 +408,7 @@
         this.data = [];
         this.a = 0;
         this.b = 1;
-        var url = "http://163.180.117.22:8088/api/quiz/get/listbyquizid?quizId="+this.info.id;
+        var url = "http://163.180.117.47:8088/api/quiz/get/listbyquizid?quizId="+this.info.id;
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -490,7 +490,7 @@
       updateQuestion()
       {
         
-        var url = "http://163.180.117.22:8088/api/quiz/post/updatequiz";
+        var url = "http://163.180.117.47:8088/api/quiz/post/updatequiz";
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           id: this.info.id,

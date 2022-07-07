@@ -361,7 +361,7 @@
 
       // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
       fetchContent() {
-        var url = "http://163.180.117.22:8088/api/content/post/contentlist"; 
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist"; 
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -393,7 +393,7 @@
        },
 
       fecthDepartment() {
-        var url = "http://163.180.117.22:8088/api/department/get/departmentlist";
+        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
 
         var config = {
           headers: {
@@ -419,7 +419,7 @@
       // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
       fetchQuizData() {
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
 
         var config = {
           headers: {
@@ -448,7 +448,7 @@
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.22:8088/api/map/post/maplist";
+        var url = "http://163.180.117.47:8088/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -523,7 +523,7 @@
         } else {
           console.log("wler");
         }
-        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/createlecture"
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
 
         var userId = this.$store.getters.getUserInfo.id;
 
@@ -577,7 +577,7 @@
         this.belongstudents = []
         
         console.log(this.CreateClassModalBelong);
-        var url = "http://163.180.117.22:8088/api/users/post/studentlistbydepartment";
+        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
 
         var payload = {
           departmentId: this.CreateClassModalBelong

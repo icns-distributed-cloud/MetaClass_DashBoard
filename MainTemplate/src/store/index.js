@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.22:8088"
+const resourceHost = "http://163.180.117.47:8088"
 
 export default new Vuex.Store({
     plugins: [
