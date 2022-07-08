@@ -99,7 +99,18 @@
                             label="강좌 리스트"
                             color="white"
                             no-data-text="생성한 강좌가 없습니다"
-                          ></v-autocomplete>
+                          >
+                          
+                          <template v-slot:item="data">
+                            <v-list-item-content>
+                              <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                              <v-list-item-subtitle v-html="data.item.time"></v-list-item-subtitle>
+                          
+                            </v-list-item-content>
+                          </template>
+                          
+                          
+                          </v-autocomplete>
                         </v-card-text>
                        
 
@@ -119,7 +130,7 @@
                           </v-btn>
 
                         </v-card-actions>
-
+                      
 
                         
                       </v-card>
@@ -301,9 +312,11 @@ import ServerManageModal from './ServerManageModal.vue'
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
               console.log(element)
+              var time = element.lectureStartTime + " ~ " + element.lectureEndTime;
               this.ServerSubjectListItem.push({
                 name: element.lectureName,
-                value: element.lecturId
+                value: element.lecturId,
+                time: time
               })
             })
           }
@@ -334,13 +347,15 @@ import ServerManageModal from './ServerManageModal.vue'
           // console.log(res);
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
+              var time = element.lectureStartTime + " ~ " + element.lectureEndTime;
               this.ServerFrontModalList.push({
                 id: element.id,
                 ipId: element.ipId,
                 ipAddress: element.ipAddress,
                 ipName: element.ipName,
                 lectureId: element.lectureId,
-                lectureName: element.lectureName
+                lectureName: element.lectureName,
+                time: time
               })
             })
           }

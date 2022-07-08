@@ -12,7 +12,7 @@
         <v-btn
           icon
           dark
-          @click="dialog = !dialog"
+          @click="closeModal"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -56,6 +56,7 @@
           <v-dialog v-model="StudentIndividualModalDialog" max-width="800px">
             <Student-Individual-Modal
               :individualInfo="individualinfo"
+              v-on:close="closeIndividualModal"
             />
           </v-dialog>
         </template>
@@ -128,12 +129,15 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
 
     methods: {
-      test() {
+      closeIndividualModal() {
         this.StudentIndividualModalDialog = false;
+      },
+      closeModal() {
+        this.$emit("close", "closeModal");
       },
       initialize () {
 
-    this.StudentSubjectText= [
+        this.StudentSubjectText= [
           {
             name: '홍길동',
             participation: 80,
@@ -203,7 +207,6 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
         // var tempinfo = item;
 
         // this.individualinfo = tempinfo;
-        console.log(this.individualinfo);
         this.editedIndex = this.StudentSubjectText.indexOf(item)
         
         this.StudentIndividualModalDialog = true // StudentIndividualModalDialog

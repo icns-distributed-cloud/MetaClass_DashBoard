@@ -48,6 +48,7 @@
       <v-dialog v-model="StudentSubjectModalDialog" max-width="800px">
         <Student-Subject-Modal
         :info="selectedClass"
+        v-on:close="closeModal"
         />
       </v-dialog>
     </template>
@@ -154,7 +155,7 @@ Vue.use(Vuetify)
     },
 
     methods: {
-      test() {
+      closeModal() {
         this.StudentSubjectModalDialog = false;
       },
       fetchClassData() {

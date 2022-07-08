@@ -3,21 +3,18 @@
 <!--학생 개인이 수강하는 모든 과목이 나타난다-->
 
 <template>
-  <v-row justify="center">
-    <v-dialog 
-      v-model ="dialog"
-    >
+  
     <v-card>
       <v-toolbar
         dark
         color="primary"
       >
-        <v-toolbar-title>{{infoinfo.name}}</v-toolbar-title>
+        <v-toolbar-title>학생 참여율 & 학생 지각율</v-toolbar-title>
           <v-spacer></v-spacer>
             <v-btn
               icon
               dark
-              @click="dialog = false"
+              @click="closeIndividualModal"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -39,8 +36,7 @@
             >
       </v-data-table>
     </v-card>
-    </v-dialog>
-  </v-row>
+
 </template>
 
 
@@ -78,10 +74,30 @@
     },
     watch: {
       infoinfo() {
-        console.log(this.infoinfo);
         this.StudentIndividualText = []
         this.individualInfo = this.infoinfo;
 
+        this.individualInfo.data.forEach(element => {
+          var istardy;
+          if (element.lateYN === true) {
+            istardy = "NO"
+          } else if (element.lateYN === false) {
+            istardy = "YES"
+          }
+
+          var startdate = this.lectureDatetoString(new Date(`${element.startTime}`));
+          this.StudentIndividualText.push({
+            subject: element.name,
+            participation: element.participationLevel,
+            tardy: istardy,
+            date: startdate
+          })
+
+
+
+        })
+
+        /*
         var url = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo"
 
         var config = {
@@ -109,11 +125,25 @@
               }
             })
         })
-
+        */
       }
     },
     methods: {
-      test() {
+      lectureDatetoString(source, delimiter = '-') {
+        const year = source.getFullYear();
+        const month = this.leftPad(source.getMonth() + 1);
+        const day = this.leftPad(source.getDate());
+
+        return [year, month, day].join(delimiter);
+      },
+      leftPad(value) {
+        if (value >= 10) {
+          return value;
+        }
+        return `0${value}`
+      },
+      closeIndividualModal() {
+        this.$emit("close", "close")
       }
     },
     beforeMount() {

@@ -81,6 +81,7 @@
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
+                console.log(element)
                 this.subjectlist.push({
                   id: element.id,
                   name: element.name,
@@ -88,10 +89,7 @@
 
                 })
               })
-
-              
-            }
-            var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
+              var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
 
 
             this.subjectlist.forEach(element => {
@@ -103,6 +101,8 @@
               this.$http
                 .post(url2, payload, config)
                 .then(res => {
+                  console.log(res)
+                  
                   var istardy;
                   if (res.data.data.lateYN === true) {
                     istardy = "YES"
@@ -118,6 +118,9 @@
                 })
 
             })
+              
+            }
+            
           })
       }
     }

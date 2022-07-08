@@ -140,6 +140,7 @@
                           class="text--primary"
                           v-text="CalendarClassnameItem.headline"
                         ></v-list-item-subtitle>
+                        
                         <v-list-item-subtitle v-text="CalendarClassnameItem.CalendarClassnameSubTitle"></v-list-item-subtitle>
                       </v-list-item-content>
                       <v-list-item-action>
@@ -168,6 +169,7 @@
                 text
                 color="secondary"
                 @click=register(CalendarFrontSelectedEvent)
+                :disabled="!CalendarFrontSelectedEvent.canJoinCancel"
               >
                 수강 신청
               </v-btn>
@@ -176,6 +178,7 @@
                 text
                 color="secondary"
                 @click=deletelecture(CalendarFrontSelectedEvent)
+                :disabled="!CalendarFrontSelectedEvent.canJoinCancel"
               >
                 수강 취소
               </v-btn>
@@ -318,14 +321,26 @@
                 } else if (element.mapType === 2) {
                   maptype = "소회의실"
                 }
+
+                var endTime = new Date(`${element.endTime}`);
+                var now = new Date();
+                
+                var canJoinCancel;
+                
+                if (now > endTime) {
+                  canJoinCancel = false;
+                } else {
+                  canJoinCancel = true;
+                }
                 CalendarFrontEvents.push({
                   name: element.name,
                   start: new Date(`${element.startTime}`),
-                  end: new Date(`${element.endTime}`),
+                  end: endTime,
                   color: this.CalendarFrontColors[1],
                   timed: true,
                   classid: element.id,
                   isRegistered: false,
+                  canJoinCancel: canJoinCancel,
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,

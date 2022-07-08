@@ -18,6 +18,11 @@
 
       <v-subheader inset class="indigo--text">
         <h2>{{info.lectureName}}</h2>
+
+        
+      </v-subheader>
+      <v-subheader inset class="indigo--text">
+        <h5>{{info.time}}</h5>
         
       </v-subheader>
     </v-list>

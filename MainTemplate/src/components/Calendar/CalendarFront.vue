@@ -99,6 +99,8 @@
           @change="CalendarFrontUpdateRange"
           font-weight-black
           interval-height="96"
+          short-intervals=false
+         
         ></v-calendar>
         <!--class="test-css black--text"-->
        
