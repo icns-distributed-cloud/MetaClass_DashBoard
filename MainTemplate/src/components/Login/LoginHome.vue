@@ -1,11 +1,6 @@
 <template>
-<v-app>
-           <div class="logo-image">
-            <v-img max-height="200" max-width="200" :src="imgLogo" alt="logo" /> 
-            </div>
-  
+  <v-app>
 
-  
   <v-container
     class="fill-height"
     fluid
@@ -204,9 +199,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.logo-image {
-  padding-left: 18px;
-}
+
 </style>
 
 
