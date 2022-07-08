@@ -1247,7 +1247,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.22:8088/api/map/post/maplist";
+        var url = "http://163.180.117.47:8088/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1295,7 +1295,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       fetchContentData() {
         this.contentlist = []
 
-        var url = "http://163.180.117.22:8088/api/content/post/contentlist";
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1330,7 +1330,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       fetchQuizData() {
         this.quizlist = []; 
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
 
         var config = {
           headers: {
@@ -1367,7 +1367,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
          
         const CalendarFrontEvents = [] // const : 내용을 변경하지 않음
 
-        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1456,7 +1456,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       refreshData() { 
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1565,7 +1565,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         nativeEvent.stopPropagation()
       },
       ClassDelete(a) {
-        var url = "http://163.180.117.22:8088/api/lecture/instructor/patch/deletelecture";
+        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
 
         var payload = {
           id: a.classid
@@ -1608,7 +1608,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
       // 강좌 수정 10. Patch - http://IPAdress/api/lecture/ instructor/patch/updatelecture
      patchEditedClass(a){
-      var url = "http://163.180.117.22:8088/api/lecture/instructor/patch/updatelecture ";
+      var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
       console.log(a.showevent[6].contentId);
       console.log(a.showevent[3].mapId);
 
@@ -1663,7 +1663,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     
     // 강의실 맵정보 수정 : 8. Patch - http://IPAdress/api/map/patch/updatemap 
     patchEditedClassLectureMap(a){
-      var url = "http://163.180.117.22:8088/api/map/patch/updatemap";
+      var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
 
       var userId = this.$store.getters.getUserInfo.id;
       var Maxnum = parseInt(a.showevent[5].CalendarClassnameAction)
@@ -1701,7 +1701,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     
     appendCalendarFrontMessage() {
       if(this.emailClick) {
-        let url = "http://163.180.117.22:8088/api/mail/send";
+        let url = "http://163.180.117.47:8088/api/mail/send";
 
         let userId = this.$store.getters.getUserInfo.id;
         let payload = {
@@ -1726,7 +1726,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             }
           }) 
       } else if(this.messageClick) {
-          let url = "http://163.180.117.22:8088/api/sms/send"; // http://localhost:8088/api/sms/send 
+          let url = "http://163.180.117.47:8088/api/sms/send"; // http://localhost:8088/api/sms/send 
 
           //var userId = this.$store.getters.getUserInfo.id;
           let payload = {
