@@ -1,4 +1,10 @@
 <template>
+  <v-app>
+    <div class="logo-image">
+      <v-img max-height="200" max-width="200" :src="imgLogo" alt="logo" /> 
+    </div>
+
+
 <v-container
     class="fill-height"
     fluid
@@ -124,7 +130,7 @@
 
   
   </v-container>
-
+  </v-app>
 </template>
 
 <script>
@@ -148,6 +154,12 @@ export default {
          
         
         }
+    },
+    props: {
+      imgLogo: {
+        type: String,
+        default: require("@/assets/logo.jpeg")
+      }
     },
 
     created() {
@@ -265,3 +277,8 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+  .logo-image {
+  padding-left: 18px;
+}
+</style>

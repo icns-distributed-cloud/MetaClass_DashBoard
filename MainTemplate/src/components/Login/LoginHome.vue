@@ -1,8 +1,17 @@
 <template>
+<v-app>
+           <div class="logo-image">
+            <v-img max-height="200" max-width="200" :src="imgLogo" alt="logo" /> 
+            </div>
+  
+
+  
   <v-container
     class="fill-height"
     fluid
   >
+  
+    
     <v-row
       align="center"
       justify="center"
@@ -15,6 +24,7 @@
       >
       
         <v-card class="elevation-12">
+          
           <v-toolbar
             color="primary"
             dark
@@ -22,7 +32,7 @@
           >
           
             <v-toolbar-title>메타 클래스</v-toolbar-title>
-            <v-spacer></v-spacer>
+          
             
           </v-toolbar>
           
@@ -88,6 +98,7 @@
 
   
   </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -116,6 +127,12 @@ export default {
         showSignUpModal: false,
         SignUp : false,
     }),
+    props: {
+      imgLogo: {
+        type: String,
+        default: require("@/assets/logo.jpeg")
+      }
+    },
     methods: {
         validateUser() {
           // 추후 형식 맞는지 검사
@@ -186,6 +203,9 @@ export default {
   height: 100%;
   align-items: center;
   justify-content: center;
+}
+.logo-image {
+  padding-left: 18px;
 }
 </style>
 
