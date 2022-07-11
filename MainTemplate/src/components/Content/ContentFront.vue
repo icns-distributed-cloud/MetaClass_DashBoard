@@ -12,7 +12,6 @@
       dark
     >
     <div> 
-        <compo-nent :is="ContentModal"></compo-nent>
        <v-row>
         <v-col
           v-for="(item, index) in ContentFrontModalList"
@@ -41,7 +40,6 @@
                     v-model="ContentFrontDialog"
                     persistent
                     max-width="600px"
-            
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
@@ -68,19 +66,24 @@
                         <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
                         </v-toolbar>
 
-                        <!--컨텐츠 이름: ContentFrontMapName-->
+                        <!--컨텐츠 이름: ContentName-->
                         <v-card-text>
                           <v-text-field
-                            v-model="ContentFrontMapName"
-                            :error-messages="ContentFrontMapName"
-                            :counter="10"
+                            v-model="ContentName"
                             label="컨텐츠 이름"
                             required
-                            @input="$v.ContentFrontMapName.$touch()"
-                            @blur="$v.ContentFrontMapName.$touch()"
                             color="white"
                           >
                           </v-text-field>
+
+                          <v-progress-linear
+                            v-if="uploading"
+                            indeterminate
+                            rounded
+                            color="light-blue"
+                            height="20px"
+                          >
+                          </v-progress-linear>
 
                         <!-- 콘텐츠 파일 첨부-->
                         <v-file-input
@@ -89,13 +92,12 @@
                           color="blue lighten-3"
                           counter
                           label="File input"
-                          multiple
                           placeholder="Select your files"
                           prepend-icon="mdi-paperclip"
                           outlined
                           :show-size="1000"
                           loading=true
-                          @change="Upload()"
+                          @change="selectFile"
                         >
                         
                         <template v-slot:selection="{ index, text }">
@@ -134,10 +136,21 @@
                             <v-btn
                                 color="green"
                                 @click=UpdateId()
+                                :disabled="!isUploaded"
                             >
                                 확인
                             </v-btn>
                         </v-card-actions>  
+                        <v-snackbar
+                          v-model="contentSaved"
+                          :timeout="2000"
+                          absolute
+                          bottom
+                          left
+                        >
+                          업로드가 완료되었습니다.
+                        </v-snackbar>
+                        
                     </v-card>
                 </v-dialog>
                 <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
@@ -157,15 +170,21 @@
 
 import ContentModal from './ContentModal.vue'
 
+
   export default {
 
   components: { ContentModal },
     data: () => ({
       // 컨텐츠 파일업로드 형식 지정
+      contentSaved: false,
+      durationaa: 0,
+      uploading: false,
+      progress: 0,
+      isUploaded: false,
       ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
       fileAccept: 'video/*',
       contentId: "",
-      ContentFrontMapName: "", // 컨텐츠 이름
+      ContentName: "", // 컨텐츠 이름
       ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
     // ContentFrontModalList
       ContentFrontModalList:[],
@@ -198,7 +217,6 @@ import ContentModal from './ContentModal.vue'
               res.data.data.forEach(element => {
                 if (element.id !== 51) {
                   var filename = element.directory.slice(element.directory.indexOf("_")+1);
-                  console.log(filename);
                   this.ContentFrontModalList.push({
                   id: element.id,
                   name: element.name,
@@ -211,20 +229,100 @@ import ContentModal from './ContentModal.vue'
           })
 
       },
+      selectFile(file) {
+        this.uploading = false;
 
-      ContentFrontCreateClassModal()
-      {
-        this.ContentFrontModalList.push({
-                com : ContentModal
-            })   
-        console.log("aaaaaaaaa")
+        this.progress = 0;
+        this.currentFile = file;
+        if (!this.currentFile) {
+          this.durationaa = 0
+          this.isUploaded = false;
+          return;
+        }
+        var vm = this;
+        var video = document.createElement("video");
+        video.preload = "metadata";
+
+        video.onloadedmetadata = function() {
+          window.URL.revokeObjectURL(video.src);
+          var duration = video.duration;
+
+          
+
+          vm.durationaa = vm.numbertoTime(duration);
+          console.log(vm.durationaa);
+          
+        }
+
+        video.src = URL.createObjectURL(this.currentFile);
+
+
+        this.testProgress();
+        
       },
+
+      fileUpload(file, onUploadProgress) {
+        this.uploading = false;
+        this.progress = 0;
+
+        let formData = new FormData();
+
+        formData.append("file", file);
+
+        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
+        var config = {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
+          onUploadProgress
+        }
+
+        this.uploading = true;
+        return this.$http.post(url, formData, config);
+
+
+      }, 
+
+      testProgress() {
+        var tempfile = this.currentFile;
+        this.isUploaded = false;
+        this.fileUpload(this.currentFile, (event) => {
+          this.progress = Math.round((100 * event.loaded) / event.total)
+        })
+          .then((res) => {
+            if (tempfile === this.currentFile) {
+              if (res.data.success === true) {
+                this.contentSaved = true;
+                this.uploading = false;
+                this.contentId = res.data.data.contentId;
+                this.isUploaded = true;
+              } else {
+                alert("업로드 실패");
+                this.uploading = false;
+                return;
+              }
+            }
+            
+          })
+          .catch(() => {
+            this.uploading = false;
+            this.progress = 0;
+            this.currentFile = undefined;
+          })
+      },
+
+
+
 
       ContentFrontDeleteClassModal()
       {
         this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
       },
       Upload() {
+        if (!this.currentFile) {
+          return;
+        }
+
         const formData = new FormData();
         formData.append("file", this.ContentFrontFiles[0]);
 
@@ -256,13 +354,17 @@ import ContentModal from './ContentModal.vue'
         if (this.contentId === "") {
           alert("파일을 선택해주세요");
           return;
+        } else if (!this.ContentName) {
+          alert("컴텐츠 이름을 입력해주세요");
+          return;
         } else {
           var userId = this.$store.getters.getUserInfo.id;
           var idUpdateUrl = "http://163.180.117.22:8088/api/content/post/updateidbycontentid";
           var payload = {
             instructorId: userId,
             contentId: this.contentId,
-            contentName: this.ContentFrontMapName
+            contentName: this.ContentName,
+            playtime: this.durationaa
           }
           this.$http
             .post(idUpdateUrl, payload, {
@@ -278,7 +380,18 @@ import ContentModal from './ContentModal.vue'
             })
         }
 
+      },
+      numbertoTime(value) {
+        const sec = parseInt(value, 10); // convert value to number if it's string
+        let hours   = Math.floor(sec / 3600); // get hours
+        let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+        let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+        // add 0 if value < 10; Example: 2 => 02
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
       }
-  }
+    }
   }
 </script>

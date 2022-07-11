@@ -5,7 +5,7 @@
     <v-sheet>
       <v-responsive :aspect-ratio="10/6">
        <div id="StudentIndividual">
-         <Student-Individual v-bind:infoinfo="individual"></Student-Individual>
+         <Student-Individual v-bind:infoinfo="individual" v-on:close="closeIndividualModal"></Student-Individual>
        </div>
       
      
@@ -51,6 +51,9 @@ export default {
 
     },
     methods: {
+      closeIndividualModal() {
+        this.$emit("close", "close")
+      }
     }
 }
 </script>

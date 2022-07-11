@@ -5,7 +5,7 @@
     <v-sheet>
       <v-responsive :aspect-ratio="10/6">
        <div id="StudentText">
-         <Student-Text v-bind:student="studentlist"></Student-Text>
+         <Student-Text v-bind:student="studentlist" v-on:close="close"></Student-Text>
        </div>
       
      
@@ -47,6 +47,9 @@ export default {
     beforeMount() {
     },
     methods: {
+      close() {
+        this.$emit("close", "closeModal");
+      }
       
     }
 }

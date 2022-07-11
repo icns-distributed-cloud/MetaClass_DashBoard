@@ -396,8 +396,8 @@ import QuizModal from './QuizModal.vue'
       fetchData() {
         this.QuizFrontModalList = [];
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId="+userId;
-        //var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=userId";
+        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId="+userId;
+        //var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=userId";
         var payload = {
           instructorId: userId
         }
@@ -529,7 +529,7 @@ import QuizModal from './QuizModal.vue'
    // 40. 퀴즈 생성하기
   createQuestion()
   {
-    var url = "http://163.180.117.22:8088/api/quiz/post/createquiz";
+    var url = "http://163.180.117.47:8088/api/quiz/post/createquiz";
 
     var userId = this.$store.getters.getUserInfo.id;
     var payload = {

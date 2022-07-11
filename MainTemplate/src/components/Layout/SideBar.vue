@@ -11,6 +11,9 @@
     <v-navigation-drawer 
     class="light-blue darken-1" dark permanet app clipped>
     <v-container>
+      <router-link :to="logolink">
+        <v-img :src="imgLogo" alt="logo" />
+      </router-link>
       <v-list-item>
         <v-list-item-content style="back">
           <v-list-item-title class="title grey--text text--darken-2">Meta Class</v-list-item-title>
@@ -93,6 +96,23 @@
             { title: "서버 관리", icon: 'mdi-server', action: "serverManage" }
         ],
         right: null,
+        logolink: ""
+      }
+    },
+    props: {
+      imgLogo: {
+        type: String,
+        default: require("@/assets/logo.jpeg")
+      }
+    },
+    created() {
+      var userInfo = this.$store.getters.getUserInfo;
+      if (userInfo.userMode === 0) {
+        this.logolink = "/CalendarPage"
+      } else if (userInfo.userMode === 1) {
+        this.logolink = "/StudentCalendar"
+      } else if (userInfo.userMode === 2) {
+        this.logolink = "/ServerRegister"
       }
     },
     computed: {

@@ -203,9 +203,15 @@
                       </v-select> 
                     </div>
                     
+<<<<<<< HEAD
                     <!--소속된 참여자 명단-->
                     <div>
                     <v-select 
+=======
+                    <!--single select-->
+                    <v-card class="mx-auto">
+                    <v-data-table v-if="showStudents"
+>>>>>>> 5b00440d23b68d6f77e5eb526902a0d29714d54a
                       v-model="selectedStudents"
                       :headers="headers"
                       :items="belongstudents"
@@ -213,6 +219,7 @@
                       item-key="name"
                       hide-default-footer
                       show-select
+<<<<<<< HEAD
                       outlined
                       multiple
                       item-text="name"
@@ -227,6 +234,20 @@
                  
                    
          
+=======
+                      @click:row="selectstudent()"
+                    >
+                      <template v-slot:top>
+                        <v-switch
+                          v-model="singleSelect"
+                          label="Single select"
+                          class="pa-3"
+                        ></v-switch>
+
+                      </template>
+                    </v-data-table>
+                    </v-card>
+>>>>>>> 5b00440d23b68d6f77e5eb526902a0d29714d54a
                  
 
                     <!-- 컨텐츠 파일 선택-->
@@ -382,7 +403,11 @@
 
       // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
       fetchContent() {
+<<<<<<< HEAD
         var url = "http://163.180.117.22:8088/api/content/post/contentlist"; 
+=======
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist"; 
+>>>>>>> 5b00440d23b68d6f77e5eb526902a0d29714d54a
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {

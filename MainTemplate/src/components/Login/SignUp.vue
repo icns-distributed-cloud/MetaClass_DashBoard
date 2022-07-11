@@ -1,4 +1,6 @@
 <template>
+  <v-app>
+
 <v-container
     class="fill-height"
     fluid
@@ -124,7 +126,7 @@
 
   
   </v-container>
-
+  </v-app>
 </template>
 
 <script>
@@ -149,10 +151,16 @@ export default {
         
         }
     },
+    props: {
+      imgLogo: {
+        type: String,
+        default: require("@/assets/logo.jpeg")
+      }
+    },
 
     created() {
       var vm = this;
-      var url = "http://163.180.117.22:8088/api/department/get/departmentlist"
+      var url = "http://163.180.117.47:8088/api/department/get/departmentlist"
 
       var config = {
         headers: {
@@ -178,7 +186,7 @@ export default {
     methods: {
       // 48. 아이디 중복 체크 http://localhost:8088/api/users/post/checkLoginId
       checkLoginId() {
-        var url = "http://163.180.117.22:8088/api/users/post/checkLoginId";
+        var url = "http://163.180.117.47:8088/api/users/post/checkLoginId";
       
         var payload = {
           loginId: this.userid,
@@ -208,7 +216,7 @@ export default {
 
       submit() {
         if(this.IDCHECKED){
-          var url = "http://163.180.117.22:8088/api/users/post/register";
+          var url = "http://163.180.117.47:8088/api/users/post/register";
 
           var usermode = 0;
           if (this.role === "instructor") {
@@ -265,3 +273,4 @@ export default {
     }
 }
 </script>
+

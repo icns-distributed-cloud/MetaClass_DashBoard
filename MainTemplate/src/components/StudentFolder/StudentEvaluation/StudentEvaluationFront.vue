@@ -5,7 +5,7 @@
 <template>
   <v-card>
           <v-card-title>
-            강의 참여율 & 강의 지각율
+            강좌 참여율 & 강좌 지각율
             <v-spacer></v-spacer>
            <v-text-field
             v-model="search"
@@ -19,6 +19,7 @@
              :headers="StudentIndividualHeaders"
              :items="StudentIndividualText"
              :search="search"
+              no-data-text="신청한 강좌가 없습니다"
             >
             
     </v-data-table>
@@ -33,6 +34,7 @@
       return {
         search: '',
         subjectlist: [],
+        StudentIndividualText: [],
        
         // headers
         StudentIndividualHeaders: [
@@ -47,39 +49,7 @@
           { text: '지각여부', value: 'tardy' },  // tardy (지각율)
          
         ],
-        StudentIndividualText: [
-          {
-            subject: '컴퓨터개론',
-            participation: 80,
-            tardy: 10,
-          },
-          {
-            subject: '선형대수',
-            participation: 70,
-            tardy: 20,
-          },
-          {
-            subject: '컴퓨터구조',
-            participation: 50,
-            tardy: 30,
-          },
-          {
-            subject: '데이터센터프로그래밍',
-            participation: 95,
-            tardy: 0.5,
-          },
-          {
-            subject: '컴퓨터네트워크',
-            participation: 65,
-            tardy: 35,
-          },
-          {
-            subject: '인공지능',
-            participation: 75,
-            tardy: 10,
-          },
-          
-        ],
+ 
         
 
       }
@@ -111,6 +81,7 @@
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
+                console.log(element)
                 this.subjectlist.push({
                   id: element.id,
                   name: element.name,
@@ -118,10 +89,14 @@
 
                 })
               })
+<<<<<<< HEAD
 
               
             }
             var url2 = "http://163.180.117.22:8088/api/lecture/student/post/ParticipationInfo";
+=======
+              var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
+>>>>>>> 5b00440d23b68d6f77e5eb526902a0d29714d54a
 
 
             this.subjectlist.forEach(element => {
@@ -133,6 +108,8 @@
               this.$http
                 .post(url2, payload, config)
                 .then(res => {
+                  console.log(res)
+                  
                   var istardy;
                   if (res.data.data.lateYN === true) {
                     istardy = "YES"
@@ -148,6 +125,9 @@
                 })
 
             })
+              
+            }
+            
           })
       }
     }

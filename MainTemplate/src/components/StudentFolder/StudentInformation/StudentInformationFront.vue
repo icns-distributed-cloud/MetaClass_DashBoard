@@ -117,6 +117,7 @@
      <!--MemberComDialog 끝-->
 
     <!--펜 아이콘 생성-->
+    <!--
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon
         elevation="4"
@@ -124,29 +125,13 @@
         class="teal mr-2"
         small
         dark
-        @click="editItem(item)"
+        @click="editUserInfo(item)"
       >
         mdi-pencil
       </v-icon>
-     <!--휴지통 아이콘 생성-->
-      <v-icon
-        elevation="4"
-        fab
-        class="cyan"
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-trash-can-outline
-      </v-icon>
+     
     </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template>
+    -->
   </v-data-table>
   </v-card>
   </div>
@@ -173,7 +158,7 @@
         { text: 'Email', value: 'email' },
         { text: 'Group', value: 'group' },
         { text: 'Phone Number', value: 'phonenumber' },
-        { text: 'Actions', value: 'actions', sortable: false },
+        // { text: 'Actions', value: 'actions', sortable: false },
       ],
       MemberName: [],
       editedIndex: -1,
@@ -209,21 +194,29 @@
     },
 
     created () {
-      this.initialize()
+      console.log(this.$store.getters.getUserInfo);
+      this.fetchData()
     },
 
     methods: {
-      initialize () {
+      fetchData () {
+        var userInfo = this.$store.getters.getUserInfo;
         this.MemberName = [
           {
-            name: '홍길동',
-            id: 'dong1234',
-            email: 'dong1234@khu.ac.kr',
-            group: 'A',
-            phonenumber: '010-1253-5000',
-          },
-         
+            name: userInfo.name,
+            id: userInfo.loginId,
+            email: userInfo.email,
+            group: userInfo.departmentName,
+            phonenumber: userInfo.phone
+          }
+
         ]
+  
+      },
+      editUserInfo(item) {
+        this.editedIndex = this.MemberName.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.MemberComDialog = true;
       },
 
       editItem (item) {
