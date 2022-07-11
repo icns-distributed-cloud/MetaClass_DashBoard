@@ -161,7 +161,7 @@
                                       <div class = "textfield-div">
                                         <v-text-field 
                                           v-model = "data[a]['quizContext'][index]"
-                                          label = "정답 입력"
+                                          label = "보기 입력"
                                         > 
                                         </v-text-field>
                                       </div>
@@ -234,7 +234,7 @@
                                     v-model="QuizScoreModal"
                                     max-width="500px"
                                   >
-                                  <!--점수 등록-->
+                                  <!--퀴즈 등록-->
                                     <template>
                                       <v-card>
                                         <v-toolbar
@@ -438,16 +438,20 @@ import QuizModal from './QuizModal.vue'
       QuizFrontModal()
       {
         this.QuizFrontDialog = false
+        // a, b 초기화
+        this.a = 0
+        this.b = 1
         this.QuizModalView = true
       },
 
       // 퀴즈 모달
-      selecResponse(e){
-     this.select = true;
-     if (e.correct) {
-       this.score++;
-     }
-   },
+      selecResponse(e)
+      {
+        this.select = true;
+        if (e.correct) {
+        this.score++;
+        }
+      },
 
    check(status) {
      if (status.correct) {
@@ -505,7 +509,7 @@ import QuizModal from './QuizModal.vue'
       this.totalscore += parseFloat(this.data[i]['score']);
     }
 
-    if (this.totalscore % 100) {
+    if ((this.totalscore % 1)>0) {
       this.totalscore = this.totalscore.toFixed(1);
     }
   },
@@ -539,7 +543,10 @@ import QuizModal from './QuizModal.vue'
         "Content-Type": "application/json"
       }
     }
-
+    if(this.totalscore > 100){
+          alert("점수는 100점을 초과할 수 없습니다.");
+    }
+    else {
     console.log(this.data);
     this.$http
       .post(url, payload, config)
@@ -549,14 +556,18 @@ import QuizModal from './QuizModal.vue'
           alert("퀴즈 등록이 완료되었습니다.");
           this.QuizScoreModal = false;
           this.QuizModalView = false;
+          this.resetdata();
           //this.score_show = true; // score_show
           this.fetchData();
         } else {
           alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
           return;
-        }
+        } 
       })
-
+      }
+   },
+      
+     resetdata() {  
       // data 초기화
       this.data = [
         {
@@ -578,8 +589,8 @@ import QuizModal from './QuizModal.vue'
       QuizScoreDialogClose(){
         this.QuizScoreModal = false
       },
-       
-  },
+    }
+  
   }
 </script>
 

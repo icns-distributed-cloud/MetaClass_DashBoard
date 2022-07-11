@@ -207,7 +207,7 @@ import ServerManageModal from './ServerManageModal.vue'
       this.fetchData();
     },
     save () {
-        var url = "http://163.180.117.47:8088/api/server/post/createserver";
+        var url = "http://163.180.117.22:8088/api/server/post/createserver";
 
         var payload = {
           lectureId: this.ServerSubjectList,
@@ -240,7 +240,7 @@ import ServerManageModal from './ServerManageModal.vue'
       },
 
     fetchIP() {
-      var url = "http://163.180.117.47:8088/api/ip/get/list";
+      var url = "http://163.180.117.22:8088/api/ip/get/list";
 
       var config = {
         headers: {
@@ -264,7 +264,7 @@ import ServerManageModal from './ServerManageModal.vue'
 
     },
     fetchTeacher() {
-      var url = "http://163.180.117.47:8088/api/users/get/allInstructor";
+      var url = "http://163.180.117.22:8088/api/users/get/allInstructor";
 
       var config = {
         headers: {
@@ -287,7 +287,7 @@ import ServerManageModal from './ServerManageModal.vue'
     },
     fetchSubject() {
       this.ServerSubjectListItem = [];
-      var url = "http://163.180.117.47:8088/api/server/get/findlectureinfo?instructorId=" + this.ServerTeacherList;
+      var url = "http://163.180.117.22:8088/api/server/get/findlectureinfo?instructorId=" + this.ServerTeacherList;
       var config = {
         headers: {
           "Content-Type": "application/json"
@@ -315,7 +315,7 @@ import ServerManageModal from './ServerManageModal.vue'
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/server/post/listserver";
+      var url = "http://163.180.117.22:8088/api/server/post/listserver";
 
       var payload = {
         instructorId: 0
@@ -354,7 +354,7 @@ import ServerManageModal from './ServerManageModal.vue'
 
       ServerFrontManage()
       {
-        var url = "http://163.180.117.47:8088/api/map/post/createmap";
+        var url = "http://163.180.117.22:8088/api/map/post/createmap";
         var maptype = 0;
         if (this.ServerTeacherList === "손덕인") {
           maptype = 0

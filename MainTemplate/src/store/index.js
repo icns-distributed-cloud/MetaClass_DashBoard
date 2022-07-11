@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.47:8088"
+const resourceHost = "http://163.180.117.22:8088"
 
 export default new Vuex.Store({
     plugins: [
@@ -20,8 +20,8 @@ export default new Vuex.Store({
         userMode: null
     },
     getters: {
-        isLogin(state){
-            return state.id == null ? false: true;
+        isLogin(state) {
+            return state.id == null ? false : true;
         },
         getUserInfo(state) {
             return {
@@ -32,7 +32,7 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        LOGIN(state, {id, name, userMode}) {
+        LOGIN(state, { id, name, userMode }) {
             state.id = id;
             state.name = name;
             state.userMode = userMode;
@@ -50,17 +50,15 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        LOGIN({commit}, {id, password, userMode}) {
+        LOGIN({ commit }, { id, password, userMode }) {
 
             return axios
                 .post(
-                    `${resourceHost}/api/users/post/login`,
-                    {
+                    `${resourceHost}/api/users/post/login`, {
                         loginId: id,
                         password: password,
                         userMode: userMode
-                    },
-                    {
+                    }, {
                         headers: {
                             "Content-Type": "application/json"
                         }
@@ -80,13 +78,13 @@ export default new Vuex.Store({
                     } else {
                         return "fail";
                     }
-                    
+
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
-        LOGOUT({commit}) {
+        LOGOUT({ commit }) {
             commit("LOGOUT");
         }
     }

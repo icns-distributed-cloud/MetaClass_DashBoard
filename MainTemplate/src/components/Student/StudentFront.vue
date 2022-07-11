@@ -158,7 +158,7 @@ Vue.use(Vuetify)
         this.StudentSubjectModalDialog = false;
       },
       fetchClassData() {
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/lecturelist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -216,7 +216,7 @@ Vue.use(Vuetify)
        StudentSubjectModalItem (item) {
         var selectedclass = item;
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/cktstubylecture";
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/cktstubylecture";
 
         var payload = {
           lectureId: item.id

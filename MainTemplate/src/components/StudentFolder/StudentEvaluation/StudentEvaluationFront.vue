@@ -91,7 +91,7 @@
       fetchData() {
         this.subjectlist = [];
 
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/lecturelist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -121,7 +121,7 @@
 
               
             }
-            var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
+            var url2 = "http://163.180.117.22:8088/api/lecture/student/post/ParticipationInfo";
 
 
             this.subjectlist.forEach(element => {

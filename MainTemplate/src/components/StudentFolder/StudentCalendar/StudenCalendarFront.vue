@@ -290,7 +290,7 @@
          
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/registerlecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/registerlecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -355,7 +355,7 @@
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
         
-        var url2 = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+        var url2 = "http://163.180.117.22:8088/api/lecture/student/post/lecturelist";
         
         this.$http
           .post(url2, payload, config)
@@ -408,7 +408,7 @@
 
       },
       register(a) {
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/joinlecture";
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/joinlecture";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -436,7 +436,7 @@
       refreshData() { 
         const CalendarFrontEvents = []
 
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/registerlecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/registerlecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -500,7 +500,7 @@
             this.CalendarFrontEvents = CalendarFrontEvents;
           })
 
-          var url2 = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+          var url2 = "http://163.180.117.22:8088/api/lecture/student/post/lecturelist";
         
         this.$http
           .post(url2, payload, config)
@@ -553,7 +553,7 @@
       },
       deletelecture(a) {
         console.log(a);
-        var url = "http://163.180.117.47:8088/api/lecture/student/delete/deletelecture";
+        var url = "http://163.180.117.22:8088/api/lecture/student/delete/deletelecture";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {

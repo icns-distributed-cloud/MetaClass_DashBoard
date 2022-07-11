@@ -136,7 +136,7 @@ import DepartmentModal from './DepartmentModal.vue'
       fetchData() {
         this.DepartmentModalList = [];
 
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+        var url = "http://163.180.117.22:8088/api/department/get/departmentlist";
 
         var config = {
           headers: {
@@ -181,7 +181,7 @@ import DepartmentModal from './DepartmentModal.vue'
         const formData = new FormData();
         formData.append("file", this.ContentFrontFiles[0]);
 
-        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
+        var url = "http://163.180.117.22:8088/api/content/post/createcontent";
 
         var config = {
           headers: {
@@ -205,7 +205,7 @@ import DepartmentModal from './DepartmentModal.vue'
         console.log(this.ContentFrontFiles);
       },
       RegisterDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/post/postdepartment";
+        var url = "http://163.180.117.22:8088/api/department/post/postdepartment";
 
         var payload = {
             "name" : this.DepartmentName

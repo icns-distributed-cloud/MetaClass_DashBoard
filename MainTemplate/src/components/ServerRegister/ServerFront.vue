@@ -228,7 +228,7 @@ import ServerModal from './ServerModal.vue'
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/ip/get/list";
+      var url = "http://163.180.117.22:8088/api/ip/get/list";
 
       var config = {
         headers: {
@@ -261,7 +261,7 @@ import ServerModal from './ServerModal.vue'
 
       ServerFrontRegister()
       {
-        var url = "http://163.180.117.47:8088/api/ip/post/create";
+        var url = "http://163.180.117.22:8088/api/ip/post/create";
 
         var payload = {
           address: this.ServerIPaddress,

@@ -82,7 +82,7 @@
         this.StudentIndividualText = []
         this.individualInfo = this.infoinfo;
 
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo"
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/ParticipationInfo"
 
         var config = {
           headers: {

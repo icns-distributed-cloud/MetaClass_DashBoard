@@ -9,11 +9,11 @@
         <v-card>
             <v-toolbar
               class="overflow-hidden mx-auto"
-              color="light-blue darken-4"
+              color="primary"
               dark  
             >
             
-            <v-toolbar-title>강의실 선택</v-toolbar-title>
+            <v-toolbar-title><strong>강의실 선택</strong></v-toolbar-title>
             <v-spacer></v-spacer>
               <v-btn
               icon
@@ -42,11 +42,11 @@
                 <v-list>
                   <v-list-item
                     v-for="(item, index) in maplist"
-                    :key=index
+                    :key=index,
                   > 
                   <v-btn
-                    width=98%
-                    color="light-blue lighten-2"
+                    width="98%"
+                    color="grey lighten-2"
                     v-bind="attrs"
                     v-on=on
                     @click="selectedMap=item.id"
@@ -59,10 +59,18 @@
               <template v-slot:default="CreateClassModalDialog">
                 <v-card>
                   <v-toolbar
-                    color="primary"
+                    :color="CreateClassModalColor"
                     dark
-                  >강좌 생성
-                  </v-toolbar>
+                  ><strong>강좌 생성</strong>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    icon
+                    dark
+                    @click="SetSelectClassActive(CreateClassModalDialog)"
+                    >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </v-toolbar>
                   
                   <!--강좌명 입력-->
                   <div>
@@ -72,9 +80,8 @@
                       :counter="10"
                       label="강좌명 입력"
                       required
-                      
-                      solo-inverted
-                      color="white"
+                      prepend-icon="mdi-pencil"
+                      outlined
                     >
                     </v-text-field>    
 
@@ -89,15 +96,15 @@
                           lazy
                           full-width
                           width="290px"
-                          solo-inverted
+                          outlined
                         >  
                           <template v-slot:activator="{ on }">
                             <v-text-field
                               v-model="CreateClassModalStartDate1"
                               label="강의 시작 날짜 및 시간"
-                              solo-inverted
-                              color="white"
+                              outlined
                               readonly
+                              prepend-icon="mdi-clock"
                               v-on="on"
                             >
                             </v-text-field>
@@ -122,6 +129,7 @@
                             v-if="CreateClassModalStartTimeModal"
                             v-model="CreateClassModalStartTime2"
                             full-width
+                            :allowed-minutes="allowedInterval"
                           >
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
@@ -140,14 +148,13 @@
                           lazy
                           full-width
                           width="290px"
-                          solo-inverted
+                          outlined
                         >
                           <template v-slot:activator="{ on }">
                             <v-text-field
                               v-model="CreateClassModalFinishDate3"
                               label="강의 종료 날짜 및 시간"
-                              solo-inverted
-                              color="white"
+                              outlined
                               readonly
                               v-on="on"
                             >  
@@ -170,7 +177,7 @@
                         >
                           <v-time-picker
                             v-if="CreateClassModalFinishTimeModal"
-                            v-model="CreateClassModalFinishTime4" :minHour="CreateClassModalStartTime2" :minMinute="CreateClassModalStartTime2"
+                            v-model="CreateClassModalFinishTime4"
                             full-width
                           >
                             <v-spacer></v-spacer>
@@ -181,7 +188,7 @@
                       </v-col>
                     </v-row>
 
-                    <!-- 소슥 선택-->
+                    <!-- 소속 선택-->
                     <div>
                       <v-select
                         v-model="CreateClassModalBelong"
@@ -189,13 +196,16 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="소속 선택"
-                        @change=test()
-                        solo-inverted
-                        color="white"
+                        @change="test()"
+                        outlined
+                        prepend-icon="mdi-domain"
                       >    
                       </v-select> 
                     </div>
-                    <v-data-table v-if="showStudents"
+                    
+                    <!--소속된 참여자 명단-->
+                    <div>
+                    <v-select 
                       v-model="selectedStudents"
                       :headers="headers"
                       :items="belongstudents"
@@ -203,18 +213,21 @@
                       item-key="name"
                       hide-default-footer
                       show-select
-                      @click:row=selectstudent()
+                      outlined
+                      multiple
+                      item-text="name"
+                      item-value="studentId"
+                      @click:row="selectstudent()"
+                      prepend-icon="mdi-account"
+                      label="소속된 참여자 명단"
                     >
-                      <template v-slot:top>
-                        <v-switch
-                          v-model="singleSelect"
-                          label="Single select"
-                          class="pa-3"
-                        ></v-switch>
-
-                      </template>
-                    </v-data-table>
-
+                     
+                    </v-select>
+                    </div>
+                 
+                   
+         
+                 
 
                     <!-- 컨텐츠 파일 선택-->
                     <div>
@@ -224,9 +237,8 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="컨텐츠 파일 선택"
-                      
-                        solo-inverted
-                        color="white"
+                        prepend-icon="folder_open"
+                        outlined
                       >    
                       </v-select> 
                     </div> 
@@ -239,30 +251,38 @@
                         label="퀴즈 선택"
                         item-text="item_text"
                         item-value="item_value"
-                       
-                        solo-inverted
-                        color="white"
+                        prepend-icon="mdi-check"
+                        outlined
+                      >    
+                      </v-select> 
+                    </div> 
+              
+
+                  <!-- 컬러 선택-->
+                    <div>
+                      <v-select
+                        v-model="CreateClassModalColor"
+                        :items="CreateClassModalColorItem"
+                        label="컬러 선택"
+                        item-text="item_text"
+                        item-value="item_value"
+                        prepend-icon="invert_colors"
+                        outlined
                       >    
                       </v-select> 
                     </div> 
                   </v-card-text>
                   </div>
-                  <!--창 닫기/ 생성-->
+
+                  <!--등록 확인-->
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
                       color="primary"
                       text
-                      @click=CreateClass()
+                      @click="CreateClass()"
                     >등록 확인
                     </v-btn>
-                    <v-btn
-                      color="primary"
-                      text
-                      @click=SetSelectClassActive(CreateClassModalDialog)
-                    >닫기
-                    </v-btn>
-
                   </v-card-actions>
                  </v-card>
               </template> 
@@ -284,6 +304,8 @@
   export default {
     data () {
         return {
+            CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
+            CreateClassModalColor: 'Primary',
             mainDialog: false,
             maplist: [],
             ButtonValue: "",
@@ -349,15 +371,18 @@
   
 
     methods: {
-
+      // 시간 5분 간격으로 나눠질 때 TRUE
+      allowedInterval: m => m % 5 == 0,
       selectstudent() {
         console.log(this.selectedStudents)
       },
       mainDialogClose(){
       this.CreateClassModalDialog = false
        },
+
+      // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
       fetchContent() {
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+        var url = "http://163.180.117.22:8088/api/content/post/contentlist"; 
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -373,6 +398,10 @@
         this.$http
           .post(url, payload, config)
           .then(res => {
+            this.CreateClassModalFileItem.push({
+              item_value: null,
+              item_text: "컨텐츠 없음"
+            })
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 this.CreateClassModalFileItem.push({
@@ -382,11 +411,10 @@
               })
             }
           })
+       },
 
-
-      },
       fecthDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+        var url = "http://163.180.117.22:8088/api/department/get/departmentlist";
 
         var config = {
           headers: {
@@ -407,13 +435,12 @@
               })
             }
           })
-
-
-
       },
+      
+      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
       fetchQuizData() {
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = "http://163.180.117.22:8088/api/quiz/get/list?instructorId=" + userId;
 
         var config = {
           headers: {
@@ -424,6 +451,10 @@
         this.$http
           .get(url, config)
           .then(res => {
+            this.CreateClassModalQuizItem.push({
+              item_value: null,
+              item_text: "퀴즈 없음"
+            })
             if (res.data.data.length >0) {
               res.data.data.forEach(element => {
                 this.CreateClassModalQuizItem.push({
@@ -434,11 +465,11 @@
             }
           })
       },
-     
+      // 07. 맵리스트
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        var url = "http://163.180.117.22:8088/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -504,6 +535,8 @@
               this.CreateClassModalDialog = false;
           }
       },
+
+      // 강좌 생성 : 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture 
       CreateClass() {
         if (this.CreateClassModalBelong === "") {
           alert("부서를 선택하세요.");
@@ -511,26 +544,27 @@
         } else {
           console.log("wler");
         }
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
+        var url = "http://163.180.117.22:8088/api/lecture/instructor/post/createlecture"
 
         var userId = this.$store.getters.getUserInfo.id;
 
         var studentlist = []
         this.selectedStudents.forEach(element => {
           studentlist.push({
-            studentId: element.studentId
+            studentId: element
           })
         })
         
         var payload = {
-          quizId: this.CreateClassModalQuiz,
+          quizId: this.CreateClassModalQuizItem.item_value,
           name: this.CreateClassModalTitle,
           instructorId: userId,
           mapId: this.selectedMap,
           contentId: this.CreateClassModalFile,
           stulist: studentlist,
           startTime: this.CreateClassModalStartDate1+":00",
-          endTime: this.CreateClassModalFinishDate3+":00"
+          endTime: this.CreateClassModalFinishDate3+":00",
+          color: this.CreateClassModalColor
         }
 
         var config = {
@@ -539,7 +573,10 @@
           }
         }
 
-        this.$http
+        var startdate = new Date(this.CreateClassModalStartDate1+":00");
+        var enddate = new Date(this.CreateClassModalFinishDate3+":00");
+        if (startdate < enddate) {
+          this.$http
           .post(url, payload, config)
           .then(res => {
             if (res.data.success === true) {
@@ -551,13 +588,18 @@
               return;
             }
           })
+        }
+            else {
+              alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
+          }
 
       },
+
       test() {
         this.belongstudents = []
         
         console.log(this.CreateClassModalBelong);
-        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
+        var url = "http://163.180.117.22:8088/api/users/post/studentlistbydepartment";
 
         var payload = {
           departmentId: this.CreateClassModalBelong

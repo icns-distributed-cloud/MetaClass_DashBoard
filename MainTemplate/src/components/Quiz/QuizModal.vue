@@ -98,7 +98,7 @@
                         <div class = "textfield-div">
                           <v-text-field 
                             v-model = "data[a]['quizContext'][index]"
-                            label = "정답 입력"
+                            label = "보기 입력"
                           > 
                           </v-text-field>
                         </div>
@@ -456,7 +456,7 @@
         }
         if (prompStr == "삭제") {
           var id = this.info.id;
-          var url = "http://163.180.117.47:8088/api/quiz/get/deletequiz?id="+id;
+          var url = "http://163.180.117.22:8088/api/quiz/get/deletequiz?id="+id;
 
           var payload = {
             id: this.info.id

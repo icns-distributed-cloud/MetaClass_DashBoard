@@ -176,7 +176,7 @@ import StudentIndividualModal from './StudentIndividualModal.vue' // StudentIndi
 
     // 상세보기 안에 있는 사람 아이콘을 클릭
        StudentIndividualModalItem (item) {
-        var url = "http://163.180.117.47:8088/api/lecture/student/post/lecturelist";
+        var url = "http://163.180.117.22:8088/api/lecture/student/post/lecturelist";
 
         var payload = {
           studentId: item.id,
