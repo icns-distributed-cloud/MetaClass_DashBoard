@@ -331,7 +331,7 @@ import { mapState } from 'vuex'
   
         
 
-        var url = "http://163.180.117.22:8088/api/users/get/allstudent";
+        var url = "http://163.180.117.47:8088/api/users/get/allstudent";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -371,7 +371,7 @@ import { mapState } from 'vuex'
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.22:8088/api/users/patch/deleteuser";
+          var url = "http://163.180.117.47:8088/api/users/patch/deleteuser";
           var userId = this.$store.getters.getUserInfo.id;
           var itemInfo = Object.assign({}, item);
 

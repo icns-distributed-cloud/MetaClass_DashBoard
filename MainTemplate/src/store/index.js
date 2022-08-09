@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.22:8088"
+const resourceHost = "http://163.180.117.47:8088"
 
 export default new Vuex.Store({
     plugins: [
@@ -40,11 +40,7 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-<<<<<<< HEAD
-        LOGIN(state, { id, name, userMode }) {
-=======
-        LOGIN(state, {id, name, userMode, loginId, email, departmentName, phone}) {
->>>>>>> 5b00440d23b68d6f77e5eb526902a0d29714d54a
+        LOGIN(state, { id, name, userMode, loginId, email, departmentName, phone }) {
             state.id = id;
             state.name = name;
             state.userMode = userMode;

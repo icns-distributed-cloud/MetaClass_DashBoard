@@ -204,7 +204,7 @@ import ServerModal from './ServerModal.vue'
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = "http://163.180.117.22:8088/api/map/post/maplist";
+      var url = "http://163.180.117.47:8088/api/map/post/maplist";
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -242,7 +242,7 @@ import ServerModal from './ServerModal.vue'
 
       ServerFrontCreateClassModal()
       {
-        var url = "http://163.180.117.22:8088/api/map/post/createmap";
+        var url = "http://163.180.117.47:8088/api/map/post/createmap";
         var maptype = 0;
         if (this.ServerTeacherList === "손덕인") {
           maptype = 0

@@ -67,7 +67,7 @@
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.22:8088/api/ip/get/delete?id=" + this.info.id;
+          var url = "http://163.180.117.47:8088/api/ip/get/delete?id=" + this.info.id;
 
           var config = {
             headers: {

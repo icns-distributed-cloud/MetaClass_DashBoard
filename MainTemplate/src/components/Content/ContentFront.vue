@@ -197,7 +197,7 @@ import ContentModal from './ContentModal.vue'
       fetchData() {
         this.ContentFrontModalList = [];
 
-        var url = "http://163.180.117.22:8088/api/content/post/contentlist";
+        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -326,7 +326,7 @@ import ContentModal from './ContentModal.vue'
         const formData = new FormData();
         formData.append("file", this.ContentFrontFiles[0]);
 
-        var url = "http://163.180.117.22:8088/api/content/post/createcontent";
+        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
 
         var config = {
           headers: {
@@ -359,7 +359,7 @@ import ContentModal from './ContentModal.vue'
           return;
         } else {
           var userId = this.$store.getters.getUserInfo.id;
-          var idUpdateUrl = "http://163.180.117.22:8088/api/content/post/updateidbycontentid";
+          var idUpdateUrl = "http://163.180.117.47:8088/api/content/post/updateidbycontentid";
           var payload = {
             instructorId: userId,
             contentId: this.contentId,

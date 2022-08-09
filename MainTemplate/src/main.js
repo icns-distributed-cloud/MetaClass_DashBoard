@@ -31,9 +31,9 @@ Vue.use(VuetifyDialog), {
         allowModifiers: true,
     }],
 
-Vue.use
+    Vue.use
 
-    Vue.config.productionTip = false
+Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 
 // 유리추가 : 회원관리(MemberCom)에 넣을 정보

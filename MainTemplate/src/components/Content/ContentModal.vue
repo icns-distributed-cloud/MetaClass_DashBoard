@@ -65,7 +65,7 @@
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.22:8088/api/content/patch/deletecontent";
+          var url = "http://163.180.117.47:8088/api/content/patch/deletecontent";
 
           var payload = {
             id: this.info.id
