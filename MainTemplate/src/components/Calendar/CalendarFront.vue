@@ -594,7 +594,6 @@
             <v-dialog
               ref="CreateClassModalStartDateDialog1"
               v-model="CreateClassModalStartDateModal"
-              :return-value.sync="CreateClassModalStartDate1"
               persistent
               lazy
               full-width
@@ -602,7 +601,7 @@
               solo-inverted
             >  
             
-              <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="CreateClassModalFinishDate3">
+              <v-date-picker v-model="CreateClassModalStartDate1" :max="CreateClassModalFinishDate3">
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
                 <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
@@ -637,14 +636,13 @@
             <v-dialog
               ref="CreateClassModalFinishDateDialog3"
               v-model="CreateClassModalFinishDateModal"
-              :return-value.sync="CreateClassModalFinishDate3"
               persistent
               lazy
               full-width
               width="290px"
               solo-inverted
             >
-              <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
+              <v-date-picker v-model="CreateClassModalFinishDate3" :min="CreateClassModalStartDate1">
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
                 <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
@@ -1356,7 +1354,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
      
       // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
       CalendarFrontUpdateRange ({ start, end }) {
-        
         this.beforestart = start;
         this.beforeend = end;
         // 이벤트 막대기 생성부분
@@ -1434,7 +1431,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                     },
                     {
                       CalendarClassnameAction: element.contentName,
-                      CalendarClassnameTitle: '컨텐츠 이름',
+                      CalendarClassnameTitle: '컨텐츠 이름'
                     },
                     { // 퀴즈 선택 추가
                       CalendarClassnameAction: element.quizName,
@@ -1445,9 +1442,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
               })
 
             }
-          
             this.CalendarFrontEvents = CalendarFrontEvents;
-            
+            //console.log(this.studentlist);
           })
       },
 
@@ -1496,7 +1492,8 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
                   mapName: element.mapName,
                   contentId: element.contentId,
                   quizId: element.quizId,
-
+                 
+        
                   showevent: [
                     {
                       CalendarClassnameAction: element.startTime,
@@ -1540,8 +1537,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
               })
 
             }
-            
-  
             this.CalendarFrontEvents = CalendarFrontEvents;
             
           })
