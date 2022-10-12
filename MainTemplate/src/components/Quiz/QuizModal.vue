@@ -98,7 +98,7 @@
                         <div class = "textfield-div">
                           <v-text-field 
                             v-model = "data[a]['quizContext'][index]"
-                            label = "보기 입력"
+                            label = "정답 입력"
                           > 
                           </v-text-field>
                         </div>
