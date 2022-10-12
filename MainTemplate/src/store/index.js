@@ -24,8 +24,8 @@ export default new Vuex.Store({
         phone: null
     },
     getters: {
-        isLogin(state) {
-            return state.id == null ? false : true;
+        isLogin(state){
+            return state.id == null ? false: true;
         },
         getUserInfo(state) {
             return {
@@ -40,7 +40,7 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        LOGIN(state, { id, name, userMode, loginId, email, departmentName, phone }) {
+        LOGIN(state, {id, name, userMode, loginId, email, departmentName, phone}) {
             state.id = id;
             state.name = name;
             state.userMode = userMode;
@@ -70,15 +70,17 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        LOGIN({ commit }, { id, password, userMode }) {
+        LOGIN({commit}, {id, password, userMode}) {
 
             return axios
                 .post(
-                    `${resourceHost}/api/users/post/login`, {
+                    `${resourceHost}/api/users/post/login`,
+                    {
                         loginId: id,
                         password: password,
                         userMode: userMode
-                    }, {
+                    },
+                    {
                         headers: {
                             "Content-Type": "application/json"
                         }
@@ -102,13 +104,13 @@ export default new Vuex.Store({
                     } else {
                         return "fail";
                     }
-
+                    
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
-        LOGOUT({ commit }) {
+        LOGOUT({commit}) {
             commit("LOGOUT");
         }
     }

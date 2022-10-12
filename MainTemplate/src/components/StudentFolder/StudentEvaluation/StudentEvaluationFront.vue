@@ -81,54 +81,39 @@
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
+                var lateYN;
+                if (element.lateYN === true) {
+                  lateYN = "YES"
+                } else if (element.lateYN === false) {
+                  lateYN = "NO";
+                }
+                var startdate = this.lectureDatetoString(new Date(`${element.startTime}`));
+                this.StudentIndividualText.push({
+                  subject: element.name,
+                  date: startdate,
+                  participation: element.participationLevel,
+                  tardy: lateYN
+                })
                 console.log(element)
-                this.subjectlist.push({
-                  id: element.id,
-                  name: element.name,
-                  date: element.startTime.slice(0, 10)
 
-                })
-              })
-
-              
+              })              
             }
-            var url2 = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo";
-
-
-            this.subjectlist.forEach(element => {
-              var payload = {
-                studentId: userId,
-                lectureId: element.id
-              }
-              this.StudentIndividualText = []
-              this.$http
-                .post(url2, payload, config)
-                .then(res => {
-                  console.log(res)
-                  
-                  var istardy;
-                  if (res.data.data.lateYN === true) {
-                    istardy = "YES"
-                  } else if (res.data.data.lateYN === false) {
-                    istardy = "NO"
-                  }
-                  this.StudentIndividualText.push({
-                    subject: res.data.data.lectureName,
-                    date: element.date,
-                    participation: res.data.data.participationLevel,
-                    tardy: istardy
-                  })
-                })
-
-            })
-              
-          })
             
+          })
+      },
+      lectureDatetoString(source, delimiter = '-') {
+        const year = source.getFullYear();
+        const month = this.leftPad(source.getMonth() + 1);
+        const day = this.leftPad(source.getDate());
+
+        return [year, month, day].join(delimiter);
+      },
+      leftPad(value) {
+        if (value >= 10) {
+          return value;
         }
-      }
+        return `0${value}`
+      },
+    }
   }
-    
-    
-  
-  
 </script>
