@@ -364,7 +364,7 @@ import ContentModal from './ContentModal.vue'
             instructorId: userId,
             contentId: this.contentId,
             contentName: this.ContentName,
-            playtime: this.durationaa
+            playTime: this.durationaa
           }
           this.$http
             .post(idUpdateUrl, payload, {
