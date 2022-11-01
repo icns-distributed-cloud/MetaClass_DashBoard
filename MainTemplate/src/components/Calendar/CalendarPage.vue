@@ -7,7 +7,7 @@
 
 <!--script-->
 <script>
-import CalendarCom from './CalendarCom.vue'
+import CalendarCom from './CalendarCom.vue';
 
 export default {
    components:

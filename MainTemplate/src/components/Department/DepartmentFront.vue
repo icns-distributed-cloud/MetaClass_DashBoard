@@ -12,7 +12,7 @@
       dark
     >
     <div> 
-       <v-row>
+      <v-row>
         <v-col
           v-for="(item, index) in DepartmentModalList"
           :key="index"
@@ -22,7 +22,7 @@
         </v-col>
       </v-row>
     </div>
-     <!--스크롤 내리기-->
+    <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
     
@@ -113,123 +113,109 @@
 
 <!------script-------->
 <script>
+import DepartmentModal from './DepartmentModal.vue';
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
+export default {
+components: { DepartmentModal },
+  data: () => ({
+    contentId: "",
 
-import DepartmentModal from './DepartmentModal.vue'
-
-  export default {
-
-  components: { DepartmentModal },
-    data: () => ({
-      contentId: "",
-
-      ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
-      DepartmentName: "", //  이름
-      ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
-    // ContentFrontModalList
-      DepartmentModalList:[],
-    }),
+    ContentFrontFiles: [], // v-model=ContentFrontFiles 파일 업로드
+    DepartmentName: "", //  이름
+    ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
+  // ContentFrontModalList
+    DepartmentModalList:[],
+  }),
   created() {
     this.fetchData();
   },    
 
   methods: {
-      fetchData() {
-        this.DepartmentModalList = [];
+    // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
+    fetchData() {
+      this.DepartmentModalList = [];
 
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+      var url = IPAddress + "/api/department/get/departmentlist";
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+      var config = Config.config;
 
-        this.$http
-          .get(url, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                  this.DepartmentModalList.push({
-                    id: element.id,
-                    name: element.name
-                  
-                })
-                
-                
+      this.$http
+        .get(url, config)
+        .then(res => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              this.DepartmentModalList.push({
+                id: element.id,
+                name: element.name
               })
-            }
-          })
-
-      },
-      empty() {
-          this.DepartmentName = "";
-      },
-
-      ContentFrontCreateClassModal()
-      {
-        this.ContentFrontModalList.push({
-                com : DepartmentModal
-            })   
-        console.log("aaaaaaaaa")
-      },
-
-      ContentFrontDeleteClassModal()
-      {
-        this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
-      },
-      Upload() {
-        const formData = new FormData();
-        formData.append("file", this.ContentFrontFiles[0]);
-
-        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
-
-        var config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
+            })
           }
-        }
+        })
+    },
+    empty() {
+      this.DepartmentName = "";
+    },
 
-        this.$http
-          .post(url, formData, config)
-          .then(res => {
-            console.log(res);
-            if (res.data.success === true) {
-              this.contentId = res.data.data.contentId;
-            } else {
-              alert("업로드 실패");
-              return;
-            }
+    ContentFrontCreateClassModal()
+    {
+      this.ContentFrontModalList.push({
+        com : DepartmentModal
+      })   
+      console.log("aaaaaaaaa")
+    },
+
+    ContentFrontDeleteClassModal()
+    {
+      this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
+    },
+
+    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
+    Upload() {
+      const formData = new FormData();
+      formData.append("file", this.ContentFrontFiles[0]);
+
+      var url = IPAddress + "/api/content/post/createcontent";
+
+      var config = Config.config;
+
+      this.$http
+        .post(url, formData, config)
+        .then(res => {
+          console.log(res);
+          if (res.data.success === true) {
+            this.contentId = res.data.data.contentId;
+          } else {
+            alert("업로드 실패");
+            return;
+          }
+        })
+      console.log(this.ContentFrontFiles);
+    },
+
+    // 부서 입력 API : 26. Post - http://IPAddress/api/department/post/postdepartment
+    RegisterDepartment() {
+      var url = IPAddress + "/api/department/post/postdepartment";
+
+      var payload = {
+          "name" : this.DepartmentName
+      }
+
+      var config = Config.config;
+
+      this.$http
+          .post(url, payload, config)
+          .then((res) => {
+              if (res.data.success === true) {
+                  alert("부서 등록 완료")
+                  this.ContentFrontDialog = false;
+              }
+          })
+          .catch((err) => {
+              alert(err);
           })
 
-
-        console.log(this.ContentFrontFiles);
-      },
-      RegisterDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/post/postdepartment";
-
-        var payload = {
-            "name" : this.DepartmentName
-        }
-
-        var config = {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-
-        this.$http
-            .post(url, payload, config)
-            .then((res) => {
-                if (res.data.success === true) {
-                    alert("부서 등록 완료")
-                    this.ContentFrontDialog = false;
-                }
-            })
-            .catch((err) => {
-                alert(err);
-            })
-
-      }
+    }
   }
-  }
+}
 </script>

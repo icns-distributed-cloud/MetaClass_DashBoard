@@ -21,7 +21,7 @@
 
 <script>
 export default {
-     methods: {
+    methods: {
         signout() {
             this.$store
                 .dispatch("LOGOUT")
@@ -32,6 +32,6 @@ export default {
             alert("로그아웃 되었습니다.");
             this.$router.push("/");
         }
-     }   
+    }   
 }
 </script>

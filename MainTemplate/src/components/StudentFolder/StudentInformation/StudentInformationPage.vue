@@ -1,26 +1,25 @@
 <template>
-  <div id="StudentInformationCom">
-    <StudentInformation-Com></StudentInformation-Com>
-  </div>
+<div id="StudentInformationCom">
+  <StudentInformation-Com></StudentInformation-Com>
+</div>
 </template>
 
 
 <!--script-->
 <script>
-import StudentInformationCom from './StudentInformationCom.vue'
+import StudentInformationCom from './StudentInformationCom.vue';
 
 export default {
-   components:
-  {
+  components: {
     StudentInformationCom
   },
-    name: "StudentInformationPage",
+  name: "StudentInformationPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

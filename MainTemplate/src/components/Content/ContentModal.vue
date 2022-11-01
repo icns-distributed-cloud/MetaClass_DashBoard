@@ -42,6 +42,8 @@
 
 <!---->
 <script>
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
   export default {
     props: {
       info: {
@@ -57,6 +59,7 @@
     },
 
     methods: {
+      // 컨텐츠 삭제 API : 15. Patch - http://IPAddress/api/content/patch/deletecontent
       DeleteContent() {
         var prompStr = prompt(
           '컨텐츠가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
@@ -65,17 +68,13 @@
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.47:8088/api/content/patch/deletecontent";
+          var url = IPAddress + "/api/content/patch/deletecontent";
 
           var payload = {
             id: this.info.id
           }
 
-          var config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
+          var config = Config.config;
 
           this.$http
             .patch(url, payload, config)
@@ -92,8 +91,6 @@
           alert("정확하게 입력해주세요.");
           return;
         }
-
-        
       }
     }
   }

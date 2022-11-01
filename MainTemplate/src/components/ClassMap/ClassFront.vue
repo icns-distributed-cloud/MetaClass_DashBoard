@@ -130,7 +130,10 @@
 <!------script-------->
 
 <script>
-import ClassMapModal from './ClassMapModal.vue'
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
+var ClassMapEnum = require("./ClassMapEnum");
+import ClassMapModal from './ClassMapModal.vue';
 
   export default {
     //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
@@ -180,22 +183,18 @@ import ClassMapModal from './ClassMapModal.vue'
       this.fetchData();
     },
   
-   
+    // 강의실 맵 리스트 API : 7. Post - http://IPAddress/api/map/post/maplist
     fetchData() {
       // var vm = this;
       this.ClassFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/map/post/maplist";
+      var url = IPAddress + "/api/map/post/maplist";
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
         instructorId: userId
       }
 
-      var config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
+      var config = Config.config;
 
       this.$http
         .post(url, payload, config)
@@ -215,27 +214,26 @@ import ClassMapModal from './ClassMapModal.vue'
           
           // console.log(this.ClassFrontModalList[0]);
         })
-        
-
     },
 
-
+      // 강의실 맵 생성 API : 5. Post - http://IPAddress/api/map/post/createmap
       ClassFrontCreateClassModal()
       {
-        var url = "http://163.180.117.47:8088/api/map/post/createmap";
+        var url = IPAddress + "/api/map/post/createmap";
         var maptype = 0;
+        var Maptype = ClassMapEnum.Maptype;
         if (this.ClassFrontMapType === "오픈형") {
-          maptype = 0
+          maptype = Maptype.OPEN;
         } else if (this.ClassFrontMapType === "계단식") {
-          maptype = 1
+          maptype = Maptype.CASCADING;
         } else if (this.ClassFrontMapType === "소회의실") {
-          maptype = 2
+          maptype = Maptype.MEETING_ROOM;
         } else {
           alert("강의실 유형을 정확하게 입력해주세요.")
           console.log(maptype);
           return;
         }
-         
+        
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           name: this.ClassFrontMapName,
@@ -244,11 +242,7 @@ import ClassMapModal from './ClassMapModal.vue'
           instructorId: userId
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .post(url, payload, config)

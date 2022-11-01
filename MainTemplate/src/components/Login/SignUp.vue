@@ -9,7 +9,6 @@
       align="center"
       justify="center"
     >
-    
       <v-col
         cols="12"
         sm="8"
@@ -19,15 +18,11 @@
           <v-toolbar
             color="primary"
             dark
-           
           >
-          
             <v-toolbar-title>메타 클래스</v-toolbar-title>
             <v-spacer></v-spacer>
-            
             </v-toolbar>
             <v-card-text>
-
               <form>
                 <v-text-field
                   v-model="name"
@@ -35,8 +30,6 @@
                   label="이름"
                   required
                 ></v-text-field>
-
-                
                 <!--아이디 중복확인-->
                 <v-text-field
                   v-model="userid"
@@ -54,7 +47,6 @@
                     </v-btn>
                   </template>
                 </v-text-field>
-                     
 
                 <v-text-field
                   v-model="userpass"
@@ -63,6 +55,7 @@
                   label="비밀번호"
                   required
                 ></v-text-field>
+
                 <v-text-field
                   v-model="email"
                   label="이메일"
@@ -80,12 +73,12 @@
                     label="강의자"
                     value="instructor"
                   ></v-radio>
+
                   <v-radio
                     label="학생"
                     value="student"
                   ></v-radio>
                 </v-radio-group>
-
                 <v-select v-if="role==='student'"
                       v-model="selectedDepartment"          
                       :items="departmentItems"
@@ -98,12 +91,7 @@
                       @change="$v.select.$touch()"
                       @blur="$v.select.$touch()"
                     ></v-select>
-
-
-                
-
                 <v-card-actions>
-                
                 <v-btn class="login_button"
                 href="/">
                   로그인
@@ -118,18 +106,19 @@
                 </v-btn>
                 </v-card-actions>
               </form>
-
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
 
-  
   </v-container>
   </v-app>
 </template>
 
 <script>
+import { UserModes } from './SignEnum';
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
 export default {
     name: "SignUp",
   data() {
@@ -146,9 +135,6 @@ export default {
 
           // 중복체크 검사
           IDCHECKED:false,
-
-         
-        
         }
     },
     props: {
@@ -158,15 +144,12 @@ export default {
       }
     },
 
+    // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
     created() {
       var vm = this;
-      var url = "http://163.180.117.47:8088/api/department/get/departmentlist"
+      var url = IPAddress + "/api/department/get/departmentlist"
 
-      var config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
+      var config = Config.config;
 
       this.$http
         .get(url, config)
@@ -184,45 +167,39 @@ export default {
     },
 
     methods: {
-      // 48. 아이디 중복 체크 http://localhost:8088/api/users/post/checkLoginId
+      // 아이디 중복 체크 API : 48. Request - http://IPAddress/api/users/post/checkLoginId
       checkLoginId() {
-        var url = "http://163.180.117.47:8088/api/users/post/checkLoginId";
+        var url = IPAddress + "/api/users/post/checkLoginId";
       
         var payload = {
           loginId: this.userid,
         }
         
-        var config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
+        var config = Config.config
 
-        
-      }
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          console.log(res);
-          if (res.data.success == true) {
-            this.IDCHECKED = true;
-            alert("사용가능한 ID 입니다.");
-          } else if (res.data.success == false) {
-            alert("사용중인 ID 입니다.");
-          }
-      
-        })
+        this.$http
+          .post(url, payload, config)
+          .then(res => {
+            console.log(res);
+            if (res.data.success == true) {
+              this.IDCHECKED = true;
+              alert("사용가능한 ID 입니다.");
+            } else if (res.data.success == false) {
+              alert("사용중인 ID 입니다.");
+            }
+          })
       },
 
+      // 회원가입 API : 4. Post - http://IPAddress/api/users/post/register
       submit() {
         if(this.IDCHECKED){
-          var url = "http://163.180.117.47:8088/api/users/post/register";
+          var url = IPAddress + "/api/users/post/register";
 
           var usermode = 0;
           if (this.role === "instructor") {
-            usermode = 0;
+            usermode = UserModes.INSTRUCTOR;
           } else if (this.role === "student") {
-            usermode = 1;
+            usermode = UserModes.STUDENT;
           } else {
             alert("정확하게 입력해주세요.");
             return;
@@ -230,6 +207,8 @@ export default {
 
           var payload = {
             loginId: this.userid,
+            // base64 encoding
+            // password: window.btoa(this.userpass),
             password: this.userpass,
             name: this.name,
             userMode: usermode,
@@ -238,11 +217,7 @@ export default {
             phone: this.phone
           }
 
-          var config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
+          var config = Config.config;
 
           this.$http
             .post(url, payload, config)

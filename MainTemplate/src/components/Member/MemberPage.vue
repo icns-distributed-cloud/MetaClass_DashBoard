@@ -7,10 +7,10 @@
 
 <!--script-->
 <script>
-import MemberCom from './MemberCom.vue'
+import MemberCom from './MemberCom.vue';
 
 export default {
-   components:
+  components:
   {
     MemberCom
   },

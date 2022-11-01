@@ -12,7 +12,7 @@
       dark
     >
     <div> 
-       <v-row>
+      <v-row>
         <v-col
           v-for="(item, index) in ContentFrontModalList"
           :key="index"
@@ -22,7 +22,7 @@
         </v-col>
       </v-row>
     </div>
-     <!--스크롤 내리기-->
+    <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
     
@@ -167,11 +167,10 @@
 
 <!------script-------->
 <script>
-
-import ContentModal from './ContentModal.vue'
-
-
-  export default {
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
+import ContentModal from './ContentModal.vue';
+export default {
 
   components: { ContentModal },
     data: () => ({
@@ -194,204 +193,185 @@ import ContentModal from './ContentModal.vue'
   },    
 
   methods: {
-      fetchData() {
-        this.ContentFrontModalList = [];
+    // 컨텐츠 목록 API : 16. Post - http://IPAddress/api/content/post/contentlist
+    fetchData() {
+      this.ContentFrontModalList = [];
 
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+      var url = IPAddress + "/api/content/post/contentlist";
 
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
+      var userId = this.$store.getters.getUserInfo.id;
+      var payload = {
+        instructorId: userId
+      }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+      var config = Config.config;
 
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                if (element.id !== 51) {
-                  var filename = element.directory.slice(element.directory.indexOf("_")+1);
-                  this.ContentFrontModalList.push({
-                  id: element.id,
-                  name: element.name,
-                  filename: filename
-                })
-                }
-                
+      this.$http
+        .post(url, payload, config)
+        .then(res => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              if (element.id !== 51) {
+                var filename = element.directory.slice(element.directory.indexOf("_")+1);
+                this.ContentFrontModalList.push({
+                id: element.id,
+                name: element.name,
+                filename: filename
               })
-            }
-          })
-
-      },
-      selectFile(file) {
-        this.uploading = false;
-
-        this.progress = 0;
-        this.currentFile = file;
-        if (!this.currentFile) {
-          this.durationaa = 0
-          this.isUploaded = false;
-          return;
-        }
-        var vm = this;
-        var video = document.createElement("video");
-        video.preload = "metadata";
-
-        video.onloadedmetadata = function() {
-          window.URL.revokeObjectURL(video.src);
-          var duration = video.duration;
-
-          
-
-          vm.durationaa = vm.numbertoTime(duration);
-          console.log(vm.durationaa);
-          
-        }
-
-        video.src = URL.createObjectURL(this.currentFile);
-
-
-        this.testProgress();
-        
-      },
-
-      fileUpload(file, onUploadProgress) {
-        this.uploading = false;
-        this.progress = 0;
-
-        let formData = new FormData();
-
-        formData.append("file", file);
-
-        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
-        var config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          onUploadProgress
-        }
-
-        this.uploading = true;
-        return this.$http.post(url, formData, config);
-
-
-      }, 
-
-      testProgress() {
-        var tempfile = this.currentFile;
-        this.isUploaded = false;
-        this.fileUpload(this.currentFile, (event) => {
-          this.progress = Math.round((100 * event.loaded) / event.total)
-        })
-          .then((res) => {
-            if (tempfile === this.currentFile) {
-              if (res.data.success === true) {
-                this.contentSaved = true;
-                this.uploading = false;
-                this.contentId = res.data.data.contentId;
-                this.isUploaded = true;
-              } else {
-                alert("업로드 실패");
-                this.uploading = false;
-                return;
               }
-            }
-            
-          })
-          .catch(() => {
-            this.uploading = false;
-            this.progress = 0;
-            this.currentFile = undefined;
-          })
-      },
-
-
-
-
-      ContentFrontDeleteClassModal()
-      {
-        this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
-      },
-      Upload() {
-        if (!this.currentFile) {
-          return;
-        }
-
-        const formData = new FormData();
-        formData.append("file", this.ContentFrontFiles[0]);
-
-        var url = "http://163.180.117.47:8088/api/content/post/createcontent";
-
-        var config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
+              
+            })
           }
-        }
+        })
+    },
 
-        this.$http
-          .post(url, formData, config)
-          .then(res => {
-            console.log(res);
+    selectFile(file) {
+      this.uploading = false;
+
+      this.progress = 0;
+      this.currentFile = file;
+      if (!this.currentFile) {
+        this.durationaa = 0
+        this.isUploaded = false;
+        return;
+      }
+      var vm = this;
+      var video = document.createElement("video");
+      video.preload = "metadata";
+
+      video.onloadedmetadata = function() {
+        window.URL.revokeObjectURL(video.src);
+        var duration = video.duration;
+
+        vm.durationaa = vm.numbertoTime(duration);
+        console.log(vm.durationaa);
+      }
+
+      video.src = URL.createObjectURL(this.currentFile);
+      this.testProgress();
+      
+    },
+
+    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
+    fileUpload(file, onUploadProgress) {
+      this.uploading = false;
+      this.progress = 0;
+
+      let formData = new FormData();
+
+      formData.append("file", file);
+
+      var url = IPAddress + "/api/content/post/createcontent";
+      var config = {
+        headers: Config.config.headers,
+        onUploadProgress
+      }
+
+      this.uploading = true;
+      return this.$http.post(url, formData, config);
+    }, 
+
+    testProgress() {
+      var tempfile = this.currentFile;
+      this.isUploaded = false;
+      this.fileUpload(this.currentFile, (event) => {
+        this.progress = Math.round((100 * event.loaded) / event.total)
+      })
+        .then((res) => {
+          if (tempfile === this.currentFile) {
             if (res.data.success === true) {
+              this.contentSaved = true;
+              this.uploading = false;
               this.contentId = res.data.data.contentId;
-              console.log(this.contentId);
+              this.isUploaded = true;
             } else {
               alert("업로드 실패");
+              this.uploading = false;
               return;
             }
-          })
-
-
-        console.log(this.ContentFrontFiles);
-      },
-      UpdateId() {
-        if (this.contentId === "") {
-          alert("파일을 선택해주세요");
-          return;
-        } else if (!this.ContentName) {
-          alert("컴텐츠 이름을 입력해주세요");
-          return;
-        } else {
-          var userId = this.$store.getters.getUserInfo.id;
-          var idUpdateUrl = "http://163.180.117.47:8088/api/content/post/updateidbycontentid";
-          var payload = {
-            instructorId: userId,
-            contentId: this.contentId,
-            contentName: this.ContentName,
-            playTime: this.durationaa
           }
-          this.$http
-            .post(idUpdateUrl, payload, {
-              headers: {
-                "Content-Type": "application/json"
-              }
-            })
-            .then(res => {
-              console.log(res);
-              alert("컨텐츠 업로드가 완료되었습니다.");
-              this.fetchData();
-              this.ContentFrontDialog = false;
-            })
+          
+        })
+        .catch(() => {
+          this.uploading = false;
+          this.progress = 0;
+          this.currentFile = undefined;
+        })
+    },
+
+    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
+    ContentFrontDeleteClassModal()
+    {
+      this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
+    },
+    Upload() {
+      if (!this.currentFile) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", this.ContentFrontFiles[0]);
+
+      var url = IPAddress + "/api/content/post/createcontent";
+
+      var config = Config.config;
+
+      this.$http
+        .post(url, formData, config)
+        .then(res => {
+          console.log(res);
+          if (res.data.success === true) {
+            this.contentId = res.data.data.contentId;
+            console.log(this.contentId);
+          } else {
+            alert("업로드 실패");
+            return;
+          }
+        })
+      console.log(this.ContentFrontFiles);
+    },
+
+    // 컨텐츠를 등록한 강사 id 저장 API : 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+    UpdateId() {
+      if (this.contentId === "") {
+        alert("파일을 선택해주세요");
+        return;
+      } else if (!this.ContentName) {
+        alert("컨텐츠 이름을 입력해주세요");
+        return;
+      } else {
+        var userId = this.$store.getters.getUserInfo.id;
+        var idUpdateUrl = IPAddress + "/api/content/post/updateidbycontentid";
+        var payload = {
+          instructorId: userId,
+          contentId: this.contentId,
+          contentName: this.ContentName,
+          playTime: this.durationaa
         }
 
-      },
-      numbertoTime(value) {
-        const sec = parseInt(value, 10); // convert value to number if it's string
-        let hours   = Math.floor(sec / 3600); // get hours
-        let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-        let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
-        // add 0 if value < 10; Example: 2 => 02
-        if (hours   < 10) {hours   = "0"+hours;}
-        if (minutes < 10) {minutes = "0"+minutes;}
-        if (seconds < 10) {seconds = "0"+seconds;}
-        return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+        var config = Config.config;
+        this.$http
+          .post(idUpdateUrl, payload, config)
+          .then(res => {
+            console.log(res);
+            alert("컨텐츠 업로드가 완료되었습니다.");
+            this.fetchData();
+            this.ContentFrontDialog = false;
+          })
       }
+
+    },
+    numbertoTime(value) {
+      const sec = parseInt(value, 10); // convert value to number if it's string
+      let hours   = Math.floor(sec / 3600); // get hours
+      let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+      let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+      // add 0 if value < 10; Example: 2 => 02
+      if (hours   < 10) {hours   = "0"+hours;}
+      if (minutes < 10) {minutes = "0"+minutes;}
+      if (seconds < 10) {seconds = "0"+seconds;}
+      return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
     }
   }
+}
 </script>

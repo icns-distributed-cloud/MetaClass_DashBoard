@@ -868,7 +868,10 @@
 
 <!--script-->
 <script>
-import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
+var Config = require("../../config");
+var CalendarEnum = require("./CaledarEnum");
+var IPAddress = Config.IPAddress;
+import CreateClassModal from './CreateClassModal.vue'; // CreateClassModal
 //import ClaendarStudentListModal from './ClaendarStudentListModal.vue' // ClaendarStudentListModal
 
   export default {
@@ -910,7 +913,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       date: new Date().toISOString().substr(0, 10),
       CreateClassModalStartDate1: new Date().toISOString().substr(0, 10),
       CreateClassModalFinishDate3: new Date().toISOString().substr(0, 10),
-
 
       maplist: [],
       studentlist: [], // 학생 리스트
@@ -964,8 +966,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
       CreateClassModal : false, //  CreateClassModal 
     
-
-   
       // 과목명 안에 있는 card-text 시작
       selected: [2],
       CalendarClassnameItemS: [
@@ -1089,7 +1089,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
       
       // 퀴즈 (펜)
-       isQuiz(item) {
+      isQuiz(item) {
         if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 7) {
           return true
         } else {
@@ -1180,7 +1180,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
 
       // 퀴즈 수정본 저장
-       SetQuizData(item) {
+      SetQuizData(item) {
         this.CalendarFrontSelectedEvent.showevent[7].CalendarClassnameAction = item.name
         this.CalendarFrontSelectedEvent.quizId = item.id
         this.popupQuizListDialog=false
@@ -1239,22 +1239,20 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.$refs.calendar.next() // CalendarFrontNext
       },
 
+      // 강의실 맵 리스트 API : 7. Post - http://IPAddress//api/map/post/maplist
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        var url = IPAddress + "/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           instructorId: userId
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config
 
+        var Maptype = CalendarEnum.Maptype;
         this.$http
           .post(url, payload, config)
           .then(res => {
@@ -1263,11 +1261,11 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
               res.data.data.forEach(element => {
                 var maptype = ""
-                if (element.type === 0) {
+                if (element.type === Maptype.OPEN) {
                   maptype = "오픈형";
-                } else if (element.type ===1){ 
+                } else if (element.type === Maptype.CASCADING){ 
                   maptype = "계단식";
-                } else if (element.type === 2) {
+                } else if (element.type === Maptype.MEETING_ROOM) {
                   maptype = "소회의실";
                 }
                 this.maplist.push({
@@ -1286,22 +1284,18 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
       
   
-      // 컨텐츠 목록 API : 16. Post- http://IPAdress/api/content/post/contentlist
+      // 컨텐츠 목록 API : 16. Post- http://IPAddress/api/content/post/contentlist
       fetchContentData() {
         this.contentlist = []
 
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
+        var url = IPAddress + "/api/content/post/contentlist";
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           instructorId: userId
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .post(url, payload, config)
@@ -1321,17 +1315,13 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           }))
       },
 
-      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
+      // 퀴즈 리스트 API 42. Get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
       fetchQuizData() {
         this.quizlist = []; 
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = IPAddress + "/api/quiz/get/list?instructorId=" + userId;
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .get(url, config)
@@ -1352,7 +1342,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           })
       },
      
-      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+      // 선생님 강좌 목록 불러오기 API : 12. Post - http://IPAddress/api/lecture/instructor/post/lecturelist
       CalendarFrontUpdateRange ({ start, end }) {
         this.beforestart = start;
         this.beforeend = end;
@@ -1362,7 +1352,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
          
         const CalendarFrontEvents = [] // const : 내용을 변경하지 않음
 
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+        var url = IPAddress + "/api/lecture/instructor/post/lecturelist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
@@ -1371,23 +1361,20 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           endDate: end.date
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
+        var Maptype = CalendarEnum.Maptype
         this.$http
           .post(url, payload, config)
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 var maptype = "";
-                if (element.mapType === 0) {
+                if (element.mapType === Maptype.OPEN) {
                   maptype = "오픈형";
-                } else if (element.mapType === 1) {
+                } else if (element.mapType === Maptype.CASCADING) {
                   maptype = "계단식";
-                } else if (element.mapType === 2) {
+                } else if (element.mapType === Maptype.MEETING_ROOM) {
                   maptype = "소회의실"
                 }
                 this.studentlist=element.students;
@@ -1447,7 +1434,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           })
       },
 
-      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+      // 선생님 강좌 목록 불러오기 API : 12. Post - http://IPAddress/api/lecture/instructor/post/lecturelist
       refreshData() { 
         const CalendarFrontEvents = []
 
@@ -1460,11 +1447,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           endDate: this.beforeend.date
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .post(url, payload, config)
@@ -1559,18 +1542,15 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
         nativeEvent.stopPropagation()
       },
+      // 강좌 삭제 API : 11. Patch - http://IPAddress/api/lecture/instructor/patch/deletelecture
       ClassDelete(a) {
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
+        var url = IPAddress + "/api/lecture/instructor/patch/deletelecture";
 
         var payload = {
           id: a.classid
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .patch(url, payload, config)
@@ -1601,9 +1581,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       },
 
 
-      // 강좌 수정 10. Patch - http://IPAdress/api/lecture/ instructor/patch/updatelecture
+      // 강좌 수정 API : 10. Patch - http://IPAddress/api/lecture/instructor/patch/updatelecture
      patchEditedClass(a){
-      var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
+      var url = IPAddress + "/api/lecture/instructor/patch/updatelecture ";
       console.log(a.showevent[6].contentId);
       console.log(a.showevent[3].mapId);
 
@@ -1620,12 +1600,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           mapId: a.mapId,
       }
       
-      var config = {
-        
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+      var config = Config.config;
         
       var startdate = new Date(a.showevent[0].CalendarClassnameAction);
       var enddate = new Date(a.showevent[1].CalendarClassnameAction);
@@ -1656,9 +1631,9 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     },
 
     
-    // 강의실 맵정보 수정 : 8. Patch - http://IPAdress/api/map/patch/updatemap 
+    // 강의실 맵정보 수정 API : 8. Patch - http://IPAddress/api/map/patch/updatemap 
     patchEditedClassLectureMap(a){
-      var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
+      var url = IPAddress + "/api/map/patch/updatemap";
 
       var userId = this.$store.getters.getUserInfo.id;
       var Maxnum = parseInt(a.showevent[5].CalendarClassnameAction)
@@ -1669,11 +1644,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         type: a.maptype,
         maxUser: Maxnum,
       }
-      var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+      var config = Config.config;
 
       this.$http
         .patch(url, payload, config)
@@ -1692,11 +1663,11 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
     },
 
     // 강의 메시지 전송 appendCalendarFrontMessage
-    // (1) 이메일 전송 http://localhost:8088/api/mail/send 
-    
+    // 메일 전송 API : 45. Post - http://IPAddress/api/mail/send
+    // 문자 전송 API : 45. Post - http://IPAddress/api/sms/send
     appendCalendarFrontMessage() {
       if(this.emailClick) {
-        let url = "http://163.180.117.47:8088/api/mail/send";
+        let url = IPAddress + "/api/mail/send";
 
         let userId = this.$store.getters.getUserInfo.id;
         let payload = {
@@ -1704,11 +1675,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
           context: this.MessageContext,
         }
 
-        let config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
+        let config = Config.config;
 
         this.$http
           .post(url, payload, config)
@@ -1721,7 +1688,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             }
           }) 
       } else if(this.messageClick) {
-          let url = "http://163.180.117.47:8088/api/sms/send"; // http://localhost:8088/api/sms/send 
+          let url = IPAddress + "/api/sms/send";
 
           //var userId = this.$store.getters.getUserInfo.id;
           let payload = {
@@ -1729,12 +1696,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
             context: this.MessageContext,
           }
 
-          let config = {
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-
+          let config = Config.config;
           this.$http
             .post(url, payload, config)
             .then(res => {

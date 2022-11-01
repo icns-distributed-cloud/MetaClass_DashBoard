@@ -12,7 +12,7 @@
 
 
 <script>
-import ContentFront from './ContentFront.vue'
+import ContentFront from './ContentFront.vue';
 
 export default {
    components:

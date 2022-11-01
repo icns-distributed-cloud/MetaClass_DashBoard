@@ -7,7 +7,7 @@
 
 <!--script-->
 <script>
-import ContentCom from './ContentCom.vue'
+import ContentCom from './ContentCom.vue';
 
 export default {
    components:

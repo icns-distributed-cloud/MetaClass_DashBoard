@@ -1,31 +1,31 @@
-   <template>
+  <template>
   <v-app id="inspire">
-   <v-layout>
+  <v-layout>
     <v-flex>
           <div id="DepartmentFront">
         <Department-Front></Department-Front>
       </div>
     </v-flex>
-   </v-layout>
+  </v-layout>
   </v-app>
 </template>
 
 
 <script>
-import DepartmentFront from './DepartmentFront.vue'
+import DepartmentFront from './DepartmentFront.vue';
 
 export default {
-   components:
+  components:
   {
     DepartmentFront
   },
-    name: "DepartmentCom",
+  name: "DepartmentCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

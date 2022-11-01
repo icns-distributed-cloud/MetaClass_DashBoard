@@ -1,27 +1,26 @@
-  <template>
-   <v-app id="inspire">
-     <div id="StudentEvaluationFront">
-      <StudentEvaluation-Front></StudentEvaluation-Front>
-      </div>
-  </v-app>
+<template>
+<v-app id="inspire">
+  <div id="StudentEvaluationFront">
+    <StudentEvaluation-Front></StudentEvaluation-Front>
+  </div>
+</v-app>
 </template>
 
 <!--script-->
 <script>
-import StudentEvaluationFront from './StudentEvaluationFront.vue'
+import StudentEvaluationFront from './StudentEvaluationFront.vue';
 
 export default {
-   components:
-  {
+  components: {
     StudentEvaluationFront
   },
-    name: "StudentEvaluationCom",
+  name: "StudentEvaluationCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

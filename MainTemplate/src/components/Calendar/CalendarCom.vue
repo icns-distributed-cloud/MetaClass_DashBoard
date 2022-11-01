@@ -8,7 +8,7 @@
 
 <!--script-->
 <script>
-import CalendarFront from './CalendarFront.vue'
+import CalendarFront from './CalendarFront.vue';
 
 export default {
    components:

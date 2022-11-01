@@ -127,6 +127,9 @@
 
 <!---->
 <script>
+var Config = require("../../config");
+var IPAddress = Config.IPAddress;
+var ClassMapEnum = require("./ClassMapEnum");
   export default {
     
     props: {
@@ -175,12 +178,13 @@
       },
 
       setMapInfo() {
+        var Maptype = ClassMapEnum.Maptype;
         this.classMapName = this.info.name;
-        if (this.info.type === 0) {
+        if (this.info.type === Maptype.OPEN) {
           this.classMapType = "오픈형"
-        } else if (this.info.type === 1) {
+        } else if (this.info.type === Maptype.CASCADING) {
           this.classMapType = "계단식"
-        } else if (this.info.type === 2) {
+        } else if (this.info.type === Maptype.MEETING_ROOM) {
           this.classMapType = "소회의실"
         }
         this.classMapMaxUser = this.info.maxUser;
@@ -193,16 +197,18 @@
         this.setMapInfo();
         this.popupUpdateMap = false
       },
+      // 강의실 맵 정보 수정 API : 8. Patch - http://IPAddress/api/map/patch/updatemap
       updateMap() {
-        var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
+        var url = IPAddress + "/api/map/patch/updatemap";
 
         var maptype = 0;
+        var Maptype = ClassMapEnum.Maptype;
         if (this.classMapType === "오픈형") {
-          maptype = 0
+          maptype = Maptype.OPEN;
         } else if (this.classMapType === "계단식") {
-          maptype = 1
+          maptype = Maptype.CASCADING;
         } else if (this.classMapType === "소회의실") {
-          maptype = 2
+          maptype = Maptype.MEETING_ROOM;
         } else {
           alert("강의실 유형을 정확하게 입력해주세요.")
           return;
@@ -215,11 +221,7 @@
           maxUser: this.classMapMaxUser
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .patch(url, payload, config)
@@ -239,6 +241,7 @@
 
         
       },
+      // 강의실 맵 삭제 API : 6. Patch - http://IPAddress/api/map/patch/deletemap
       deleteMap() {
         var prompStr = prompt(
           '강의실이 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
@@ -247,17 +250,13 @@
           return;
         }
         if (prompStr == "삭제") {
-          var url = "http://163.180.117.47:8088/api/map/patch/deletemap";
+          var url = IPAddress + "/api/map/patch/deletemap";
 
           var payload = {
             id: this.info.id
           }
 
-          var config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
+          var config = Config.config;
 
           this.$http
             .patch(url, payload, config)

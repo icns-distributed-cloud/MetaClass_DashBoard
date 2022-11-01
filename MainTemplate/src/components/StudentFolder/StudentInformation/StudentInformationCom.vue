@@ -1,27 +1,26 @@
-  <template>
-   <v-app id="inspire">
-     <div id="StudentInformationFront">
-      <StudentInformation-Front></StudentInformation-Front>
-      </div>
-  </v-app>
+<template>
+<v-app id="inspire">
+  <div id="StudentInformationFront">
+    <StudentInformation-Front></StudentInformation-Front>
+  </div>
+</v-app>
 </template>
 
 <!--script-->
 <script>
-import StudentInformationFront from './StudentInformationFront.vue'
+import StudentInformationFront from './StudentInformationFront.vue';
 
 export default {
-   components:
-  {
+  components: {
     StudentInformationFront
   },
-    name: "StudentInformationCom",
+  name: "StudentInformationCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

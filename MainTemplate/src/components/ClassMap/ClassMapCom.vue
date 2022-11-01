@@ -12,7 +12,7 @@
 
 
 <script>
-import ClassFront from './ClassFront.vue'
+import ClassFront from './ClassFront.vue';
 
 export default {
    components:

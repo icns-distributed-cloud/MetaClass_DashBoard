@@ -8,7 +8,7 @@
 
 <!--script-->
 <script>
-import ClassMapCom from './ClassMapCom.vue'
+import ClassMapCom from './ClassMapCom.vue';
 
 export default {
    components:

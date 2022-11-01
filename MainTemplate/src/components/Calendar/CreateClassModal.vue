@@ -303,6 +303,9 @@
 
 <!--script--->
 <script>
+var Config = require("../../config");
+var CaledarEnum = require("./CaledarEnum");
+var IPAddress = Config.IPAddress;
   export default {
     data () {
         return {
@@ -398,22 +401,18 @@
       },
       mainDialogClose(){
       this.CreateClassModalDialog = false
-       },
+      },
 
-      // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
+      // 컨텐츠 목록 API 16. Post- http://IPAddress/api/content/post/contentlist
       fetchContent() {
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist"; 
+        var url = IPAddress + "/api/content/post/contentlist"; 
 
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           instructorId: userId
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .post(url, payload, config)
@@ -431,16 +430,13 @@
               })
             }
           })
-       },
+      },
 
+      // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
       fecthDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
+        var url = IPAddress + "/api/department/get/departmentlist";
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .get(url, config)
@@ -456,16 +452,12 @@
           })
       },
       
-      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
+      // 퀴즈 리스트 API : 42. Get - http://IPAddress/api/quiz/get/list?instructorId=1 
       fetchQuizData() {
         var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
+        var url = IPAddress + "/api/quiz/get/list?instructorId=" + userId;
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .get(url, config)
@@ -484,34 +476,32 @@
             }
           })
       },
-     
+    
+      // 강의실 맵 리스트 API : 7. Post - http://IPAddress/api/map/post/maplist
       fetchMapData() {
         this.maplist = [];
 
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
+        var url = IPAddress + "/api/map/post/maplist";
         
         var userId = this.$store.getters.getUserInfo.id;
         var payload = {
           instructorId: userId
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
+        var Maptype = CaledarEnum.Maptype;
         this.$http
           .post(url, payload, config)
           .then(res => {
             if (res.data.data.length > 0) {
               res.data.data.forEach(element => {
                 var maptype = ""
-                if (element.type === 0) {
+                if (element.type === Maptype.OPEN) {
                   maptype = "오픈형";
-                } else if (element.type ===1){ 
+                } else if (element.type === Maptype.CASCADING){ 
                   maptype = "계단식";
-                } else if (element.type === 2) {
+                } else if (element.type === Maptype.MEETING_ROOM) {
                   maptype = "소회의실";
                 }
                 this.maplist.push({
@@ -557,7 +547,7 @@
           }
       },
 
-      // 강좌 생성 : 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture 
+      // 강좌 생성 APi : 9. Post - http://IPAddress/api/lecture/instructor/post/createlecture 
       CreateClass() {
         if (this.CreateClassModalBelong === "") {
           alert("부서를 선택하세요.");
@@ -565,7 +555,7 @@
         } else {
           console.log("wler");
         }
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
+        var url = IPAddress + "/api/lecture/instructor/post/createlecture";
 
         var userId = this.$store.getters.getUserInfo.id;
 
@@ -587,11 +577,7 @@
           endTime: this.CreateClassModalFinishDate3+":00"
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         var startdate = new Date(this.CreateClassModalStartDate1+":00");
         var enddate = new Date(this.CreateClassModalFinishDate3+":00");
@@ -615,21 +601,18 @@
 
       },
 
+      // 부서별 학생 리스트 API : 32. Post - http://IPAddress/api/users/post/studentlistbydepartment
       test() {
         this.belongstudents = []
         
         console.log(this.CreateClassModalBelong);
-        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
+        var url = IPAddress + "/api/users/post/studentlistbydepartment";
 
         var payload = {
           departmentId: this.CreateClassModalBelong
         }
 
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        var config = Config.config;
 
         this.$http
           .post(url, payload, config)
@@ -648,12 +631,8 @@
               console.log(this.belongstudents);
               this.showStudents = true;
             }
-            
-            
-            
           })
-
       }
-  }
+    }
   }
 </script>

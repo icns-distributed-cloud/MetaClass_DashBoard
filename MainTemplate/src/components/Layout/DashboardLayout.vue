@@ -12,15 +12,14 @@
 </template>
 
 <script>
-import SideBar from './SideBar.vue'
-import TopNavbar from './TopNavBar.vue'
-import DashboardContent from './DashboardContent.vue'
+import SideBar from './SideBar.vue';
+import TopNavbar from './TopNavBar.vue';
+import DashboardContent from './DashboardContent.vue';
 export default {
     components: { 
         SideBar,
         TopNavbar,
         DashboardContent
     },
-    
 }
 </script>

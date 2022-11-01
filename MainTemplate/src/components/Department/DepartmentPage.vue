@@ -7,20 +7,20 @@
 
 <!--script-->
 <script>
-import DepartmentCom from './DepartmentCom.vue'
+import DepartmentCom from './DepartmentCom.vue';
 
 export default {
-   components:
+  components:
   {
     DepartmentCom
   },
     name: "DepartmentPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

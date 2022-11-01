@@ -6,20 +6,20 @@
 
 <!--script-->
 <script>
-import QuizCom from './QuizCom.vue'
+import QuizCom from './QuizCom.vue';
 
 export default {
-   components:
+  components:
   {
     QuizCom
   },
-    name: "QuizPage",
+  name: "QuizPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>
