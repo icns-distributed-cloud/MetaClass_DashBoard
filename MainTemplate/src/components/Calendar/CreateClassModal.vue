@@ -200,7 +200,7 @@
                         item-text="item_text"
                         item-value="item_value"
                         label="소속 선택"
-                        @change="test()"
+                        @change="department()"
                         outlined
                         prepend-icon="mdi-domain"
                       >    
@@ -298,11 +298,10 @@
   </v-row> 
 </template>
 
-
-
-
 <!--script--->
 <script>
+import moment from 'moment'
+var RestAPIManager = require('../RestAPIManager')
   export default {
     data () {
         return {
@@ -355,16 +354,11 @@
             classStartTime: "",
 
             // 시간 시작, 종료 지정
-            date: this.$moment().format('YYYY-MM-DD'),
-            currentDate: this.$moment().format('YYYY-MM-DD'),
+            date: moment().format('YYYY-MM-DD'),
+            currentDate: moment().format('YYYY-MM-DD'),
             currentTime: "",
-            CreateClassModalStartDate1: this.$moment().format('YYYY-MM-DD'),
-            CreateClassModalFinishDate3: this.$moment().format('YYYY-MM-DD'),
-
-            
-            
-            // 콘텐츠 파일 첨부
-            //CreateClassModalFiles: [],
+            CreateClassModalStartDate1: moment().format('YYYY-MM-DD'),
+            CreateClassModalFinishDate3: moment().format('YYYY-MM-DD'),
         }
     },
     created() {
@@ -376,7 +370,7 @@
     watch: {
       CreateClassModalStartDate1() {
         if (this.CreateClassModalStartDate1 === this.currentDate) {
-          this.currentTime = this.$moment().format("HH:mm");
+          this.currentTime = moment().format("HH:mm");
         } else {
           this.currentTime = "";
         }
@@ -400,135 +394,6 @@
       this.CreateClassModalDialog = false
        },
 
-      // API 16. 컨텐츠 목록 Post- http://IPAdress/api/content/post/contentlist
-      fetchContent() {
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist"; 
-
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            this.CreateClassModalFileItem.push({
-              item_value: null,
-              item_text: "컨텐츠 없음"
-            })
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalFileItem.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-       },
-
-      fecthDepartment() {
-        var url = "http://163.180.117.47:8088/api/department/get/departmentlist";
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalBelongItems.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-      },
-      
-      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
-      fetchQuizData() {
-        var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            this.CreateClassModalQuizItem.push({
-              item_value: null,
-              item_text: "퀴즈 없음"
-            })
-            if (res.data.data.length >0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalQuizItem.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-      },
-     
-      fetchMapData() {
-        this.maplist = [];
-
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
-        
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                var maptype = ""
-                if (element.type === 0) {
-                  maptype = "오픈형";
-                } else if (element.type ===1){ 
-                  maptype = "계단식";
-                } else if (element.type === 2) {
-                  maptype = "소회의실";
-                }
-                this.maplist.push({
-                  id: element.id,
-                  name: element.name,
-                  type: element.type,
-                  maxUser: element.maxUser,
-                  typename: maptype
-                })
-              })
-            }
-
-
-          })
-      },
-      
-
       // 강의실 생성 시작 date, time
       CreateClassModalStartSet() {
         this.saveStartDate = this.CreateClassModalStartDate1;
@@ -537,12 +402,14 @@
         this.$refs.CreateClassModalStartTimeDialog2.save(this.CreateClassModalStartTime2);
         this.createClassModalFinish = false
       },
+
       // 강의실 생성 종료 date, time
       CreateClassModalFinishSet() {
         this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime4;
         this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
         this.$refs.CreateClassModalFinishTimeDialog4.save(this.CreateClassModalFinishTime4);
       },
+
       show() {
         this.showStudents = true;
         console.log(this.showStudents);
@@ -557,103 +424,89 @@
           }
       },
 
-      // 강좌 생성 : 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture 
-      CreateClass() {
-        if (this.CreateClassModalBelong === "") {
-          alert("부서를 선택하세요.");
-          return;
-        } else {
-          console.log("wler");
+      // 16. Post- http://IPAdress/api/content/post/contentlist
+      async fetchContent() {
+        var contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
+        var CreateClassModalFileItem = [];
+        console.log(contentlist);
+        for (const content of contentlist){
+          CreateClassModalFileItem.push({
+            item_text: content.name,
+            item_value: content.id
+          });
         }
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/createlecture"
+        this.CreateClassModalFileItem = CreateClassModalFileItem;
+      },
 
-        var userId = this.$store.getters.getUserInfo.id;
-
-        var studentlist = []
-        this.selectedStudents.forEach(element => {
-          studentlist.push({
-            studentId: element.studentId
-          })
-        })
-        
-        var payload = {
-          quizId: this.CreateClassModalQuiz,
-          name: this.CreateClassModalTitle,
-          instructorId: userId,
-          mapId: this.selectedMap,
-          contentId: this.CreateClassModalFile,
-          stulist: studentlist,
-          startTime: this.CreateClassModalStartDate1+":00",
-          endTime: this.CreateClassModalFinishDate3+":00"
+      // 27. Get- http://localhost:8088/api/department/get/departmentlist
+      async fecthDepartment() {
+        var departmentlist = await RestAPIManager.API_departmentlist(this.$store.getters.getUserInfo.id)
+        var CreateClassModalBelongItems = [];
+        console.log(departmentlist);
+        for (const department of departmentlist) {
+          CreateClassModalBelongItems.push({
+            item_text: department.name,
+            item_value: department.id
+          });
         }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
+        this.CreateClassModalBelongItems = CreateClassModalBelongItems;
+      },
+    
+      // 42. Get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
+      async fetchQuizData() {
+        var quizlist = await RestAPIManager.API_quizlist(this.$store.getters.getUserInfo.id)
+        var CreateClassModalQuizItem = [];
+        console.log(quizlist);
+        for (const quiz of quizlist) {
+          CreateClassModalQuizItem.push({
+            item_text: quiz.name,
+            item_value: quiz.id
+          });
         }
+        this.CreateClassModalQuizItem = CreateClassModalQuizItem;
+      },
 
-        var startdate = new Date(this.CreateClassModalStartDate1+":00");
-        var enddate = new Date(this.CreateClassModalFinishDate3+":00");
+      // 7. Post  -  http://IPAdress/api/map/post/maplist 
+      async fetchMapData () {
+        this.maplist = await RestAPIManager.API_maplist("", this.$store.getters.getUserInfo.id);
+        console.log(this.maplist);
+      },
+
+      // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
+      async CreateClass(createinfo) {
+        this.createlecture = await RestAPIManager.API_createlecture(createinfo, this.$store.getters.getUserInfo.id);
+        console.log(this.createlecture);
+        var startdate = new Date(createinfo.CreateClassModalStartDate1+":00");
+        var enddate = new Date(createinfo.CreateClassModalFinishDate3+":00");
         if (startdate < enddate) {
-          this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("강좌 생성이 완료되었습니다.");
-              this.CreateClassModalDialog = false;
-              this.$parent.refreshData();
-            } else {
+          if (this.createlecture.res_success === true) {
+            alert("강좌 생성이 완료되었습니다.");
+            this.CreateClassModalDialog = false;
+            this.refreshData();
+          } else {
               alert("정확하게 입력해주세요.");
               return;
             }
-          })
         }
-            else {
-              alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
-          }
-
+          else {
+            alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
+        }
+        if (this.CreateClassModalBelong === "") {
+          alert("부서를 선택하세요.");
+          return;
+        }
       },
 
-      test() {
-        this.belongstudents = []
-        
-        console.log(this.CreateClassModalBelong);
-        var url = "http://163.180.117.47:8088/api/users/post/studentlistbydepartment";
-
-        var payload = {
-          departmentId: this.CreateClassModalBelong
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
+      // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
+      async department() {
+        var res_studentlistbydepartment = await RestAPIManager.API_studentlistbydepartment(this.CreateClassModalBelong);
+        console.log(this.belongstudents);
+        if (this.belongstudents.length > 0) {
+          for (const studentlistbydepartment of res_studentlistbydepartment.res_studentlistbydepartment){
+            this.belongstudents.push(studentlistbydepartment)
           }
         }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.BelongStudents.push({
-                  studentId: element.studentId
-                })
-                this.belongstudents.push({
-                  name: element.studentName,
-                  studentId: element.studentId
-                })
-                
-              })
-              console.log(this.belongstudents);
-              this.showStudents = true;
-            }
-            
-            
-            
-          })
-
-      }
+      }             
   }
-  }
+}
 </script>

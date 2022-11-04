@@ -429,7 +429,7 @@
                     <v-divider></v-divider>
 
                     <v-virtual-scroll
-                      :items="studentlist"
+                      :items="studentlist[CalendarFrontSelectedEvent.classid]"
                       height="300"
                       item-height="64"
                     >
@@ -868,6 +868,7 @@
 
 <!--script-->
 <script>
+var RestAPIManager = require('../RestAPIManager')
 import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 //import ClaendarStudentListModal from './ClaendarStudentListModal.vue' // ClaendarStudentListModal
 
@@ -913,7 +914,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 
 
       maplist: [],
-      studentlist: [], // 학생 리스트
+      studentlist: {}, // 학생 리스트
       contentlist: [], // 컨텐츠 리스트
       quizlist: [], // 퀴즈 리스트
 
@@ -1039,8 +1040,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CalendarFrontMessageDialog= false 
         },
 
-  
-
       isStartTime(item) {
         if (this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 0){
           return true
@@ -1161,8 +1160,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.popupQuizListDialog = false
       },
 
-
-
       Setmapdata(item){
         this.CalendarFrontSelectedEvent.showevent[3].CalendarClassnameAction = item.name
         this.CalendarFrontSelectedEvent.showevent[4].CalendarClassnameAction = item.typename
@@ -1172,6 +1169,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CalendarFrontSelectedOpen=false
         this.CalendarFrontSelectedOpen=true
       },
+
       // 컨텐츠 수정본 저장
       SetContentData(item) {
         this.CalendarFrontSelectedEvent.showevent[6].CalendarClassnameAction = item.name
@@ -1186,7 +1184,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.popupQuizListDialog=false
       },
 
-
       setStartTime() {
         this.CalendarFrontSelectedEvent.showevent[0].CalendarClassnameAction = this.CreateClassModalStartDate1 + " " + this.CreateClassModalStartTime2 + ":00";
         this.CreateClassModalStartDateModal = false;
@@ -1198,7 +1195,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CreateClassModalFinishTimeModal = false;
       },
 
-      
       editAllItem(){
         this.editLectureName = this.CalendarFrontSelectedEvent.name
         this.CreateClassModalDialog = true
@@ -1206,7 +1202,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       editAllclose () {
         this.CreateClassModalDialog = false
       },
-
 
       closeLectureName () {
         this.CreateClassModalDialog = false
@@ -1217,7 +1212,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         this.CalendarFrontSelectedEvent.name = this.editLectureName
         this.closeLectureName()
       },
-
 
       CalendarFrontViewDay ({ date }) {
         this.CalendarFrontFocus = date
@@ -1238,311 +1232,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       next () {
         this.$refs.calendar.next() // CalendarFrontNext
       },
-
-      fetchMapData() {
-        this.maplist = [];
-
-        var url = "http://163.180.117.47:8088/api/map/post/maplist";
-        
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              this.color = this.CalendarFrontGetEventColor();
-
-              res.data.data.forEach(element => {
-                var maptype = ""
-                if (element.type === 0) {
-                  maptype = "오픈형";
-                } else if (element.type ===1){ 
-                  maptype = "계단식";
-                } else if (element.type === 2) {
-                  maptype = "소회의실";
-                }
-                this.maplist.push({
-                  id: element.id,
-                  name: element.name,
-                  type: element.type,
-                  maxUser: element.maxUser,
-                  typename: maptype,
-                  color: this.color
-                })
-              })
-            }
-
-
-          })
-      },
-      
-  
-      // 컨텐츠 목록 API : 16. Post- http://IPAdress/api/content/post/contentlist
-      fetchContentData() {
-        this.contentlist = []
-
-        var url = "http://163.180.117.47:8088/api/content/post/contentlist";
-
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then((res => {
-            this.contentlist.push({
-              id: null,
-              name: "컨텐츠 없음"
-            })
-            if (res.data.data.length >= 0) {
-              res.data.data.forEach(element => {
-                this.contentlist.push({
-                  id: element.id,
-                  name: element.name
-                })
-              })
-            }
-          }))
-      },
-
-      // API 42. 퀴즈 리스트 get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
-      fetchQuizData() {
-        this.quizlist = []; 
-        var userId = this.$store.getters.getUserInfo.id;
-        var url = "http://163.180.117.47:8088/api/quiz/get/list?instructorId=" + userId;
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            this.quizlist.push({
-              id: null,
-              name: "퀴즈 없음"
-            })
-            if (res.data.data.length >0) {
-              res.data.data.forEach(element => {
-                this.quizlist.push({
-                  id: element.id,
-                  name: element.name
-                })
-                 //console.log(this.quizlist);
-              })
-            }
-          })
-      },
-     
-      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
-      CalendarFrontUpdateRange ({ start, end }) {
-        this.beforestart = start;
-        this.beforeend = end;
-        // 이벤트 막대기 생성부분
-        // 여기서 데이터베이스에서 정보를 가져와야한다.
-        // 가져올 데이터 data , time
-         
-        const CalendarFrontEvents = [] // const : 내용을 변경하지 않음
-
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
-        
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId,
-          startDate: start.date,
-          endDate: end.date
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                var maptype = "";
-                if (element.mapType === 0) {
-                  maptype = "오픈형";
-                } else if (element.mapType === 1) {
-                  maptype = "계단식";
-                } else if (element.mapType === 2) {
-                  maptype = "소회의실"
-                }
-                this.studentlist=element.students;
-                CalendarFrontEvents.push({
-                  name: element.name,
-                  start: new Date(`${element.startTime}`),
-                  end: new Date(`${element.endTime}`),
-                  color: this.CalendarFrontColors[0],
-                  timed: true,
-                  classid: element.id,
-                  mapId: element.mapId,
-                  mapName: element.mapName,
-                  contentId: element.contentId,
-                  quizId: element.quizId,
-                  showevent: [
-                    {
-                      CalendarClassnameAction: element.startTime,
-                      CalendarClassnameTitle: '강의 시작 일자',
-                    },
-                    {
-                      CalendarClassnameAction: element.endTime,
-                      CalendarClassnameTitle: '강의 끝 일자',
-                    },
-                    {
-                      CalendarClassnameAction: element.instructorName,
-                      CalendarClassnameTitle: '강의자',
-                    },
-                    {
-                      CalendarClassnameAction: element.mapName,
-                      CalendarClassnameTitle: '강의실 이름',
-                    },
-                    {
-                      CalendarClassnameAction: maptype,
-                      CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                      CalendarClassnameTitle: '참여 인원수',
-                      //CalendarClassnameAction: element.mapMaxUser,
-                      //CalendarClassnameTitle: '참여 인원수',
-                    },
-                    {
-                      CalendarClassnameAction: element.contentName,
-                      CalendarClassnameTitle: '컨텐츠 이름'
-                    },
-                    { // 퀴즈 선택 추가
-                      CalendarClassnameAction: element.quizName,
-                      CalendarClassnameTitle: '퀴즈 이름'
-                    },
-                  ]
-                })
-              })
-
-            }
-            this.CalendarFrontEvents = CalendarFrontEvents;
-            //console.log(this.studentlist);
-          })
-      },
-
-      // 선생님 강좌 목록 불러오기 : 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
-      refreshData() { 
-        const CalendarFrontEvents = []
-
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
-        
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId,
-          startDate: this.beforestart.date,
-          endDate: this.beforeend.date
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                var maptype = "";
-                if (element.mapType === 0) {
-                  maptype = "오픈형";
-                } else if (element.mapType === 1) {
-                  maptype = "계단식";
-                } else if (element.mapType === 2) {
-                  maptype = "소회의실"
-                }
-                this.studentlist=element.students;
-
-                CalendarFrontEvents.push({
-                  name: element.name,
-                  start: new Date(`${element.startTime}`),
-                  end: new Date(`${element.endTime}`),
-                  color: this.CalendarFrontColors[0],
-                  timed: true,
-                  classid: element.id,
-                  mapId: element.mapId,
-                  mapName: element.mapName,
-                  contentId: element.contentId,
-                  quizId: element.quizId,
-                 
-        
-                  showevent: [
-                    {
-                      CalendarClassnameAction: element.startTime,
-                      CalendarClassnameTitle: '강의 시작 일자',
-                    },
-                    {
-                      CalendarClassnameAction: element.endTime,
-                      CalendarClassnameTitle: '강의 끝 일자',
-                    },
-                    {
-                      CalendarClassnameAction: element.instructorName,
-                      CalendarClassnameTitle: '강의자',
-                    },
-                    {
-                      CalendarClassnameAction: element.mapName,
-                      CalendarClassnameTitle: '강의실 이름',
-                    },
-                    {
-                      CalendarClassnameAction: maptype,
-                      CalendarClassnameTitle: '강의 타입',
-                    },
-                    {
-                      CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                      CalendarClassnameTitle: '참여 인원수',
-                      //CalendarClassnameAction: element.mapMaxUser,
-                      //CalendarClassnameTitle: '참여 인원수',
-                    },
-                    {
-                      CalendarClassnameAction: element.contentName,
-                      CalendarClassnameTitle: '컨텐츠 이름'
-                    },
-                    
-                    // 퀴즈 이름
-                    {
-                      CalendarClassnameAction: element.quizName,
-                      CalendarClassnameTitle: '퀴즈 이름'
-                    },
-                  ]
-
-                })
-              })
-
-            }
-            this.CalendarFrontEvents = CalendarFrontEvents;
-            
-          })
-      },
-
-
+ 
       CalendarFrontShowEvent ({ nativeEvent, event }) {
         const open = () => {
           this.CalendarFrontSelectedEvent = event
@@ -1556,37 +1246,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         } else {
           open()
         }
-
         nativeEvent.stopPropagation()
-      },
-      ClassDelete(a) {
-        var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
-
-        var payload = {
-          id: a.classid
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .patch(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("강좌 삭제가 완료되었습니다.")
-              this.CalendarFrontSelectedOpen = false;
-              this.refreshData();
-            } else if (res.data.success === false) {
-              alert(res.data.message);
-            }
-          })
-      },
-
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
       },
 
       CalendarFrontSetActivePopup(modal){
@@ -1600,51 +1260,72 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         }
       },
 
-
-      // 강좌 수정 10. Patch - http://IPAdress/api/lecture/ instructor/patch/updatelecture
-     patchEditedClass(a){
-      var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/updatelecture ";
-      console.log(a.showevent[6].contentId);
-      console.log(a.showevent[3].mapId);
-
-      var userId = this.$store.getters.getUserInfo.id;
-
-      var payload = {
-          id: a.classid,
-          name: a.name,
-          instructorId: userId,
-          startTime: a.showevent[0].CalendarClassnameAction,
-          endTime: a.showevent[1].CalendarClassnameAction,
-          contentId: a.contentId,
-          quizId: a.quizId,
-          mapId: a.mapId,
-      }
+      // 7. Post  -  http://IPAdress/api/map/post/maplist 
+      async fetchMapData () {
+        this.maplist = await RestAPIManager.API_maplist(this.CalendarFrontGetEventColor(), this.$store.getters.getUserInfo.id);
+        console.log(this.maplist);
+      },
       
-      var config = {
-        
-          headers: {
-            "Content-Type": "application/json"
-          }
+      // 16. Post- http://IPAdress/api/content/post/contentlist
+      async fetchContentData() {
+        this.contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
+        console.log(this.contentlist);
+      },
+
+      // 42. Get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
+      async fetchQuizData() {
+        this.quizlist = await RestAPIManager.API_quizlist(this.$store.getters.getUserInfo.id);
+        console.log(this.quizlist); 
+      },
+     
+      // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+      async CalendarFrontUpdateRange({ start, end }) {
+        this.beforestart = start;
+        this.beforeend = end;
+        this.CalendarFrontEvents = await RestAPIManager.API_lecturelist(start, end, this.$store.getters.getUserInfo.id);
+        for (const lecture of this.CalendarFrontEvents){
+          this.studentlist[lecture.classid] = lecture.studentlist; 
         }
-        
-      var startdate = new Date(a.showevent[0].CalendarClassnameAction);
-      var enddate = new Date(a.showevent[1].CalendarClassnameAction);
-      var nowdate = new Date();
+      },
+
+      // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+      async refreshData() { 
+        this.lecturelist = await RestAPIManager.API_lecturelist(this.beforestart, this.beforeend, this.$store.getters.getUserInfo.id);
+        for (const lecture of this.lecturelist){
+          this.studentlist[lecture.classid] = lecture.studentlist; 
+        }
+      },
+
+      // 23. Post- http://localhost:8088/api/lecture/student/delete/deletelecture
+      async ClassDelete(classinfo) {
+        this.deletelecture = await RestAPIManager.API_deletelecture(this.$store.getters.getUserInfo.id, classinfo.classid);
+        console.log(this.deletelecture);
+
+        if (this.deletelecture[0].res_success === true) {
+          alert("강좌 삭제가 완료되었습니다.")
+          this.CalendarFrontSelectedOpen = false;
+          this.refreshData();
+
+        } else if (this.deletelecture[0].res_success === false) {
+          alert(this.deletelecture[0].res_message);
+        }
+      },
+
+      // 10. Patch - http://IPAdress/api/lecture/instructor/patch/updatelecture
+     async patchEditedClass(lectureinfo) {
+      this.updatelecture = await RestAPIManager.API_updatelecture(lectureinfo, this.$store.getters.getUserInfo.id);
+      console.log(this.updatelecture);
+      var startdate = new Date(lectureinfo.showevent[0].CalendarClassnameAction);
+      var enddate = new Date(lectureinfo.showevent[1].CalendarClassnameAction);
+      var nowdate = new Date();     
       if ((startdate < enddate) && (nowdate < enddate)) { 
-        this.$http
-          .patch(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("강좌 수정이 완료되었습니다.")
-              this.CalendarFrontSelectedOpen = false;
-              this.refreshData();
-            } else if (res.data.success === false) {
-              alert(res.data.message);
-            }
-          })
-          .catch(res => {
-            alert(res);
-        })
+        if (this.updatelecture.res_success === true) {
+          alert("강좌 수정이 완료되었습니다.")
+          this.CalendarFrontSelectedOpen = false;
+          this.refreshData();
+        } else if (this.updatelecture.res_success === false) {
+          alert(this.updatelecture.res_message);
+        }
       }
       else if(startdate >= enddate) {
         alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
@@ -1652,121 +1333,47 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       else if(nowdate >= enddate) {
         alert("지난 강의는 수정할 수 없습니다.")
       }
-
     },
 
-    
-    // 강의실 맵정보 수정 : 8. Patch - http://IPAdress/api/map/patch/updatemap 
-    patchEditedClassLectureMap(a){
-      var url = "http://163.180.117.47:8088/api/map/patch/updatemap";
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var Maxnum = parseInt(a.showevent[5].CalendarClassnameAction)
-      var payload = {
-        instructorId: userId,
-        id: a.mapId,
-        name: a.mapName,
-        type: a.maptype,
-        maxUser: Maxnum,
-      }
-      var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-      this.$http
-        .patch(url, payload, config)
-        .then(res => {
-          if (res.data.success === true) {
+    // 8. Patch - http://IPAdress/api/map/patch/updatemap 
+    async patchEditedClassLectureMap(mapinfo) {
+      this.updatemap = await RestAPIManager.API_updatemap(mapinfo, this.$store.getters.getUserInfo.id);
+      console.log(this.updatemap);
+      //var Maxnum = parseInt(mapinfo.showevent[5].CalendarClassnameAction);
+      this.updatemap = await RestAPIManager.API_updatemap(this.$store.getters.getUserInfo.id);
+      if (this.updatemap.res_success === true) {
             alert("강좌 수정이 완료되었습니다.")
             this.CalendarFrontSelectedOpen = false;
             this.refreshData();
-          } else if (res.data.success === false) {
-            alert(res.data.message);
+          } else if (this.updatemap.res_success === false) {
+            alert(this.updatemap.res_message);
           }
-        })
-    },
-    test1() {
-      console.log(this.CreateClassModalStartDate1);
     },
 
-    // 강의 메시지 전송 appendCalendarFrontMessage
-    // (1) 이메일 전송 http://localhost:8088/api/mail/send 
-    
-    appendCalendarFrontMessage() {
-      if(this.emailClick) {
-        let url = "http://163.180.117.47:8088/api/mail/send";
-
-        let userId = this.$store.getters.getUserInfo.id;
-        let payload = {
-          instructorId: userId,
-          context: this.MessageContext,
+     // 45. post http://localhost:8088/api/mail/sendAll
+     async appendCalendarFrontMessage() {
+      if (this.emailClick) {
+        this.mailsend = await RestAPIManager.API_mailsend(this.MessageContext, this.$store.getters.getUserInfo.id);
+        console.log(this.mailsend);
+        if (this.mailsend.res_success === true) {
+          alert("메일 전송이 완료되었습니다.")
+          this.closeCalendarFrontMessage();
+        } else if (this.mailsend.res_success === false) {
+          alert(this.mailsend.res_message);
         }
-
-        let config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("메일 전송이 완료되었습니다.")
-              this.closeCalendarFrontMessage();
-            } else if (res.data.success === false) {
-              alert(res.data.message);
-            }
-          }) 
-      } else if(this.messageClick) {
-          let url = "http://163.180.117.47:8088/api/sms/send"; // http://localhost:8088/api/sms/send 
-
-          //var userId = this.$store.getters.getUserInfo.id;
-          let payload = {
-            //instructorId: userId,
-            context: this.MessageContext,
-          }
-
-          let config = {
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-
-          this.$http
-            .post(url, payload, config)
-            .then(res => {
-              if (res.data.success === true) {
-                alert("메세지 전송이 완료되었습니다.")
-                this.closeCalendarFrontMessage();
-              } else if (res.data.success === false) {
-                alert(res.data.message);
-              }
-            })
       }
-      
-    },
-
-    intervalFormat() {
-            const longOptions = { timeZone: 'UTC', hour12: true, hour: '2-digit', minute: '2-digit' }
-            //const shortOptions = { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: '2-digit' }
-            //const shortHourOptions = { timeZone: 'UTC', hour12: true, hour: 'numeric' }
-
-            return longOptions
+      // 46. post http://localhost:8088/api/sms/send
+      if(this.messageClick) {
+        this.smssend = await RestAPIManager.API_smssend(this.MessageContext, this.$store.getters.getUserInfo.id);
+        console.log(this.smssend);
+        if (this.smssend.res_success === true) {
+          alert("메세지 전송이 완료되었습니다.")
+          this.closeCalendarFrontMessage();
+        } else if (this.smssend.res_success === false) {
+          alert(this.smssend.res_message);
         }
-
-
-  },
+      }
+    },
+  }
 }
-
 </script>
-
-<!--
-<style>
-/* 캘린더 상단에 week와 day클릭 시, 왼쪽 시간을 투명색으로 주기 */ 
-.v-calendar-daily__interval-text {
-  color: transparent !important
-}
-</style>-->

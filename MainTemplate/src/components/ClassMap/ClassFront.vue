@@ -130,8 +130,8 @@
 <!------script-------->
 
 <script>
+var RestAPIManager = require('../RestAPIManager')
 import ClassMapModal from './ClassMapModal.vue'
-
   export default {
     //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
 
@@ -161,9 +161,8 @@ import ClassMapModal from './ClassMapModal.vue'
     ClassFrontMapType: "ClassFront",
 
   created() {
-    this.fetchData();
+    this.fetchMapData();
   },
-
 
   methods: {
     ClassFrontIncrement() {
@@ -171,104 +170,56 @@ import ClassMapModal from './ClassMapModal.vue'
         this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) + 1;
       }
     },
+
     ClassFrontDecrement() {
       if (this.ClassFrontNumValue > this.ClassFrontForm .min) {
         this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) - 1;
       }
     },
+
     deleteMap() {
-      this.fetchData();
-    },
-  
-   
-    fetchData() {
-      // var vm = this;
-      this.ClassFrontModalList = [];
-      var url = "http://163.180.117.47:8088/api/map/post/maplist";
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId
-      }
-
-      var config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-
-      this.$http
-        .post(url, payload, config)
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.ClassFrontModalList.push({
-                id: element.id,
-                maxUser: element.maxUser,
-                name: element.name,
-                type: element.type
-              })
-            })
-          }
-          console.log(this.ClassFrontModalList);
-          
-          // console.log(this.ClassFrontModalList[0]);
-        })
-        
-
+      this.fetchMapData();
     },
 
-
-      ClassFrontCreateClassModal()
-      {
-        var url = "http://163.180.117.47:8088/api/map/post/createmap";
-        var maptype = 0;
-        if (this.ClassFrontMapType === "오픈형") {
-          maptype = 0
-        } else if (this.ClassFrontMapType === "계단식") {
-          maptype = 1
-        } else if (this.ClassFrontMapType === "소회의실") {
-          maptype = 2
-        } else {
-          alert("강의실 유형을 정확하게 입력해주세요.")
-          console.log(maptype);
-          return;
-        }
-         
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          name: this.ClassFrontMapName,
-          type: maptype,
-          maxUser: this.ClassFrontNumValue,
-          instructorId: userId
-        }
-
-        var config = {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {  
-            if (res.data.success === true) {
-              alert("강의실 생성이 완료되었습니다.");
-              this.ClassFrontDialog = false;
-              this.fetchData();
-            } else {
-              alert("강의실 이름이 중복되었습니다");
-              return;
-            }
-          }) 
-      },
-
-      ClassFrontDeleteClassModal()
+    ClassFrontDeleteClassModal()
       {
         this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
       },
-  },
-  
+
+    // 7. Post - http://IPAdress/api/map/post/maplist
+    async fetchMapData() {
+      this.ClassFrontModalList = [];
+      this.maplist = await RestAPIManager.API_maplist("",this.$store.getters.getUserInfo.id);
+      console.log(this.maplist);
+    },
+
+    // 5. Post - http://IPAdress/api/map/post/createmap
+    async ClassFrontCreateClassModal() {
+      var maptype = 0;
+      if (this.ClassFrontMapType === "오픈형") {
+        maptype = 0
+      } else if (this.ClassFrontMapType === "계단식") {
+        maptype = 1
+      } else if (this.ClassFrontMapType === "소회의실") {
+        maptype = 2
+      } else {
+        alert("강의실 유형을 정확하게 입력해주세요.")
+        console.log(maptype);
+        return;
+      }
+
+      this.createmap = await RestAPIManager.API_createmap(this.ClassFrontMapName, maptype, this.ClassFrontNunValue,this.$store.getters.getUserInfo.id);
+      console.log(this.createmap);
+
+      if (this.createmap.res_success === true) {
+        alert("강의실 생성이 완료되었습니다.");
+        this.ClassFrontDialog = false;
+        this.fetchMapData();
+      } else {
+        alert("강의실 이름이 중복되었습니다");
+        return;
+      }
+    },
   }
+}
 </script>
