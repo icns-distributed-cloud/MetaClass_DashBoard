@@ -64,7 +64,7 @@
 <script>
 import StudentIndividualModal from './StudentIndividualModal.vue'; // StudentIndividualModal
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   components: { StudentIndividualModal }, // StudentIndividualModal
@@ -166,7 +166,7 @@ export default {
     // 상세보기 안에 있는 사람 아이콘을 클릭
     // 수강신청한 강좌 조회 API : 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
     StudentIndividualModalItem (item) {
-      var url = IPAddress + "/api/lecture/student/post/lecturelist";
+      var url = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
 
       var payload = {
         studentId: item.id,

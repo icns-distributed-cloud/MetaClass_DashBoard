@@ -15,8 +15,7 @@
 import ServerManageFront from './ServerManageFront.vue';
 
 export default {
-  components:
-  {
+  components: {
     ServerManageFront
   },
   name: "ServerManageCom",

@@ -126,14 +126,10 @@
             </v-snackbar>
           </v-card>
           </template>
-
-
-
-
-            </v-dialog>
+        </v-dialog>
             <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
-            <v-container style="height: 20px;"></v-container>
-        </v-col>
+        <v-container style="height: 20px;"></v-container>
+      </v-col>
     </div>
     </template>
   </v-responsive>        
@@ -144,7 +140,7 @@
 <script>
 import ServerModal from './ServerModal.vue';
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   components: { ServerModal },
@@ -187,14 +183,17 @@ export default {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) + 1;
       }
     },
+
     ServerFrontDecrement() {
       if (this.ServerFrontNumValue > this.ServerFrontForm .min) {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
+
     deleteIP() {
       this.fetchData();
     },
+
     hello () {
       this.ServerName = "";
       this.ServerIPaddress = "";
@@ -205,7 +204,7 @@ export default {
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = IPAddress + "/api/ip/get/list";
+      var url = RestAPIURL.IP.GetIPListAPI;
 
       var config = Config.config;
 
@@ -230,7 +229,7 @@ export default {
 
     // 아이피 등록 API : 33. Post - http://IPAddress/api/ip/post/create
     ServerFrontRegister() {
-      var url = IPAddress + "/api/ip/post/create";
+      var url = RestAPIURL.IP.PostCreateIPAPI;
 
       var payload = {
         address: this.ServerIPaddress,

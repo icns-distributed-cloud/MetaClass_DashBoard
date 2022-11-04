@@ -1,5 +1,5 @@
 <template>
-  <v-col>
+<v-col>
   <v-card>
     <v-toolbar
       color="indigo"
@@ -9,41 +9,37 @@
       <v-toolbar-title class="white--text">
         <h2>{{info.name}}</h2>
       </v-toolbar-title>
-      </v-toolbar>
-      <v-list
+    </v-toolbar>
+    <v-list
       two-line
       subheader
       color="indigo lighten-5"
-      >
+    >
       <v-subheader inset class="indigo--text">
         <h3>{{info.filename}}</h3>
       </v-subheader>
-      </v-list>
-    
+    </v-list>
     <v-list two-line color="indigo lighten-5">
-        <v-card-actions>
-            <v-spacer></v-spacer> 
-            <v-btn
-                class="mr-4"
-                color="green"
-                @click=DeleteDepartment()
-            >
-                삭제
-            </v-btn>
-            
-        </v-card-actions> 
+      <v-card-actions>
+        <v-spacer></v-spacer> 
+        <v-btn
+          class="mr-4"
+          color="green"
+          @click=DeleteDepartment()
+        >
+          삭제
+        </v-btn>
+      </v-card-actions> 
     </v-list>
   </v-card>
-  </v-col>
+</v-col>
 </template>
-
-
-
 
 <!---->
 <script>
 var Config = require("../../config");
-var IPAdderss = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
+
 export default {
   props: {
     info: {
@@ -68,7 +64,7 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = IPAdderss + "/api/department/patch/deletedepartment";
+        var url = RestAPIURL.Department.PostDeleteDepartmentAPI;
 
         var payload = {
           id: this.info.id
@@ -91,10 +87,7 @@ export default {
         alert("정확하게 입력해주세요.");
         return;
       }
-
-      
-    }
-  }
+    },
+  },
 }
-
 </script>

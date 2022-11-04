@@ -1,7 +1,7 @@
 <template>
-  <div id="ContentCom">
-    <Content-Com></Content-Com>
-  </div>
+<div id="ContentCom">
+  <Content-Com></Content-Com>
+</div>
 </template>
 
 
@@ -10,17 +10,16 @@
 import ContentCom from './ContentCom.vue';
 
 export default {
-   components:
-  {
+  components:{
     ContentCom
   },
-    name: "ContentPage",
+  name: "ContentPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

@@ -1,31 +1,29 @@
-   <template>
-  <v-app id="inspire">
-   <v-layout>
+<template>
+<v-app id="inspire">
+  <v-layout>
     <v-flex>
-          <div id="ContentFront">
+      <div id="ContentFront">
         <Content-Front></Content-Front>
       </div>
     </v-flex>
-   </v-layout>
-  </v-app>
+  </v-layout>
+</v-app>
 </template>
-
 
 <script>
 import ContentFront from './ContentFront.vue';
 
 export default {
-   components:
-  {
+  components:{
     ContentFront
   },
-    name: "ContentCom",
+  name: "ContentCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

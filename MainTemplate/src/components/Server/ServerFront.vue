@@ -125,8 +125,8 @@
 <script>
 import ServerModal from './ServerModal.vue';
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
 var ClassMapEnum = require("../ClassMap/ClassMapEnum");
+var RestAPIURL = require("../../RestAPIURL");
 var Maptype = ClassMapEnum.Maptype;
 
 export default {
@@ -162,30 +162,32 @@ export default {
     this.fetchData();
   },
 
-
   methods: {
     ServerFrontIncrement() {
       if (this.ServerFrontNumValue < this.ServerFrontForm .max) {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) + 1;
       }
     },
+
     ServerFrontDecrement() {
       if (this.ServerFrontNumValue > this.ServerFrontForm .min) {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
+
     deleteMap() {
       this.fetchData();
     },
+
     save () {
-        this.ServerSaved = true
-      },
+      this.ServerSaved = true
+    },
 
     // 강의실 맵 리스트 API : 7. Post - http://IPAddress/api/map/post/maplist
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = IPAddress + "/api/map/post/maplist";
+      var url = RestAPIURL.Map.PostMapListAPI;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -214,9 +216,8 @@ export default {
     },
 
     // 강의실 맵 생성 API : 5. Post - http://IPAddress/api/map/post/createmap
-    ServerFrontCreateClassModal()
-    {
-      var url = IPAddress + "/api/map/post/createmap";
+    ServerFrontCreateClassModal() {
+      var url = RestAPIURL.Map.PostCreateMapAPI;
       var maptype = 0;
       if (this.ServerTeacherList === "손덕인") {
         maptype = Maptype.OPEN

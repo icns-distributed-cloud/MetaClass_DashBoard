@@ -37,7 +37,6 @@
       </v-card-actions> 
     </v-list>
   </v-card>
-
   <!--퀴즈 모달 시작-->
   <template>
   <v-dialog v-model = "QuizModalView">
@@ -269,7 +268,8 @@
 <!---->
 <script>
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
+
 export default {
   props: {
     info: {
@@ -364,8 +364,7 @@ export default {
 
     GetTotalScore() {
       this.totalscore = 0;
-      for (var i=0; i<this.data.length; i++)
-      {
+      for (var i=0; i<this.data.length; i++) {
         this.totalscore += parseFloat(this.data[i]['score']);
       }
 
@@ -376,8 +375,7 @@ export default {
 
     QuizScoreDeviedN() {
       var length = this.data.length;
-      for (var i=0; i<length; i++)
-      {
+      for (var i=0; i<length; i++) {
         if (100% length) {
           this.data[i]['score'] = (100/this.data.length).toFixed(1);
         } else {
@@ -391,7 +389,7 @@ export default {
       this.data = [];
       this.a = 0;
       this.b = 1;
-      var url = IPAddress + "/api/quiz/get/listbyquizid?quizId="+this.info.id;
+      var url = RestAPIURL.Quiz.GetQuizListbyQuizIdAPI + this.info.id;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -435,7 +433,7 @@ export default {
       }
       if (prompStr == "삭제") {
         var id = this.info.id;
-        var url = IPAddress + "/api/quiz/get/deletequiz?id="+id;
+        var url = RestAPIURL.Quiz.GetDeleteQuizAPI + id;
 
         var payload = {
           id: this.info.id
@@ -462,10 +460,8 @@ export default {
     },
 
     // 퀴즈 수정 API : 43. Post - http://IPAddress/api/quiz/post/updatequiz
-    updateQuestion()
-    {
-      
-      var url = IPAddress + "/api/quiz/post/updatequiz";
+    updateQuestion(){
+      var url = RestAPIURL.Quiz.PostUpdateQuizAPI;
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
         id: this.info.id,
@@ -494,7 +490,7 @@ export default {
               alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
               return;
             }
-        })
+          })
       }
     },
 

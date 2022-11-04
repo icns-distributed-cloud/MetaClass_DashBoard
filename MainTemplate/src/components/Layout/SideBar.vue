@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <!--가장 위 상단의 bar, 색은 primary-->
-      <!--가장 아래인 하단 bar, 색은 primary-->
-      <!-- <v-footer color="blue lighten-1" dark app>Project</v-footer> -->
-    <!--왼쪽에 bar 생성-->
-    <v-navigation-drawer 
-    class="light-blue darken-1" dark permanet app clipped>
+<div>
+  <!--가장 위 상단의 bar, 색은 primary-->
+    <!--가장 아래인 하단 bar, 색은 primary-->
+    <!-- <v-footer color="blue lighten-1" dark app>Project</v-footer> -->
+  <!--왼쪽에 bar 생성-->
+  <v-navigation-drawer class="light-blue darken-1" dark permanet app clipped>
     <v-container>
       <router-link :to="logolink">
         <v-img :src="imgLogo" alt="logo" />
@@ -17,7 +16,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-    <!--item-->
+      <!--item-->
       <v-list nav dense v-if="isStudent">
         <v-list-item
           v-for="item in studentMenus"
@@ -31,9 +30,9 @@
           <v-list-item-content>
             <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list nav dense v-if="isTeacher">
+        </v-list-item>
+      </v-list>
+      <v-list nav dense v-if="isTeacher">
         <v-list-item
           v-for="item in teacherMenus"
           :key="item.title"
@@ -46,9 +45,9 @@
           <v-list-item-content>
             <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list nav dense v-if="isServerManager">
+        </v-list-item>
+      </v-list>
+      <v-list nav dense v-if="isServerManager">
         <v-list-item
           v-for="item in serverManagerMenus"
           :key="item.title"
@@ -61,13 +60,12 @@
           <v-list-item-content>
             <v-list-item-title  style="color: white;">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        </v-list-item>
+      </v-list>
     </v-container>
-    </v-navigation-drawer>
-  </div>
+  </v-navigation-drawer>
+</div>
 </template>
-
 
 <script>
 var LayoutEnum = require("./LayoutEnum");
@@ -97,12 +95,14 @@ export default {
       logolink: ""
     }
   },
+
   props: {
     imgLogo: {
       type: String,
       default: require("@/assets/logo.jpeg")
     }
   },
+
   created() {
     var userInfo = this.$store.getters.getUserInfo;
     if (userInfo.userMode === UserModes.INSTRUCTOR) {
@@ -113,20 +113,22 @@ export default {
       this.logolink = "/ServerRegister"
     }
   },
+
   computed: {
-      isTeacher: function() {
-          var userInfo = this.$store.getters.getUserInfo;
-          return userInfo.userMode == UserModes.INSTRUCTOR;
-      },
-      isStudent: function() {
-          var userInfo = this.$store.getters.getUserInfo;
-          return userInfo.userMode == UserModes.STUDENT;
-      },
-      isServerManager: function() {
-          var userInfo = this.$store.getters.getUserInfo;
-          return userInfo.userMode == UserModes.SERVER_MANAGER;
-      }
+    isTeacher: function() {
+      var userInfo = this.$store.getters.getUserInfo;
+      return userInfo.userMode == UserModes.INSTRUCTOR;
+    },
+    isStudent: function() {
+      var userInfo = this.$store.getters.getUserInfo;
+      return userInfo.userMode == UserModes.STUDENT;
+    },
+    isServerManager: function() {
+      var userInfo = this.$store.getters.getUserInfo;
+      return userInfo.userMode == UserModes.SERVER_MANAGER;
+    }
   },
+
   methods:{
     signout() {
       this.$store
@@ -134,10 +136,12 @@ export default {
         .then(() => this.redirect())
         .catch(() => this.redirect());
     },
+
     redirect() {
       alert("로그아웃 되었습니다.");
       this.$router.push("/");
     },
+
     menuActionClick(action){
       if(action=="Calendar")
       {
@@ -191,8 +195,8 @@ export default {
       {
           this.$router.push('/ServerManage');
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

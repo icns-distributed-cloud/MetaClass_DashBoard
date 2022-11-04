@@ -40,8 +40,7 @@
 
 <!---->
 <script>
-var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   props: {
@@ -53,6 +52,7 @@ export default {
 
   computed: {
   },
+
   created() {
   },
 
@@ -66,7 +66,7 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = IPAddress + "/api/server/delete/deleteserver";
+        var url = RestAPIURL.Server.DeleteDeleteServerAPI;
 
         var payload = {
           data: {

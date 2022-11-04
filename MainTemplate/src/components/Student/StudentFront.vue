@@ -103,7 +103,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'; // Ensur
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 Vue.use(Vuetify)
 export default {
@@ -150,7 +150,7 @@ export default {
 
     // 선생님 강좌 목록 불러오기 API : 12. Post - http://IPAddress/api/lecture/instructor/post/lecturelist
     fetchClassData() {
-      var url = IPAddress + "/api/lecture/instructor/post/lecturelist";
+      var url = RestAPIURL.Lecture.Instructor.PostInsLectureList;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -204,7 +204,7 @@ export default {
     StudentSubjectModalItem (item) {
       var selectedclass = item;
 
-      var url = IPAddress + "/api/lecture/instructor/post/cktstubylecture";
+      var url = RestAPIURL.Lecture.Instructor.PostCKTStubyLectureAPI;
 
       var payload = {
         lectureId: item.id

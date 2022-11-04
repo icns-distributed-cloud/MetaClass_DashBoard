@@ -38,7 +38,7 @@
 <!---->
 <script>
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   props: {
@@ -64,7 +64,7 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = IPAddress + "/api/ip/get/delete?id=" + this.info.id;
+        var url = RestAPIURL.IP.GetDeleteIPAPI + this.info.id;
 
         var config = Config.config;
 
@@ -77,7 +77,6 @@ export default {
             } else {
               alert(res.data.message);
             }
-            
           })
         console.log("delete map");
       } else {
@@ -87,6 +86,5 @@ export default {
     }
   }
 }
-
 </script>
 

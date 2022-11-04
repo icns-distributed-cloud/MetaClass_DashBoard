@@ -1,7 +1,7 @@
 <template>
-  <div id="DepartmentCom">
-    <Department-Com></Department-Com>
-  </div>
+<div id="DepartmentCom">
+  <Department-Com></Department-Com>
+</div>
 </template>
 
 
@@ -10,11 +10,10 @@
 import DepartmentCom from './DepartmentCom.vue';
 
 export default {
-  components:
-  {
+  components:{
     DepartmentCom
   },
-    name: "DepartmentPage",
+  name: "DepartmentPage",
   data() {
     return {
     

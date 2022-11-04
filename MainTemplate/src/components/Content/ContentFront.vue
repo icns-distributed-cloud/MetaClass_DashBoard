@@ -1,7 +1,7 @@
 <!--Content front-->
 <template>
-  <v-card class="overflow-hidden">
-    <v-responsive :aspect-ratio="16/9">
+<v-card class="overflow-hidden">
+  <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
     <!--grey lighten-3 색이 포함된 sheet 늘리기 800-->
     <v-sheet
@@ -11,183 +11,170 @@
       color="grey lighten-3"
       dark
     >
-    <div> 
-      <v-row>
-        <v-col
-          v-for="(item, index) in ContentFrontModalList"
-          :key="index"
-          cols="4"
-        >
-          <Content-Modal v-bind:info="ContentFrontModalList[index]"></Content-Modal>
-        </v-col>
-      </v-row>
-    </div>
-    <!--스크롤 내리기-->
+      <div> 
+        <v-row>
+          <v-col
+            v-for="(item, index) in ContentFrontModalList"
+            :key="index"
+            cols="4"
+          >
+            <Content-Modal v-bind:info="ContentFrontModalList[index]"></Content-Modal>
+          </v-col>
+        </v-row>
+      </div>
+      <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
-    
     <!--컨텐츠 등록-->
     <template>
-        <!--컨텐츠 등록 우측으로 이동-->
-        <div class="text-right">
-            <v-col
-                cols="12"
-                sm="12"
-                md="8"
-                offset-md="4"
+    <!--컨텐츠 등록 우측으로 이동-->
+    <div class="text-right">
+      <v-col
+        cols="12"
+        sm="12"
+        md="8"
+        offset-md="4"
+      >
+        <v-dialog
+          v-model="ContentFrontDialog"
+          persistent
+          max-width="600px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="deep-purple lighten-1"
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
+            컨텐츠 등록
+          </v-btn>  
+          </template>
+          <!--컨텐츠 등록 팝업창-->
+          <v-card
+            class="overflow-hidden"
+            color="purple lighten-1"
+            dark
+          >
+            <!--상단 컨텐츠 등록-->   
+            <v-toolbar
+                flat
+                color="purple"
             >
-                <v-dialog
-                    v-model="ContentFrontDialog"
-                    persistent
-                    max-width="600px"
+              <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
+            </v-toolbar>
+            <!--컨텐츠 이름: ContentName-->
+            <v-card-text>
+              <v-text-field
+                v-model="ContentName"
+                label="컨텐츠 이름"
+                required
+                color="white"
+              >
+              </v-text-field>
+              <v-progress-linear
+                v-if="uploading"
+                indeterminate
+                rounded
+                color="light-blue"
+                height="20px"
+              >
+              </v-progress-linear>
+              <!-- 콘텐츠 파일 첨부-->
+              <v-file-input
+                v-model="ContentFrontFiles"
+                :accept="fileAccept"
+                color="blue lighten-3"
+                counter
+                label="File input"
+                placeholder="Select your files"
+                prepend-icon="mdi-paperclip"
+                outlined
+                :show-size="1000"
+                loading=true
+                @change="selectFile"
+              >
+                <template v-slot:selection="{ index, text }">
+                <v-chip
+                  v-if="index < 2"
+                  color="blue lighten-3"
+                  dark
+                  label
+                  small
                 >
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            color="deep-purple lighten-1"
-                            dark
-                            v-bind="attrs"
-                            v-on="on"
-                        >
-                            컨텐츠 등록
-                        </v-btn>  
-                    </template>
-
-                    <!--컨텐츠 등록 팝업창-->
-                    <v-card
-                        class="overflow-hidden"
-                        color="purple lighten-1"
-                        dark
-                    >
-                    <!--상단 컨텐츠 등록-->   
-                        <v-toolbar
-                            flat
-                            color="purple"
-                        >
-                        <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
-                        </v-toolbar>
-
-                        <!--컨텐츠 이름: ContentName-->
-                        <v-card-text>
-                          <v-text-field
-                            v-model="ContentName"
-                            label="컨텐츠 이름"
-                            required
-                            color="white"
-                          >
-                          </v-text-field>
-
-                          <v-progress-linear
-                            v-if="uploading"
-                            indeterminate
-                            rounded
-                            color="light-blue"
-                            height="20px"
-                          >
-                          </v-progress-linear>
-
-                        <!-- 콘텐츠 파일 첨부-->
-                        <v-file-input
-                          v-model="ContentFrontFiles"
-                          :accept="fileAccept"
-                          color="blue lighten-3"
-                          counter
-                          label="File input"
-                          placeholder="Select your files"
-                          prepend-icon="mdi-paperclip"
-                          outlined
-                          :show-size="1000"
-                          loading=true
-                          @change="selectFile"
-                        >
-                        
-                        <template v-slot:selection="{ index, text }">
-                          <v-chip
-                            v-if="index < 2"
-                            color="blue lighten-3"
-                            dark
-                            label
-                            small
-        
-                          >
-                            {{ text }}
-                          </v-chip>
-                          <span
-                          color="blue"
-                            v-else-if="index === 2"
-                            class="text-overline grey--text text--darken-3 mx-2"
-                          >
-                            +{{ files.length - 2 }} File(s)
-                          </span>
-                        
-                        </template>
-                        
-                        </v-file-input>
-                      </v-card-text>                     
-
-                        <!--하단 취소, 확인 버튼-->
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                color="blue-grey"
-                                @click="ContentFrontDialog = false"
-                            >
-                                취소
-                            </v-btn>
-                            <v-btn
-                                color="green"
-                                @click=UpdateId()
-                                :disabled="!isUploaded"
-                            >
-                                확인
-                            </v-btn>
-                        </v-card-actions>  
-                        <v-snackbar
-                          v-model="contentSaved"
-                          :timeout="2000"
-                          absolute
-                          bottom
-                          left
-                        >
-                          업로드가 완료되었습니다.
-                        </v-snackbar>
-                        
-                    </v-card>
-                </v-dialog>
-                <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
-                <v-container style="height: 20px;"></v-container>
-            </v-col>
-        </div>
+                  {{ text }}
+                </v-chip>
+                <span
+                color="blue"
+                  v-else-if="index === 2"
+                  class="text-overline grey--text text--darken-3 mx-2"
+                >
+                  +{{ files.length - 2 }} File(s)
+                </span>
+                </template>
+              </v-file-input>
+            </v-card-text>
+            <!--하단 취소, 확인 버튼-->
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-grey"
+                @click="ContentFrontDialog = false"
+              >
+                취소
+              </v-btn>
+              <v-btn
+                color="green"
+                @click=UpdateId()
+                :disabled="!isUploaded"
+              >
+                확인
+              </v-btn>
+            </v-card-actions>  
+            <v-snackbar
+              v-model="contentSaved"
+              :timeout="2000"
+              absolute
+              bottom
+              left
+            >
+              업로드가 완료되었습니다.
+            </v-snackbar>
+          </v-card>
+        </v-dialog>
+        <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
+        <v-container style="height: 20px;"></v-container>
+      </v-col>
+    </div>
     </template>   
-    </v-responsive>   
-  </v-card> 
+  </v-responsive>   
+</v-card> 
 </template>
-
-
-
 
 <!------script-------->
 <script>
-var Config = require("../../config");
-var IPAddress = Config.IPAddress;
 import ContentModal from './ContentModal.vue';
-export default {
+var Config = require("../../config");
+var ResAPIURL = require("../../RestAPIURL");
 
+export default {
   components: { ContentModal },
-    data: () => ({
-      // 컨텐츠 파일업로드 형식 지정
-      contentSaved: false,
-      durationaa: 0,
-      uploading: false,
-      progress: 0,
-      isUploaded: false,
-      ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
-      fileAccept: 'video/*',
-      contentId: "",
-      ContentName: "", // 컨텐츠 이름
-      ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
-    // ContentFrontModalList
-      ContentFrontModalList:[],
-    }),
+  data: () => ({
+    // 컨텐츠 파일업로드 형식 지정
+    contentSaved: false,
+    durationaa: 0,
+    uploading: false,
+    progress: 0,
+    isUploaded: false,
+    ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
+    fileAccept: 'video/*',
+    contentId: "",
+    ContentName: "", // 컨텐츠 이름
+    ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
+  // ContentFrontModalList
+    ContentFrontModalList:[],
+  }),
+
   created() {
     this.fetchData();
   },    
@@ -197,7 +184,7 @@ export default {
     fetchData() {
       this.ContentFrontModalList = [];
 
-      var url = IPAddress + "/api/content/post/contentlist";
+      var url = ResAPIURL.Content.PostContentListAPI;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -219,7 +206,6 @@ export default {
                 filename: filename
               })
               }
-              
             })
           }
         })
@@ -249,7 +235,6 @@ export default {
 
       video.src = URL.createObjectURL(this.currentFile);
       this.testProgress();
-      
     },
 
     // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
@@ -261,7 +246,7 @@ export default {
 
       formData.append("file", file);
 
-      var url = IPAddress + "/api/content/post/createcontent";
+      var url = ResAPIURL.Content.PostCreateContentAPI;
       var config = {
         headers: Config.config.headers,
         onUploadProgress
@@ -290,7 +275,6 @@ export default {
               return;
             }
           }
-          
         })
         .catch(() => {
           this.uploading = false;
@@ -299,11 +283,13 @@ export default {
         })
     },
 
-    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
+    
     ContentFrontDeleteClassModal()
     {
       this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
     },
+
+    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
     Upload() {
       if (!this.currentFile) {
         return;
@@ -312,7 +298,7 @@ export default {
       const formData = new FormData();
       formData.append("file", this.ContentFrontFiles[0]);
 
-      var url = IPAddress + "/api/content/post/createcontent";
+      var url = ResAPIURL.Content.PostCreateContentAPI;
 
       var config = Config.config;
 
@@ -341,7 +327,7 @@ export default {
         return;
       } else {
         var userId = this.$store.getters.getUserInfo.id;
-        var idUpdateUrl = IPAddress + "/api/content/post/updateidbycontentid";
+        var idUpdateUrl = ResAPIURL.Content.PostUpdateIdbyContentIdAPI;
         var payload = {
           instructorId: userId,
           contentId: this.contentId,
@@ -371,7 +357,7 @@ export default {
       if (minutes < 10) {minutes = "0"+minutes;}
       if (seconds < 10) {seconds = "0"+seconds;}
       return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
-    }
-  }
+    },
+  },
 }
 </script>

@@ -12,22 +12,21 @@
         color="grey lighten-3"
         dark
       >
-      <div> 
-        <!--<compo-nent :is="QuizModal"></compo-nent>-->
-        <v-row>
-          <v-col
-            v-for="(item, index) in QuizFrontModalList"
-            :key="index"
-            cols="4"
-          >
-            <Quiz-Modal v-bind:info="QuizFrontModalList[index]"></Quiz-Modal>
-          </v-col>
-        </v-row>
-      </div>
+        <div> 
+          <!--<compo-nent :is="QuizModal"></compo-nent>-->
+          <v-row>
+            <v-col
+              v-for="(item, index) in QuizFrontModalList"
+              :key="index"
+              cols="4"
+            >
+              <Quiz-Modal v-bind:info="QuizFrontModalList[index]"></Quiz-Modal>
+            </v-col>
+          </v-row>
+        </div>
       <!--스크롤 내리기-->
         <v-container style="height: 1000px;"></v-container>
       </v-sheet>
-      
       <!--퀴즈 등록-->
       <template>
       <!--퀴즈 등록 우측으로 이동-->
@@ -326,12 +325,11 @@
 <script>
 import QuizModal from './QuizModal.vue';
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   components: { QuizModal },
-
-    //name: 'QuizFront',
+  //name: 'QuizFront',
   props: {
     info: {
       type: Object,
@@ -355,13 +353,13 @@ export default {
           score: 0,
         },
       ],
-      a:0,
-      b:1,
-      select:false,
-      //score:0,
-      quiz:true,
-      QuizScoreModal:false,
-      totalscore: 0,
+    a:0,
+    b:1,
+    select:false,
+    //score:0,
+    quiz:true,
+    QuizScoreModal:false,
+    totalscore: 0,
   }),
 
   created() {
@@ -373,7 +371,7 @@ export default {
     fetchData() {
       this.QuizFrontModalList = [];
       var userId = this.$store.getters.getUserInfo.id;
-      var url = IPAddress + "/api/quiz/get/list?instructorId="+userId;
+      var url = RestAPIURL.Quiz.GetQuizListAPI + userId;
       var payload = {
         instructorId: userId
       }
@@ -386,11 +384,11 @@ export default {
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
               this.QuizFrontModalList.push({
-              id: element.id,
-              name: element.name,
-            })  
-          })
-        }
+                id: element.id,
+                name: element.name,
+              })
+            })
+          }
         })
     },
 
@@ -471,8 +469,7 @@ export default {
 
     GetTotalScore() {
       this.totalscore = 0;
-      for (var i=0; i<this.data.length; i++)
-      {
+      for (var i=0; i<this.data.length; i++) {
         this.totalscore += parseFloat(this.data[i]['score']);
       }
 
@@ -483,8 +480,7 @@ export default {
 
     QuizScoreDeviedN() {
       var length = this.data.length;
-      for (var i=0; i<length; i++)
-      {
+      for (var i=0; i<length; i++) {
         if (100% length) {
           this.data[i]['score'] = (100/this.data.length).toFixed(1);
         } else {
@@ -495,7 +491,7 @@ export default {
 
   // 퀴즈 생성 API : 40. Post - http://IPAddress/api/quiz/post/createquiz
     createQuestion(){
-      var url = IPAddress + "/api/quiz/post/createquiz";
+      var url = RestAPIURL.Quiz.PostCreateQuizAPI;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {

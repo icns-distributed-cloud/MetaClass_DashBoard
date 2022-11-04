@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+<v-app>
   <v-container
     class="fill-height"
     fluid
@@ -62,20 +62,19 @@
             <v-progress-circular
               indeterminate
               color="primary"
-          ></v-progress-circular>
+            ></v-progress-circular>
           </v-overlay>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
-  </v-app>
+</v-app>
 </template>
-
-
 
 <script>
 var SignEnum = require('./SignEnum');
 var UserModes = SignEnum.UserModes;
+
 export default {
   components: {
     
@@ -98,16 +97,17 @@ export default {
     showSignUpModal: false,
     SignUp : false,
   }),
+
   props: {
     imgLogo: {
       type: String,
       default: require("@/assets/logo.jpeg")
     }
   },
+
   methods: {
     validateUser() {
       // 추후 형식 맞는지 검사
-
       // base64 encoding
       // this.onSubmit(this.id, window.btoa(this.password), this.role);
       this.onSubmit(this.id, this.password, this.role);
@@ -141,6 +141,7 @@ export default {
         })
       }, 1000);
     },
+
     redirect() {
       var userMode = this.$store.getters.getUserInfo.userMode;
       console.log(userMode);
@@ -155,28 +156,24 @@ export default {
         alert("직업을 선택해주세요.");
         return;
       }
-      
       this.$router.push(redirectPath);
     },
 
     signup() {
       this.showSignUpModal=true;
-      
-    }
-  }
+    },
+  },
 }
-
-
 </script>
-<style lang="scss" scoped>
-.loading-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
 
+<style lang="scss" scoped>
+  .loading-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
 
 

@@ -10,8 +10,7 @@
 import ServerManageCom from './ServerManageCom.vue';
 
 export default {
-  components:
-  {
+  components: {
     ServerManageCom
   },
   name: "ServerManagePage",

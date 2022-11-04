@@ -28,7 +28,7 @@
 <!--script-->
 <script>
 var Config = require("../../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../../RestAPIURL");
 
 export default {
   data () {
@@ -60,7 +60,7 @@ export default {
     fetchData() {
       this.subjectlist = [];
 
-      var url = IPAddress + "/api/lecture/student/post/lecturelist";
+      var url = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {

@@ -1,7 +1,7 @@
 <template>
-      <div id="content">
-        <Calendar-Com></Calendar-Com>
-      </div>     
+<div id="content">
+  <Calendar-Com></Calendar-Com>
+</div>     
 </template>
 
 
@@ -10,17 +10,16 @@
 import CalendarCom from './CalendarCom.vue';
 
 export default {
-   components:
-  {
+  components: {
     CalendarCom
   },
-    name: "CalendarPage",
+  name: "CalendarPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

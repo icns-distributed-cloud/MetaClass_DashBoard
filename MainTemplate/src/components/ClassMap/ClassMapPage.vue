@@ -1,27 +1,24 @@
 <template>
-  <div id="ClassMapCom">
-    <ClassMap-Com></ClassMap-Com>
-  </div>
+<div id="ClassMapCom">
+  <ClassMap-Com></ClassMap-Com>
+</div>
 </template>
-
-
 
 <!--script-->
 <script>
 import ClassMapCom from './ClassMapCom.vue';
 
 export default {
-   components:
-  {
+  components:{
     ClassMapCom
   },
-    name: "ClassMapPage",
+  name: "ClassMapPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

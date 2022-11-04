@@ -16,8 +16,7 @@
 import ServerFront from './ServerFront.vue';
 
 export default {
-  components:
-  {
+  components: {
     ServerFront
   },
   name: "ServerCom",

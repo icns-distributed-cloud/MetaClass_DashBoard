@@ -187,7 +187,7 @@
 <!--script-->
 <script>
 var Config = require("../../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../../RestAPIURL");
 var ClassMapEnum = require("../../ClassMap/ClassMapEnum");
 var MapType = ClassMapEnum.Maptype;
 
@@ -249,18 +249,23 @@ export default {
       this.CalendarFrontFocus = date
       this.CalendarFrontType = 'day'
     },
+    
     CalendarFrontGetEventColor (event) {
       return event.color
     },
+
     CalendarFrontSetToday () {
       this.CalendarFrontFocus = ''
     },
+
     prev () {
       this.$refs.calendar.prev() // CalendarFrontPrev
     },
+
     next () {
       this.$refs.calendar.next() // CalendarFrontNext
     },
+
     CalendarFrontShowEvent ({ nativeEvent, event }) {
       const open = () => {
         this.CalendarFrontSelectedEvent = event
@@ -288,7 +293,7 @@ export default {
         
       const CalendarFrontEvents = []
 
-      var url = IPAddress + "/api/lecture/student/post/registerlecturelist";
+      var url = RestAPIURL.Lecture.Student.PostRegistreLectureListAPI;
       
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -360,7 +365,7 @@ export default {
           this.CalendarFrontEvents = CalendarFrontEvents;
         })
       
-      var url2 = IPAddress + "/api/lecture/student/post/lecturelist";
+      var url2 = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
       
       this.$http
         .post(url2, payload, config)
@@ -413,7 +418,7 @@ export default {
 
     // 강좌 수강 신청 API : 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
     register(a) {
-      var url = IPAddress + "/api/lecture/student/post/joinlecture";
+      var url = RestAPIURL.Lecture.Student.PostJoinLectureAPI;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -440,7 +445,7 @@ export default {
     refreshData() { 
       const CalendarFrontEvents = []
 
-      var url = IPAddress + "/api/lecture/student/post/registerlecturelist";
+      var url = RestAPIURL.Lecture.Student.PostRegistreLectureListAPI;
       
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {
@@ -500,7 +505,7 @@ export default {
           this.CalendarFrontEvents = CalendarFrontEvents;
         })
 
-        var url2 = IPAddress + "/api/lecture/student/post/lecturelist";
+      var url2 = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
       
       this.$http
         .post(url2, payload, config)
@@ -554,7 +559,7 @@ export default {
     // 강좌 취소 API : 23. Post - http://IPAddress/api/lecture/student/delete/deletelecture
     deletelecture(a) {
       console.log(a);
-      var url = IPAddress + "/api/lecture/student/delete/deletelecture";
+      var url = RestAPIURL.Lecture.Student.DeleteDeleteLectureAPI;
 
       var userId = this.$store.getters.getUserInfo.id;
       var payload = {

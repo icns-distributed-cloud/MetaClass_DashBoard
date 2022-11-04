@@ -1,13 +1,13 @@
-  <template>
-  <v-app id="inspire">
+<template>
+<v-app id="inspire">
   <v-layout>
     <v-flex>
-          <div id="QuizFront">
+      <div id="QuizFront">
         <Quiz-Front></Quiz-Front>
       </div>
     </v-flex>
   </v-layout>
-  </v-app>
+</v-app>
 </template>
 
 
@@ -15,8 +15,7 @@
 import QuizFront from './QuizFront.vue';
 
 export default {
-  components:
-  {
+  components: {
     QuizFront
   },
   name: "QuizCom",

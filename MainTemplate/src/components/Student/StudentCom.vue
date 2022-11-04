@@ -1,12 +1,12 @@
 <template>
 <v-app id="inspire">
-<v-layout>
-  <v-flex>
-    <div id="StudentFront">
-      <Content-Front></Content-Front>
-    </div>
-  </v-flex>
-</v-layout>
+  <v-layout>
+    <v-flex>
+      <div id="StudentFront">
+        <Content-Front></Content-Front>
+      </div>
+    </v-flex>
+  </v-layout>
 </v-app>
 </template>
 

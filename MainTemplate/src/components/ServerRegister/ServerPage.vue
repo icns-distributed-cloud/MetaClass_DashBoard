@@ -10,8 +10,7 @@
 import ServerCom from './ServerCom.vue';
 
 export default {
-  components:
-  {
+  components: {
     ServerCom
   },
   name: "ServerPage",

@@ -129,7 +129,7 @@
 <script>
 import ServerManageModal from './ServerManageModal.vue';
 var Config = require("../../config");
-var IPAddress = Config.IPAddress;
+var RestAPIURL = require("../../RestAPIURL");
 var ClassMapEnum = require("../ClassMap/ClassMapEnum");
 var MapType = ClassMapEnum.Maptype;
 
@@ -185,44 +185,46 @@ export default {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) + 1;
       }
     },
+    
     ServerFrontDecrement() {
       if (this.ServerFrontNumValue > this.ServerFrontForm .min) {
         this.ServerFrontNumValue = parseInt(this.ServerFrontNumValue, 10) - 1;
       }
     },
+
     deleteServer() {
       this.fetchData();
     },
 
     // 서버 아이피 등록 API : 18. Post - http://IPAddress/api/server/post/createserver
     save() {
-        var url = IPAddress + "/api/server/post/createserver";
+      var url = RestAPIURL.Server.PostCreateServerAPI;
 
-        var payload = {
-          lectureId: this.ServerSubjectList,
-          ipId: this.ServerIpList
-        }
+      var payload = {
+        lectureId: this.ServerSubjectList,
+        ipId: this.ServerIpList
+      }
 
-        var config = Config.config;
+      var config = Config.config;
 
-        this.$http
-          .post(url, payload, config)
-          .then((res) => {
-            if (res.data.success === true) {
-              alert("서버-강좌 등록 완료");
-              this.ServerSaved = true;
-              this.fetchData();
-            }
-          })
-          .catch((err) => {
-            alert(err);
-          })
-        this.ServerSaved = true
-      },
+      this.$http
+        .post(url, payload, config)
+        .then((res) => {
+          if (res.data.success === true) {
+            alert("서버-강좌 등록 완료");
+            this.ServerSaved = true;
+            this.fetchData();
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        })
+      this.ServerSaved = true
+    },
 
     // 등록한 아이피 리스트 API : 35. Get - http://IPAddress/api/ip/get/list
     fetchIP() {
-      var url = IPAddress + "/api/ip/get/list";
+      var url = RestAPIURL.IP.GetIPListAPI;
 
       var config = Config.config;
 
@@ -243,7 +245,7 @@ export default {
 
     // 서버 아이피 등록 시 모든 강사 회원 정보 리스트 API : 31. Get - http://IPAddress/api/users/get/allInstructor
     fetchTeacher() {
-      var url = IPAddress + "/api/users/get/allInstructor";
+      var url = RestAPIURL.Users.GetAllInstructorAPI;
 
       var config = Config.config;
 
@@ -264,7 +266,7 @@ export default {
     // 강사가 강좌 예정인 강좌 리스트 API : 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId=
     fetchSubject() {
       this.ServerSubjectListItem = [];
-      var url = IPAddress + "/api/server/get/findlectureinfo?instructorId=" + this.ServerTeacherList;
+      var url = RestAPIURL.Server.GetFindLectureInfoAPI + this.ServerTeacherList;
       var config = Config.config;
 
       this.$http
@@ -288,7 +290,7 @@ export default {
     fetchData() {
       // var vm = this;
       this.ServerFrontModalList = [];
-      var url = IPAddress + "/api/server/post/listserver";
+      var url = RestAPIURL.Server.PostListServerAPI;
 
       var payload = {
         instructorId: 0
@@ -322,7 +324,7 @@ export default {
     // 강의실 맵 생성 API : 5. Post - http://IPAddress/api/map/post/createmap
     ServerFrontManage()
     {
-      var url = IPAddress + "/api/map/post/createmap";
+      var url = RestAPIURL.Map.PostCreateMapAPI;
       var maptype = 0;
       if (this.ServerTeacherList === "손덕인") {
         maptype = MapType.OPEN;

@@ -1,27 +1,26 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-dialog
-        v-model="CreateClassModalDialog"
-        max-width="500px"
-      >
-      <!--강의실 상단 box-->
-        <v-card>
-            <v-toolbar
-              class="overflow-hidden mx-auto"
-              color="primary"
-              dark  
+<v-row>
+  <v-col>
+    <v-dialog
+      v-model="CreateClassModalDialog"
+      max-width="500px"
+    >
+    <!--강의실 상단 box-->
+      <v-card>
+          <v-toolbar
+            class="overflow-hidden mx-auto"
+            color="primary"
+            dark  
+          >
+          <v-toolbar-title><strong>강의실 선택</strong></v-toolbar-title>
+          <v-spacer></v-spacer>
+            <v-btn
+            icon
+            dark
+            @click="mainDialogClose()"
             >
-            
-            <v-toolbar-title><strong>강의실 선택</strong></v-toolbar-title>
-            <v-spacer></v-spacer>
-              <v-btn
-              icon
-              dark
-              @click="mainDialogClose()"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-toolbar>
           <!--강의실 A--> 
           <v-col cols="auto">
@@ -30,50 +29,48 @@
               max-width="600"
               v-model="mainDialog"
             >
-            <!--<v-list>
-              <v-list-item
-                v-for="(item, index) in maplist"
-                :key=index
-              > <v-btn>{{ item.id }}</v-btn>
-              </v-list-item>
-            </v-list>-->
+              <!--<v-list>
+                <v-list-item
+                  v-for="(item, index) in maplist"
+                  :key=index
+                > <v-btn>{{ item.id }}</v-btn>
+                </v-list-item>
+              </v-list>-->
               <template v-slot:activator="{ on, attrs }">
-                
-                <v-list>
-                  <v-list-item
-                    v-for="(item, index) in maplist"
-                    :key=index,
-                  > 
-                  <v-btn
-                    width="98%"
-                    color="grey lighten-2"
-                    v-bind="attrs"
-                    v-on=on
-                    @click="selectedMap=item.id"
-                  >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
-                  </v-list-item>
-                </v-list>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in maplist"
+                  :key=index,
+                > 
+                <v-btn
+                  width="98%"
+                  color="grey lighten-2"
+                  v-bind="attrs"
+                  v-on=on
+                  @click="selectedMap=item.id"
+                >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
+                </v-list-item>
+              </v-list>
               </template>
-              
               <!--강의실 A 클릭 후에 나타나는 page-->
               <template v-slot:default="CreateClassModalDialog">
-                <v-card>
-                  <v-toolbar
-                    :color="CreateClassModalColor"
-                    dark
-                  ><strong>강좌 생성</strong>
+              <v-card>
+                <v-toolbar
+                  :color="CreateClassModalColor"
+                  dark
+                >
+                  <strong>강좌 생성</strong>
                   <v-spacer></v-spacer>
                   <v-btn
                     icon
                     dark
                     @click="SetSelectClassActive(CreateClassModalDialog)"
-                    >
+                  >
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                 </v-toolbar>
-                  
-                  <!--강좌명 입력-->
-                  <div>
+                <!--강좌명 입력-->
+                <div>
                   <v-card-text>
                     <v-text-field
                       v-model="CreateClassModalTitle"
@@ -84,8 +81,7 @@
                       outlined
                     >
                     </v-text-field>    
-
-                  <!--강의 시작 날짜 및 시간-->
+                <!--강의 시작 날짜 및 시간-->
                     <v-row>
                       <v-col cols="12" sm="6">
                         <v-dialog
@@ -99,15 +95,15 @@
                           outlined
                         >  
                           <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="CreateClassModalStartDate1"
-                              label="강의 시작 날짜 및 시간"
-                              outlined
-                              readonly
-                              prepend-icon="mdi-clock"
-                              v-on="on"
-                            >
-                            </v-text-field>
+                          <v-text-field
+                            v-model="CreateClassModalStartDate1"
+                            label="강의 시작 날짜 및 시간"
+                            outlined
+                            readonly
+                            prepend-icon="mdi-clock"
+                            v-on="on"
+                          >
+                          </v-text-field>
                           </template>
                           <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="currentDate">
                             <v-spacer></v-spacer>
@@ -115,7 +111,6 @@
                             <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
                           </v-date-picker> 
                         </v-dialog>
-
                         <v-dialog
                           ref="CreateClassModalStartTimeDialog2"
                           v-model="CreateClassModalStartTimeModal"
@@ -138,7 +133,6 @@
                           </v-time-picker>
                         </v-dialog>
                       </v-col>
-                     
                       <!--강의 종료 날짜 및 시간--> 
                       <v-col cols="12" sm="6">
                         <v-dialog
@@ -150,18 +144,17 @@
                           full-width
                           width="290px"
                           outlined
-                          
                         >
                           <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="CreateClassModalFinishDate3"
-                              label="강의 종료 날짜 및 시간"
-                              outlined
-                              readonly
-                              v-on="on"
-                              :disabled="createClassModalFinish"
-                            >  
-                            </v-text-field>
+                          <v-text-field
+                            v-model="CreateClassModalFinishDate3"
+                            label="강의 종료 날짜 및 시간"
+                            outlined
+                            readonly
+                            v-on="on"
+                            :disabled="createClassModalFinish"
+                          >  
+                          </v-text-field>
                           </template>  
                           <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
                             <v-spacer></v-spacer>
@@ -191,7 +184,6 @@
                         </v-dialog>
                       </v-col>
                     </v-row>
-
                     <!-- 소속 선택-->
                     <div>
                       <v-select
@@ -206,31 +198,27 @@
                       >    
                       </v-select> 
                     </div>
-                    
                     <!--single select-->
                     <v-card class="mx-auto">
-                    <v-data-table v-if="showStudents"
-                      v-model="selectedStudents"
-                      :headers="headers"
-                      :items="belongstudents"
-                      :single-select="singleSelect"
-                      item-key="name"
-                      hide-default-footer
-                      show-select
-                      @click:row="selectstudent()"
-                    >
-                      <template v-slot:top>
+                      <v-data-table v-if="showStudents"
+                        v-model="selectedStudents"
+                        :headers="headers"
+                        :items="belongstudents"
+                        :single-select="singleSelect"
+                        item-key="name"
+                        hide-default-footer
+                        show-select
+                        @click:row="selectstudent()"
+                      >
+                        <template v-slot:top>
                         <v-switch
                           v-model="singleSelect"
                           label="Single select"
                           class="pa-3"
                         ></v-switch>
-
-                      </template>
-                    </v-data-table>
+                        </template>
+                      </v-data-table>
                     </v-card>
-                 
-
                     <!-- 컨텐츠 파일 선택-->
                     <div>
                       <v-select
@@ -244,7 +232,6 @@
                       >    
                       </v-select> 
                     </div> 
-                    
                     <!-- 퀴즈 선택-->
                     <div>
                       <v-select
@@ -257,10 +244,8 @@
                         outlined
                       >    
                       </v-select> 
-                    </div> 
-              
-
-                  <!-- 컬러 선택-->
+                    </div>
+                    <!-- 컬러 선택-->
                     <div>
                       <v-select
                         v-model="CreateClassModalColor"
@@ -274,365 +259,354 @@
                       </v-select> 
                     </div> 
                   </v-card-text>
-                  </div>
-
-                  <!--등록 확인-->
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary"
-                      text
-                      @click="CreateClass()"
-                    >등록 확인
-                    </v-btn>
-                  </v-card-actions>
-                 </v-card>
+                </div>
+                <!--등록 확인-->
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="CreateClass()"
+                  >등록 확인
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
               </template> 
-              <!--강의실 A 클릭 후 sumit 끝 부분-->
+            <!--강의실 A 클릭 후 sumit 끝 부분-->
             </v-dialog>
-           </v-col>
-            
-         </v-card> 
-      </v-dialog>
-    </v-col>
-  </v-row> 
+          </v-col>
+        </v-card> 
+    </v-dialog>
+  </v-col>
+</v-row> 
 </template>
-
-
-
 
 <!--script--->
 <script>
 var Config = require("../../config");
 var CaledarEnum = require("./CaledarEnum");
-var IPAddress = Config.IPAddress;
-  export default {
-    data () {
-        return {
-            CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
-            CreateClassModalColor: 'Primary',
-            mainDialog: false,
-            maplist: [],
-            ButtonValue: "",
-            selectedMap: "",
-            hello: "",
+var RestAPIURL = require("../../RestAPIURL");
 
-            belongstudents: [],
-            singleSelect: false,
-            headers: [
-              {
-                text: "이름",
-                align: "start",
-                sortable: false,
-                value: "name"
-              }
-            ],
+export default {
+  data () {
+    return {
+        CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
+        CreateClassModalColor: 'Primary',
+        mainDialog: false,
+        maplist: [],
+        ButtonValue: "",
+        selectedMap: "",
+        hello: "",
 
-            selectedStudents: [],
-            showStudents: false,
+        belongstudents: [],
+        singleSelect: false,
+        headers: [
+          {
+            text: "이름",
+            align: "start",
+            sortable: false,
+            value: "name"
+          }
+        ],
 
-            // 강의실 선택
-            CreateClassModalDialog: true,
-            // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
-            //CreateClassModalStartDate1: "",
-            CreateClassModalStartDateModal: false,
-            CreateClassModalStartTime2: "",
-            CreateClassModalStartTimeModal: false,
-            // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
-            //CreateClassModalFinishDate3: "",
-            CreateClassModalFinishDateModal: false,
-            CreateClassModalFinishTime4: "",
-            CreateClassModalFinishTimeModal: false, 
-            // 소속 선택
-            CreateClassModalBelong: "",
-            CreateClassModalBelongItems: [],
-            BelongStudents: [],
-            // 컨텐츠 파일 선택
-            CreateClassModalFile: "",
-            CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
-            // 퀴즈 선택
-            CreateClassModalQuiz: [],
-            CreateClassModalQuizItem: [], // 퀴즈 item 선택
-            CreateClassModalTitle: "",
-            createClassModalFinish: true,
-            classStartTime: "",
+        selectedStudents: [],
+        showStudents: false,
 
-            // 시간 시작, 종료 지정
-            date: this.$moment().format('YYYY-MM-DD'),
-            currentDate: this.$moment().format('YYYY-MM-DD'),
-            currentTime: "",
-            CreateClassModalStartDate1: this.$moment().format('YYYY-MM-DD'),
-            CreateClassModalFinishDate3: this.$moment().format('YYYY-MM-DD'),
+        // 강의실 선택
+        CreateClassModalDialog: true,
+        // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
+        //CreateClassModalStartDate1: "",
+        CreateClassModalStartDateModal: false,
+        CreateClassModalStartTime2: "",
+        CreateClassModalStartTimeModal: false,
+        // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
+        //CreateClassModalFinishDate3: "",
+        CreateClassModalFinishDateModal: false,
+        CreateClassModalFinishTime4: "",
+        CreateClassModalFinishTimeModal: false, 
+        // 소속 선택
+        CreateClassModalBelong: "",
+        CreateClassModalBelongItems: [],
+        BelongStudents: [],
+        // 컨텐츠 파일 선택
+        CreateClassModalFile: "",
+        CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
+        // 퀴즈 선택
+        CreateClassModalQuiz: [],
+        CreateClassModalQuizItem: [], // 퀴즈 item 선택
+        CreateClassModalTitle: "",
+        createClassModalFinish: true,
+        classStartTime: "",
 
-            
-            
-            // 콘텐츠 파일 첨부
-            //CreateClassModalFiles: [],
-        }
-    },
-    created() {
-      this.fetchMapData();
-      this.fecthDepartment();
-      this.fetchContent();
-      this.fetchQuizData();
-    },
-    watch: {
-      CreateClassModalStartDate1() {
-        if (this.CreateClassModalStartDate1 === this.currentDate) {
-          this.currentTime = this.$moment().format("HH:mm");
-        } else {
-          this.currentTime = "";
-        }
-      },
-      CreateClassModalFinishDate3() {
-        if (this.CreateClassModalFinishDate3 === this.saveStartDate) {
-          this.classStartTime = this.CreateClassModalStartTime2;
-        } else {
-          this.classStartTime = "";
-        }
+        // 시간 시작, 종료 지정
+        date: this.$moment().format('YYYY-MM-DD'),
+        currentDate: this.$moment().format('YYYY-MM-DD'),
+        currentTime: "",
+        CreateClassModalStartDate1: this.$moment().format('YYYY-MM-DD'),
+        CreateClassModalFinishDate3: this.$moment().format('YYYY-MM-DD'),
+        // 콘텐츠 파일 첨부
+        //CreateClassModalFiles: [],
+    }
+  },
+
+  created() {
+    this.fetchMapData();
+    this.fecthDepartment();
+    this.fetchContent();
+    this.fetchQuizData();
+  },
+
+  watch: {
+    CreateClassModalStartDate1() {
+      if (this.CreateClassModalStartDate1 === this.currentDate) {
+        this.currentTime = this.$moment().format("HH:mm");
+      } else {
+        this.currentTime = "";
       }
     },
-
-    methods: {
-      // 시간 5분 간격으로 나눠질 때 TRUE
-      allowedInterval: m => m % 5 == 0,
-      selectstudent() {
-        console.log(this.selectedStudents)
-      },
-      mainDialogClose(){
-      this.CreateClassModalDialog = false
-      },
-
-      // 컨텐츠 목록 API 16. Post- http://IPAddress/api/content/post/contentlist
-      fetchContent() {
-        var url = IPAddress + "/api/content/post/contentlist"; 
-
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = Config.config;
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            this.CreateClassModalFileItem.push({
-              item_value: null,
-              item_text: "컨텐츠 없음"
-            })
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalFileItem.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-      },
-
-      // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
-      fecthDepartment() {
-        var url = IPAddress + "/api/department/get/departmentlist";
-
-        var config = Config.config;
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalBelongItems.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-      },
-      
-      // 퀴즈 리스트 API : 42. Get - http://IPAddress/api/quiz/get/list?instructorId=1 
-      fetchQuizData() {
-        var userId = this.$store.getters.getUserInfo.id;
-        var url = IPAddress + "/api/quiz/get/list?instructorId=" + userId;
-
-        var config = Config.config;
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            this.CreateClassModalQuizItem.push({
-              item_value: null,
-              item_text: "퀴즈 없음"
-            })
-            if (res.data.data.length >0) {
-              res.data.data.forEach(element => {
-                this.CreateClassModalQuizItem.push({
-                  item_text: element.name,
-                  item_value: element.id
-                })
-              })
-            }
-          })
-      },
-    
-      // 강의실 맵 리스트 API : 7. Post - http://IPAddress/api/map/post/maplist
-      fetchMapData() {
-        this.maplist = [];
-
-        var url = IPAddress + "/api/map/post/maplist";
-        
-        var userId = this.$store.getters.getUserInfo.id;
-        var payload = {
-          instructorId: userId
-        }
-
-        var config = Config.config;
-
-        var Maptype = CaledarEnum.Maptype;
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                var maptype = ""
-                if (element.type === Maptype.OPEN) {
-                  maptype = "오픈형";
-                } else if (element.type === Maptype.CASCADING){ 
-                  maptype = "계단식";
-                } else if (element.type === Maptype.MEETING_ROOM) {
-                  maptype = "소회의실";
-                }
-                this.maplist.push({
-                  id: element.id,
-                  name: element.name,
-                  type: element.type,
-                  maxUser: element.maxUser,
-                  typename: maptype
-                })
-              })
-            }
-
-
-          })
-      },
-      
-
-      // 강의실 생성 시작 date, time
-      CreateClassModalStartSet() {
-        this.saveStartDate = this.CreateClassModalStartDate1;
-        this.CreateClassModalStartDate1 = this.CreateClassModalStartDate1 +" "+ this.CreateClassModalStartTime2;
-        this.$refs.CreateClassModalStartDateDialog1.save(this.CreateClassModalStartDate1);
-        this.$refs.CreateClassModalStartTimeDialog2.save(this.CreateClassModalStartTime2);
-        this.createClassModalFinish = false
-      },
-      // 강의실 생성 종료 date, time
-      CreateClassModalFinishSet() {
-        this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime4;
-        this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
-        this.$refs.CreateClassModalFinishTimeDialog4.save(this.CreateClassModalFinishTime4);
-      },
-      show() {
-        this.showStudents = true;
-        console.log(this.showStudents);
-      },
-
-      SetSelectClassActive()
-      {
-        console.log(this.CreateClassModalFile);
-          if(this.CreateClassModalDialog == true)
-          {
-              this.CreateClassModalDialog = false;
-          }
-      },
-
-      // 강좌 생성 APi : 9. Post - http://IPAddress/api/lecture/instructor/post/createlecture 
-      CreateClass() {
-        if (this.CreateClassModalBelong === "") {
-          alert("부서를 선택하세요.");
-          return;
-        } else {
-          console.log("wler");
-        }
-        var url = IPAddress + "/api/lecture/instructor/post/createlecture";
-
-        var userId = this.$store.getters.getUserInfo.id;
-
-        var studentlist = []
-        this.selectedStudents.forEach(element => {
-          studentlist.push({
-            studentId: element.studentId
-          })
-        })
-        
-        var payload = {
-          quizId: this.CreateClassModalQuiz,
-          name: this.CreateClassModalTitle,
-          instructorId: userId,
-          mapId: this.selectedMap,
-          contentId: this.CreateClassModalFile,
-          stulist: studentlist,
-          startTime: this.CreateClassModalStartDate1+":00",
-          endTime: this.CreateClassModalFinishDate3+":00"
-        }
-
-        var config = Config.config;
-
-        var startdate = new Date(this.CreateClassModalStartDate1+":00");
-        var enddate = new Date(this.CreateClassModalFinishDate3+":00");
-        if (startdate < enddate) {
-          this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("강좌 생성이 완료되었습니다.");
-              this.CreateClassModalDialog = false;
-              this.$parent.refreshData();
-            } else {
-              alert("정확하게 입력해주세요.");
-              return;
-            }
-          })
-        }
-            else {
-              alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
-          }
-
-      },
-
-      // 부서별 학생 리스트 API : 32. Post - http://IPAddress/api/users/post/studentlistbydepartment
-      test() {
-        this.belongstudents = []
-        
-        console.log(this.CreateClassModalBelong);
-        var url = IPAddress + "/api/users/post/studentlistbydepartment";
-
-        var payload = {
-          departmentId: this.CreateClassModalBelong
-        }
-
-        var config = Config.config;
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach(element => {
-                this.BelongStudents.push({
-                  studentId: element.studentId
-                })
-                this.belongstudents.push({
-                  name: element.studentName,
-                  studentId: element.studentId
-                })
-                
-              })
-              console.log(this.belongstudents);
-              this.showStudents = true;
-            }
-          })
+    CreateClassModalFinishDate3() {
+      if (this.CreateClassModalFinishDate3 === this.saveStartDate) {
+        this.classStartTime = this.CreateClassModalStartTime2;
+      } else {
+        this.classStartTime = "";
       }
     }
+  },
+
+  methods: {
+    // 시간 5분 간격으로 나눠질 때 TRUE
+    allowedInterval: m => m % 5 == 0,
+    selectstudent() {
+      console.log(this.selectedStudents)
+    },
+    mainDialogClose(){
+    this.CreateClassModalDialog = false
+    },
+
+    // 컨텐츠 목록 API 16. Post- http://IPAddress/api/content/post/contentlist
+    fetchContent() {
+      var url = RestAPIURL.Content.PostContentListAPI; 
+
+      var userId = this.$store.getters.getUserInfo.id;
+      var payload = {
+        instructorId: userId
+      }
+
+      var config = Config.config;
+
+      this.$http
+        .post(url, payload, config)
+        .then(res => {
+          this.CreateClassModalFileItem.push({
+            item_value: null,
+            item_text: "컨텐츠 없음"
+          })
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              this.CreateClassModalFileItem.push({
+                item_text: element.name,
+                item_value: element.id
+              })
+            })
+          }
+        })
+    },
+
+    // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
+    fecthDepartment() {
+      var url = RestAPIURL.Department.GetDepartmentListAPI;
+
+      var config = Config.config;
+
+      this.$http
+        .get(url, config)
+        .then(res => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach((element) => {
+              this.CreateClassModalBelongItems.push({
+                item_text: element.name,
+                item_value: element.id
+              })
+            })
+          }
+        })
+    },
+    
+    // 퀴즈 리스트 API : 42. Get - http://IPAddress/api/quiz/get/list?instructorId=1 
+    fetchQuizData() {
+      var userId = this.$store.getters.getUserInfo.id;
+      var url = RestAPIURL.Quiz.GetQuizListAPI + userId;
+
+      var config = Config.config;
+
+      this.$http
+        .get(url, config)
+        .then(res => {
+          this.CreateClassModalQuizItem.push({
+            item_value: null,
+            item_text: "퀴즈 없음"
+          })
+          if (res.data.data.length >0) {
+            res.data.data.forEach(element => {
+              this.CreateClassModalQuizItem.push({
+                item_text: element.name,
+                item_value: element.id
+              })
+            })
+          }
+        })
+    },
+  
+    // 강의실 맵 리스트 API : 7. Post - http://IPAddress/api/map/post/maplist
+    fetchMapData() {
+      this.maplist = [];
+
+      var url = RestAPIURL.Map.PostMapListAPI;
+      
+      var userId = this.$store.getters.getUserInfo.id;
+      var payload = {
+        instructorId: userId
+      }
+
+      var config = Config.config;
+
+      var Maptype = CaledarEnum.Maptype;
+      this.$http
+        .post(url, payload, config)
+        .then(res => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              var maptype = ""
+              if (element.type === Maptype.OPEN) {
+                maptype = "오픈형";
+              } else if (element.type === Maptype.CASCADING){ 
+                maptype = "계단식";
+              } else if (element.type === Maptype.MEETING_ROOM) {
+                maptype = "소회의실";
+              }
+              this.maplist.push({
+                id: element.id,
+                name: element.name,
+                type: element.type,
+                maxUser: element.maxUser,
+                typename: maptype
+              })
+            })
+          }
+        })
+    },
+  
+    // 강의실 생성 시작 date, time
+    CreateClassModalStartSet() {
+      this.saveStartDate = this.CreateClassModalStartDate1;
+      this.CreateClassModalStartDate1 = this.CreateClassModalStartDate1 +" "+ this.CreateClassModalStartTime2;
+      this.$refs.CreateClassModalStartDateDialog1.save(this.CreateClassModalStartDate1);
+      this.$refs.CreateClassModalStartTimeDialog2.save(this.CreateClassModalStartTime2);
+      this.createClassModalFinish = false
+    },
+    // 강의실 생성 종료 date, time
+    CreateClassModalFinishSet() {
+      this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime4;
+      this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
+      this.$refs.CreateClassModalFinishTimeDialog4.save(this.CreateClassModalFinishTime4);
+    },
+    show() {
+      this.showStudents = true;
+      console.log(this.showStudents);
+    },
+
+    SetSelectClassActive() {
+      console.log(this.CreateClassModalFile);
+        if(this.CreateClassModalDialog == true)
+        {
+          this.CreateClassModalDialog = false;
+        }
+    },
+
+    // 강좌 생성 APi : 9. Post - http://IPAddress/api/lecture/instructor/post/createlecture 
+    CreateClass() {
+      if (this.CreateClassModalBelong === "") {
+        alert("부서를 선택하세요.");
+        return;
+      } else {
+        console.log("wler");
+      }
+      var url = RestAPIURL.Lecture.Instructor.PostCreateLectureAPI;
+
+      var userId = this.$store.getters.getUserInfo.id;
+
+      var studentlist = []
+      this.selectedStudents.forEach(element => {
+        studentlist.push({
+          studentId: element.studentId
+        })
+      })
+      
+      var payload = {
+        quizId: this.CreateClassModalQuiz,
+        name: this.CreateClassModalTitle,
+        instructorId: userId,
+        mapId: this.selectedMap,
+        contentId: this.CreateClassModalFile,
+        stulist: studentlist,
+        startTime: this.CreateClassModalStartDate1+":00",
+        endTime: this.CreateClassModalFinishDate3+":00"
+      }
+
+      var config = Config.config;
+
+      var startdate = new Date(this.CreateClassModalStartDate1+":00");
+      var enddate = new Date(this.CreateClassModalFinishDate3+":00");
+      if (startdate < enddate) {
+        this.$http
+        .post(url, payload, config)
+        .then(res => {
+          if (res.data.success === true) {
+            alert("강좌 생성이 완료되었습니다.");
+            this.CreateClassModalDialog = false;
+            this.$parent.refreshData();
+          } else {
+            alert("정확하게 입력해주세요.");
+            return;
+          }
+        })
+      }
+      else {
+        alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
+      }
+    },
+
+    // 부서별 학생 리스트 API : 32. Post - http://IPAddress/api/users/post/studentlistbydepartment
+    test() {
+      this.belongstudents = []
+      
+      console.log(this.CreateClassModalBelong);
+      var url = RestAPIURL.Users.PostStudentListbyDepartmentAPI;
+
+      var payload = {
+        departmentId: this.CreateClassModalBelong
+      }
+
+      var config = Config.config;
+
+      this.$http
+        .post(url, payload, config)
+        .then(res => {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(element => {
+              this.BelongStudents.push({
+                studentId: element.studentId
+              })
+              this.belongstudents.push({
+                name: element.studentName,
+                studentId: element.studentId
+              })
+            })
+            console.log(this.belongstudents);
+            this.showStudents = true;
+          }
+        })
+    }
   }
+}
 </script>

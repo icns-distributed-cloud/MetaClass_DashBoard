@@ -1,7 +1,7 @@
 <template>
-  <div id="QuizCom">
-    <Quiz-Com></Quiz-Com>
-  </div>
+<div id="QuizCom">
+  <Quiz-Com></Quiz-Com>
+</div>
 </template>
 
 <!--script-->
@@ -9,8 +9,7 @@
 import QuizCom from './QuizCom.vue';
 
 export default {
-  components:
-  {
+  components: {
     QuizCom
   },
   name: "QuizPage",
