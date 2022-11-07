@@ -1,27 +1,25 @@
 <template>
-  <div id="ServerCom">
-    <Server-Com></Server-Com>
-  </div>
-
+<div id="ServerCom">
+  <Server-Com></Server-Com>
+</div>
 </template>
 
 
 <!--script-->
 <script>
-import ServerCom from './ServerCom.vue'
+import ServerCom from './ServerCom.vue';
 
 export default {
-   components:
-  {
+  components: {
     ServerCom
   },
-    name: "ServerPage",
+  name: "ServerPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

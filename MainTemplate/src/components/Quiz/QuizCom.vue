@@ -1,31 +1,30 @@
-   <template>
-  <v-app id="inspire">
-   <v-layout>
+<template>
+<v-app id="inspire">
+  <v-layout>
     <v-flex>
-          <div id="QuizFront">
+      <div id="QuizFront">
         <Quiz-Front></Quiz-Front>
       </div>
     </v-flex>
-   </v-layout>
-  </v-app>
+  </v-layout>
+</v-app>
 </template>
 
 
 <script>
-import QuizFront from './QuizFront.vue'
+import QuizFront from './QuizFront.vue';
 
 export default {
-   components:
-  {
+  components: {
     QuizFront
   },
-    name: "QuizCom",
+  name: "QuizCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

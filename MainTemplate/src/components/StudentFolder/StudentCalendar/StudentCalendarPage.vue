@@ -1,26 +1,25 @@
 <template>
-  <div id="StudentCalendarCom">
-    <StudentCalendar-Com></StudentCalendar-Com>
-  </div>
+<div id="StudentCalendarCom">
+  <StudentCalendar-Com></StudentCalendar-Com>
+</div>
 </template>
 
 
 <!--script-->
 <script>
-import StudentCalendarCom from './StudentCalendarCom.vue'
+import StudentCalendarCom from './StudentCalendarCom.vue';
 
 export default {
-   components:
-  {
+  components: {
     StudentCalendarCom
   },
-    name: "StudentCalendarPage",
+  name: "StudentCalendarPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

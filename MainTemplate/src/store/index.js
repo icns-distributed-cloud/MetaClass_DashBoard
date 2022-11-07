@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://163.180.117.47:8088"
+const resourceHost = "http://163.180.117.43:8088"
 
 export default new Vuex.Store({
     plugins: [
@@ -21,7 +21,8 @@ export default new Vuex.Store({
         loginId: null,
         email: null,
         departmentName: null,
-        phone: null
+        phone: null,
+        status: null
     },
     getters: {
         isLogin(state){
@@ -35,12 +36,13 @@ export default new Vuex.Store({
                 loginId: state.loginId,
                 email: state.email,
                 departmentName: state.departmentName,
-                phone: state.phone
+                phone: state.phone,
+                status: state.status
             }
         }
     },
     mutations: {
-        LOGIN(state, {id, name, userMode, loginId, email, departmentName, phone}) {
+        LOGIN(state, {id, name, userMode, loginId, email, departmentName, phone, status}) {
             state.id = id;
             state.name = name;
             state.userMode = userMode;
@@ -48,6 +50,7 @@ export default new Vuex.Store({
             state.email = email;
             state.departmentName = departmentName;
             state.phone = phone;
+            state.stuts = status;
 
             localStorage.id = id;
             localStorage.name = name;
@@ -56,6 +59,7 @@ export default new Vuex.Store({
             localStorage.email = email;
             localStorage.departmentName = departmentName;
             localStorage.phone = phone;
+            localStorage.status = status;
         },
         LOGOUT(state) {
             state.id = null;
@@ -65,20 +69,19 @@ export default new Vuex.Store({
             state.email = null;
             state.departmentName = null;
             state.phone = null;
+            state.status = null;
 
             localStorage.clear();
         }
     },
     actions: {
-        LOGIN({commit}, {id, password, userMode}) {
-
+        LOGIN({commit}, {id, password}) {
             return axios
                 .post(
                     `${resourceHost}/api/users/post/login`,
                     {
                         loginId: id,
-                        password: password,
-                        userMode: userMode
+                        password: password
                     },
                     {
                         headers: {
@@ -89,16 +92,16 @@ export default new Vuex.Store({
                 .then(res => {
                     if (res.data.success === true) {
                         var parsedData = res.data.data;
-                        console.log(parsedData);
-
+                        
                         commit("LOGIN", {
                             id: parsedData.id,
                             name: parsedData.name,
-                            userMode: userMode,
+                            userMode: parsedData.userMode,
                             loginId: parsedData.loginId,
                             email: parsedData.email,
                             departmentName: parsedData.departmentName,
-                            phone: parsedData.phone
+                            phone: parsedData.phone,
+                            status: parsedData.status
                         })
                         return "success";
                     } else {

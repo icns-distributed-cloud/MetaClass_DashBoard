@@ -1,26 +1,25 @@
 <template>
-  <div id="MemberCom">
-    <Member-Com></Member-Com>
-  </div>
+<div id="MemberCom">
+  <Member-Com></Member-Com>
+</div>
 </template>
 
 
 <!--script-->
 <script>
-import MemberCom from './MemberCom.vue'
+import MemberCom from './MemberCom.vue';
 
 export default {
-   components:
-  {
+  components:{
     MemberCom
   },
-    name: "MemberPage",
+  name: "MemberPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

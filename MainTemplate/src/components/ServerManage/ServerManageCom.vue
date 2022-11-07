@@ -1,32 +1,30 @@
 <!--ServerFront-->
 <template>
-  <v-app id="inspire">
-   <v-layout>
+<v-app id="inspire">
+  <v-layout>
     <v-flex>
-          <div id="ServerFront">
+      <div id="ServerFront">
         <Server-Manage-Front></Server-Manage-Front>
       </div>
     </v-flex>
-   </v-layout>
-  </v-app>
+  </v-layout>
+</v-app>
 </template>
 
-
 <script>
-import ServerManageFront from './ServerManageFront.vue'
+import ServerManageFront from './ServerManageFront.vue';
 
 export default {
-   components:
-  {
+  components: {
     ServerManageFront
   },
-    name: "ServerManageCom",
+  name: "ServerManageCom",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>

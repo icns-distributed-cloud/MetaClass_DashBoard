@@ -1,26 +1,24 @@
 <template>
-  <div id="StudentEvaluationCom">
-    <StudentEvaluation-Com></StudentEvaluation-Com>
-  </div>
+<div id="StudentEvaluationCom">
+  <StudentEvaluation-Com></StudentEvaluation-Com>
+</div>
 </template>
-
 
 <!--script-->
 <script>
-import StudentEvaluationCom from './StudentEvaluationCom.vue'
+import StudentEvaluationCom from './StudentEvaluationCom.vue';
 
 export default {
-   components:
-  {
+  components: {
     StudentEvaluationCom
   },
-    name: "StudentEvaluationPage",
+  name: "StudentEvaluationPage",
   data() {
-        return {
-        
-        }
-    },
-    methods: {
+    return {
+    
     }
+  },
+  methods: {
+  }
 }
 </script>
