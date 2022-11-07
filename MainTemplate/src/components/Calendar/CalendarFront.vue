@@ -782,7 +782,7 @@
 <!--script-->
 <script>
 var Config = require("../../config");
-var CalendarEnum = require("./CaledarEnum");
+var CalendarEnum = require("../Enum/MapEnum");
 var RestAPIURL = require("../../RestAPIURL");
 import CreateClassModal from './CreateClassModal.vue'; // CreateClassModal
 //import ClaendarStudentListModal from './ClaendarStudentListModal.vue' // ClaendarStudentListModal

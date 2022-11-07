@@ -188,7 +188,7 @@
 <script>
 var Config = require("../../../config");
 var RestAPIURL = require("../../../RestAPIURL");
-var ClassMapEnum = require("../../ClassMap/ClassMapEnum");
+var ClassMapEnum = require("../../Enum/MapEnum");
 var MapType = ClassMapEnum.Maptype;
 
 export default {

@@ -40,14 +40,6 @@
                 v-model="password"
                 @keydown.enter="validateUser"
               ></v-text-field>
-              <v-select
-              v-model="role"
-              :items="items"
-              item-text="name"
-              item-value="value"
-              label="role"
-              prepend-icon=mdi-account-details>
-              ></v-select>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -72,8 +64,9 @@
 </template>
 
 <script>
-var SignEnum = require('./SignEnum');
+var SignEnum = require('../Enum/SignEnum');
 var UserModes = SignEnum.UserModes;
+var Status = SignEnum.Status;
 
 export default {
   components: {
@@ -84,16 +77,9 @@ export default {
     absolute: true,
     sending: false,
 
-    items: [
-      {name: "instructor", value: 0},
-      {name: "student", value: 1},
-      {name: "server manager", value: 2}
-    ],
-
     id : "",
     password : "",
     confirm : "",
-    role: "",
     showSignUpModal: false,
     SignUp : false,
   }),
@@ -109,13 +95,13 @@ export default {
     validateUser() {
       // 추후 형식 맞는지 검사
       // base64 encoding
-      // this.onSubmit(this.id, window.btoa(this.password), this.role);
-      this.onSubmit(this.id, this.password, this.role);
+      // this.onSubmit(this.id, window.btoa(this.password));
+      this.onSubmit(this.id, this.password);
     },
 
     // signin
     // 로그인 관련 API : 1. Post - http://IPAddress/api/users/post/login
-    onSubmit(id, password, userMode) {
+    onSubmit(id, password) {
       this.overlay = true;
 
       setTimeout(() => {
@@ -124,7 +110,7 @@ export default {
         this.$store.dispatch("LOGOUT");
 
         this.$store
-        .dispatch("LOGIN", {id, password, userMode})
+        .dispatch("LOGIN", {id, password})
         .then((res) => {
           if (res === "success") {
             this.overlay = false;
@@ -144,17 +130,17 @@ export default {
 
     redirect() {
       var userMode = this.$store.getters.getUserInfo.userMode;
-      console.log(userMode);
       var redirectPath = "/";
-      if (userMode === UserModes.INSTRUCTOR) {
-        redirectPath = "/CalendarPage"
-      } else if (userMode === UserModes.STUDENT) {
-        redirectPath = "/StudentCalendar"
-      } else if (userMode === UserModes.SERVER_MANAGER) {
-        redirectPath = "/ServerRegister"
+      if (this.$store.getters.getUserInfo.status === Status.NOT_AVAILABLE){
+        // 비밀번호 변경 modal or page 이동
       } else {
-        alert("직업을 선택해주세요.");
-        return;
+          if (userMode === UserModes.INSTRUCTOR) {
+          redirectPath = "/CalendarPage"
+        } else if (userMode === UserModes.STUDENT) {
+          redirectPath = "/StudentCalendar"
+        } else if (userMode === UserModes.SERVER_MANAGER) {
+          redirectPath = "/ServerRegister"
+        }
       }
       this.$router.push(redirectPath);
     },

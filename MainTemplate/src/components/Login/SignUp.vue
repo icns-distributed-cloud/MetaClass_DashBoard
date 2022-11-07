@@ -114,12 +114,14 @@
 </template>
 
 <script>
-import { UserModes } from './SignEnum';
+var SignEnum = require("../Enum/SignEnum");
 var Config = require("../../config");
 var RestAPIURL = require("../../RestAPIURL");
+var UserModes = SignEnum.UserModes;
 
 export default {
   name: "SignUp",
+
   data() {
     return {
       role: "",
@@ -136,6 +138,7 @@ export default {
       IDCHECKED:false,
     }
   },
+
   props: {
     imgLogo: {
       type: String,
@@ -238,7 +241,6 @@ export default {
 
     redirect() {
       var redirectPath = "/";
-        
       this.$router.push(redirectPath);
     },
   }

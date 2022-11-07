@@ -122,7 +122,7 @@
 <script>
 import ClassMapModal from './ClassMapModal.vue';
 var Config = require("../../config");
-var ClassMapEnum = require("./ClassMapEnum");
+var ClassMapEnum = require("../Enum/MapEnum");
 var RestAPIURL = require("../../RestAPIURL");
 
 export default {

@@ -284,7 +284,7 @@
 <!--script--->
 <script>
 var Config = require("../../config");
-var CaledarEnum = require("./CaledarEnum");
+var CaledarEnum = require("../Enum/MapEnum");
 var RestAPIURL = require("../../RestAPIURL");
 
 export default {

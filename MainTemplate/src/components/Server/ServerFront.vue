@@ -125,7 +125,7 @@
 <script>
 import ServerModal from './ServerModal.vue';
 var Config = require("../../config");
-var ClassMapEnum = require("../ClassMap/ClassMapEnum");
+var ClassMapEnum = require("../Enum/MapEnum");
 var RestAPIURL = require("../../RestAPIURL");
 var Maptype = ClassMapEnum.Maptype;
 

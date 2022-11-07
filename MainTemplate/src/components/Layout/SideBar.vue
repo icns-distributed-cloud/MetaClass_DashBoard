@@ -68,7 +68,7 @@
 </template>
 
 <script>
-var LayoutEnum = require("./LayoutEnum");
+var LayoutEnum = require("../Enum/LayoutEnum");
 var UserModes = LayoutEnum.UserModes;
 export default {
   data () {
