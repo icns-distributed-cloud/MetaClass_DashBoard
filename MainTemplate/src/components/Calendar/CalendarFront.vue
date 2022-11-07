@@ -102,8 +102,7 @@
           @click:date="CalendarFrontViewDay"
           @change="CalendarFrontUpdateRange"
           font-weight-black
-          interval-height="96"
-          
+          interval-height="96"  
           :event-overlap-mode="mode"
           :event-overlap-threshold="60"
         
@@ -111,8 +110,7 @@
         ></v-calendar>
        
         <!--class="test-css black--text"-->
-       
-
+      
         <!--event 클릭 시 나타나는 화면--> 
      
         <v-menu
@@ -912,7 +910,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CreateClassModalStartDate1: new Date().toISOString().substr(0, 10),
       CreateClassModalFinishDate3: new Date().toISOString().substr(0, 10),
 
-
       maplist: [],
       studentlist: {}, // 학생 리스트
       contentlist: [], // 컨텐츠 리스트
@@ -947,7 +944,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
         studentId: '', // 학생 아이디
       },
 
-      
       beforestart: "",
       beforeend: "",
       CalendarFrontFocus: '',
@@ -965,8 +961,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       CalendarFrontNames: ['과목명'], // 캘린더에서 과목을 클릭 했을 때, 나타나는 과목명 // 랜덤 값 추출
       CreateClassModal : false, //  CreateClassModal 
     
-
-   
       // 과목명 안에 있는 card-text 시작
       selected: [2],
       CalendarClassnameItemS: [
@@ -1114,28 +1108,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       closeStudentList(){
         this.popupStudentListDialog = false // 
       },
-      /*
-      popupStudentList(modal){
-        if(modal == true)
-        {
-          this.ClaendarStudentListModal = false;
-        }
-        else
-        {
-          this.ClaendarStudentListModal = true; 
-        }
-      },
-
-      closeStudentList(modal){
-        if(modal == true)
-        {
-          this.ClaendarStudentListModal = false;
-        }
-        else
-        {
-          this.ClaendarStudentListModal = true; 
-        }
-      },*/
 
       // 컨텐츠
       popupContentList() {
@@ -1340,7 +1312,6 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
       this.updatemap = await RestAPIManager.API_updatemap(mapinfo, this.$store.getters.getUserInfo.id);
       console.log(this.updatemap);
       //var Maxnum = parseInt(mapinfo.showevent[5].CalendarClassnameAction);
-      this.updatemap = await RestAPIManager.API_updatemap(this.$store.getters.getUserInfo.id);
       if (this.updatemap.res_success === true) {
             alert("강좌 수정이 완료되었습니다.")
             this.CalendarFrontSelectedOpen = false;
