@@ -95,9 +95,8 @@
             @click:prepend="ClassFrontDecrement"
             >
             </v-text-field>
-  
-  
             </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -112,21 +111,16 @@
               >
               수정
               </v-btn>
-            </v-card-actions>
-            
+            </v-card-actions>     
         </v-card>
       </v-dialog>
-    </template>
-  
-  
+    </template> 
   </v-col>
-  </template>
+</template>
 
 <script>
-var RestAPIManager = require('../RestAPIManager')
-var Config = require("../../config");
+var RestAPIManager = require('../RestAPIManager');
 var ClassMapEnum = require("../Enum/MapEnum");
-var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   props: {
@@ -156,7 +150,6 @@ export default {
   }),
 
   computed: {
-
   },
 
   created() {
@@ -195,19 +188,21 @@ export default {
 
     closeUpdateMap() {
       this.setMapInfo();
-
     },
+
     methods: {
       ClassFrontIncrement() {
         if (this.classMapMaxUser < this.ClassFrontForm .max) {
           this.classMapMaxUser = parseInt(this.classMapMaxUser, 10) + 1;
         }
       },
+
       ClassFrontDecrement() {
         if (this.classMapMaxUser > this.ClassFrontForm .min) {
           this.classMapMaxUser = parseInt(this.classMapMaxUser, 10) - 1;
         }
       },
+
       setMapInfo() {
         this.classMapName = this.info.name;
         if (this.info.type === 0) {
@@ -219,29 +214,39 @@ export default {
         }
         this.classMapMaxUser = this.info.maxUser;
       },
+
       popupUpdateMapDialog() {
         this.popupUpdateMap = true
       },
+
       closeUpdateMap() {
         this.setMapInfo();
         this.popupUpdateMap = false
       },
 
       // 8. Patch - http://IPAdress/api/map/patch/updatemap 
-      async patchEditedClassLectureMap(mapinfo) {
+      async patchEditedClassLectureMap() {
+        var maptype = "";
+        if (this.classMapType === "오픈형") {
+          maptype = 0
+        } else if (this.classMapType === "계단식") {
+          maptype = 1;
+        } else if (this.classMapType === "소회의실") {
+          maptype = 2;
+        } else {
+          alert("강의실 유형을 정확하게 입력해주세요.")
+          return;
+        }
+        var mapinfo = {
+          id: this.info.id,
+          name: this.classMapName,
+          type: maptype,
+          maxUser: this.classMapMaxUser
+        }
+
         this.updatemap = await RestAPIManager.API_updatemap(mapinfo, this.$store.getters.getUserInfo.id);
         console.log(this.updatemap);
-        // let mapType = "";
-        // if (this.classMapType === "오픈형") {
-        //   mapType = 0
-        // } else if (this.classMapType === "계단식") {
-        //   mapType = 1
-        // } else if (this.classMapType === "소회의실") {
-        //   mapType = 2
-        // } else {
-        //   alert("강의실 유형을 정확하게 입력해주세요.")
-        //   return;
-        // }
+        
         if (this.updatemap.res_success === true) {
               alert("강의실 수정이 완료되었습니다.");
               this.popupUpdateMap = false;
@@ -251,93 +256,24 @@ export default {
               return;
             }
       },
-      
     },
 
-    // 강의실 맵 정보 수정 API : 8. Patch - http://IPAddress/api/map/patch/updatemap
-    updateMap() {
-      var url = RestAPIURL.Map.PatchUpdateMapAPI;
-
-      var maptype = 0;
-      var Maptype = ClassMapEnum.Maptype;
-      if (this.classMapType === "오픈형") {
-        maptype = Maptype.OPEN;
-      } else if (this.classMapType === "계단식") {
-        maptype = Maptype.CASCADING;
-      } else if (this.classMapType === "소회의실") {
-        maptype = Maptype.MEETING_ROOM;
-      } else {
-        alert("강의실 유형을 정확하게 입력해주세요.")
-        return;
-      }
-
-      var payload = {
-        id: this.info.id,
-        name: this.classMapName,
-        type: maptype,
-        maxUser: this.classMapMaxUser
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .patch(url, payload, config)
-        .then(res => {
-          if (res.data.success === true) {
-            alert("강의실 수정이 완료되었습니다.");
-            this.popupUpdateMap = false;
-            this.$parent.$parent.$parent.$parent.fetchData();
-          } else {
-            alert("강의실 수정이 실패했습니다.");
+    // 6. Patch - http://IPAddress/api/map/patch/deletemap
+        async deleteMap() {
+          this.deletemap = await RestAPIManager.API_deletemap(this.$store.getters.getUserInfo.id);
+          console.log(this.deleteMap) 
+          var prompStr = prompt(
+            '강의실이 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
+          );
+          if (prompStr == null) {
             return;
           }
-        })
-        .catch(res => {
-          alert(res);
-        })
-    },
-
-    // 강의실 맵 삭제 API : 6. Patch - http://IPAddress/api/map/patch/deletemap
-  
-
-
-        deleteMap() {
-        var prompStr = prompt(
-          '강의실이 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
-        );
-        if (prompStr == null) {
-          return;
-        }
-        if (prompStr == "삭제") {
-          var url = "http://163.180.117.47:8088/api/map/patch/deletemap";
-
-          var payload = {
-            id: this.info.id
-          }
-
-          var config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
-
-          this.$http
-            .patch(url, payload, config)
-            .then(res => {
-              if (res.data.success === true) {
-                alert("성공적으로 삭제되었습니다.");
-                this.$parent.$parent.$parent.$parent.deleteMap();
-              } else {
-                alert(res.data.message);
-              }
-              
-            })
-            console.log("delete map");
+          if (this.deleteMap.res_success === true) {
+            alert("성공적으로 삭제되었습니다.");
+            this.deleteMap();
           } else {
-            alert("정확하게 입력해주세요.");
-            return;
-          }
-
+            alert(this.deleteMap.message);
+      }
     },
   },
 }

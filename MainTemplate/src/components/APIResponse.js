@@ -107,6 +107,18 @@ export function API_lecturelist_Res(res) {
     })
 }
 
+// 11. Patch - http://IPAdress/api/lecture/instructor/patch/deletelecture
+export function API_insdeletelecture_Res(res) {
+    success = res.success;
+    code = res.code;
+    message = res.message;
+    return ({
+        res_success: success,
+        res_code: code,
+        res_message: message,
+    })
+}
+
 // 23. Post - http://localhost:8088/api/lecture/student/delete/deletelecture
 export function API_deletelecture_Res(res) {
     success = res.success;
@@ -233,6 +245,68 @@ export function API_departmentlist_Res(res) {
 
 // 5. Post - http://IPAdress/api/map/post/createmap
 export function API_createmap_Res(res) {
+    success = res.success;
+    code = res.code;
+    message = res.message;
+    var data = res.data;
+    return ({
+        res_success: success,
+        res_code: code,
+        res_message: message,
+        res_data: data
+    })
+}
+
+// 6. Patch  -  http://IPAdress/api/map/patch/deletemap
+export function API_deletemap_Res(res) {
+    success = res.success;
+    code = res.code;
+    message = res.message;
+    var data = res.data;
+    return ({
+        res_success: success,
+        res_code: code,
+        res_message: message,
+        res_data: data
+    })
+}
+
+// 13. Post - http://IPAddress/api/content/post/createcontent
+export function API_createcontent_Res(res) {
+    var res_createcontent = [];
+    success = res.success;
+    code = res.code;
+    message = res.message;
+    for (const createcontent of res.data) {
+        res_createcontent.push({
+            contentId: createcontent.contentId,
+            directory: createcontent.directory
+        })
+    }
+    return ({
+        res_success: success,
+        res_code: code,
+        res_message: message,
+        res_createcontent: res_createcontent
+    })
+}
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export function API_updateidbycontentid_Res(res) {
+    success = res.success;
+    code = res.code;
+    message = res.message;
+    var data = res.data;
+    return ({
+        res_success: success,
+        res_code: code,
+        res_message: message,
+        res_data: data
+    })
+}
+
+// 15. Patch- http://IPAdress/api/content/patch/deletecontent
+export function API_deletecontent_Res(res) {
     success = res.success;
     code = res.code;
     message = res.message;
