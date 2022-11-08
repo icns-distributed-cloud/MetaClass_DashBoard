@@ -154,8 +154,7 @@
 <!------script-------->
 <script>
 import ContentModal from './ContentModal.vue';
-var Config = require("../../config");
-var ResAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
 
 export default {
   components: { ContentModal },
@@ -176,44 +175,11 @@ export default {
   }),
 
   created() {
-    this.fetchData();
   },    
 
   methods: {
-    // 컨텐츠 목록 API : 16. Post - http://IPAddress/api/content/post/contentlist
-    fetchData() {
-      this.ContentFrontModalList = [];
-
-      var url = ResAPIURL.Content.PostContentListAPI;
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              if (element.id !== 51) {
-                var filename = element.directory.slice(element.directory.indexOf("_")+1);
-                this.ContentFrontModalList.push({
-                id: element.id,
-                name: element.name,
-                filename: filename
-              })
-              }
-            })
-          }
-        })
-    },
-
     selectFile(file) {
       this.uploading = false;
-
       this.progress = 0;
       this.currentFile = file;
       if (!this.currentFile) {
@@ -234,119 +200,14 @@ export default {
       }
 
       video.src = URL.createObjectURL(this.currentFile);
-      this.testProgress();
+      this.contentProgress();
     },
 
-    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
-    fileUpload(file, onUploadProgress) {
-      this.uploading = false;
-      this.progress = 0;
-
-      let formData = new FormData();
-
-      formData.append("file", file);
-
-      var url = ResAPIURL.Content.PostCreateContentAPI;
-      var config = {
-        headers: Config.config.headers,
-        onUploadProgress
-      }
-
-      this.uploading = true;
-      return this.$http.post(url, formData, config);
-    }, 
-
-    testProgress() {
-      var tempfile = this.currentFile;
-      this.isUploaded = false;
-      this.fileUpload(this.currentFile, (event) => {
-        this.progress = Math.round((100 * event.loaded) / event.total)
-      })
-        .then((res) => {
-          if (tempfile === this.currentFile) {
-            if (res.data.success === true) {
-              this.contentSaved = true;
-              this.uploading = false;
-              this.contentId = res.data.data.contentId;
-              this.isUploaded = true;
-            } else {
-              alert("업로드 실패");
-              this.uploading = false;
-              return;
-            }
-          }
-        })
-        .catch(() => {
-          this.uploading = false;
-          this.progress = 0;
-          this.currentFile = undefined;
-        })
-    },
-
-    
     ContentFrontDeleteClassModal()
     {
       this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
     },
 
-    // 컨텐츠 생성 API : 13. Post - http://IPAddress/api/content/post/createcontent
-    Upload() {
-      if (!this.currentFile) {
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", this.ContentFrontFiles[0]);
-
-      var url = ResAPIURL.Content.PostCreateContentAPI;
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, formData, config)
-        .then(res => {
-          console.log(res);
-          if (res.data.success === true) {
-            this.contentId = res.data.data.contentId;
-            console.log(this.contentId);
-          } else {
-            alert("업로드 실패");
-            return;
-          }
-        })
-      console.log(this.ContentFrontFiles);
-    },
-
-    // 컨텐츠를 등록한 강사 id 저장 API : 14. Post - http://IPAddress/api/content/post/updateidbycontentid
-    UpdateId() {
-      if (this.contentId === "") {
-        alert("파일을 선택해주세요");
-        return;
-      } else if (!this.ContentName) {
-        alert("컨텐츠 이름을 입력해주세요");
-        return;
-      } else {
-        var userId = this.$store.getters.getUserInfo.id;
-        var idUpdateUrl = ResAPIURL.Content.PostUpdateIdbyContentIdAPI;
-        var payload = {
-          instructorId: userId,
-          contentId: this.contentId,
-          contentName: this.ContentName,
-          playTime: this.durationaa
-        }
-
-        var config = Config.config;
-        this.$http
-          .post(idUpdateUrl, payload, config)
-          .then(res => {
-            console.log(res);
-            alert("컨텐츠 업로드가 완료되었습니다.");
-            this.fetchData();
-            this.ContentFrontDialog = false;
-          })
-      }
-
-    },
     numbertoTime(value) {
       const sec = parseInt(value, 10); // convert value to number if it's string
       let hours   = Math.floor(sec / 3600); // get hours
@@ -358,6 +219,73 @@ export default {
       if (seconds < 10) {seconds = "0"+seconds;}
       return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
     },
-  },
+
+    // 16. Post- http://IPAdress/api/content/post/contentlist 
+    async fetchContentData(instructorId) {
+      this.contentlist = await RestAPIManager.API_contentlist(instructorId, this.$store.getters.getUserInfo.id);
+      console.log(this.contentlist);
+      this.ContentFrontModalList = [];
+        if (this.contentlist.length > 0) {
+          this.contentlist.forEach(contentlist => {
+            if (contentlist.id !== 51) {
+              var filename = contentlist.directory.slice(contentlist.directory.indexOf("_")+1);
+              this.ContentFrontModalList.push({
+              id: contentlist.id,
+              name: contentlist.name,
+              filename: filename
+            })
+            }
+          })
+        }
+    },
+
+    // 13. Post - http://IPAddress/api/content/post/createcontent
+    async fileUpload(file, onUploadProgress, contentProgress) {
+      if (!this.currentFile) {
+        return;
+      }
+      this.createcontent = await RestAPIManager.API_createcontent(file, onUploadProgress, contentProgress, this.$store.getters.getUserInfo.id);
+      console.log(this.createcontent);
+      this.progress = 0;
+      var tempfile = this.currentFile;
+      this.isUploaded = false;
+      this.fileUpload(this.currentFile, (event) => {
+        this.progress = Math.round((100 * event.loaded) / event.total)
+      })
+      if (tempfile === this.currentFile) {
+        if (this.createcontent.res_success === true) {
+          this.contentSaved = true;
+          this.uploading = false;
+          this.contentId = this.createcontent.contentId;
+          this.isUploaded = true;
+          this.UpdateId();
+        } else {
+          alert("업로드 실패");
+          this.uploading = false;
+          return;
+        }
+      }
+    }, 
+
+    // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+    async UpdateId() {  
+      if (this.contentId === "") {
+        alert("파일을 선택해주세요");
+        return;
+      } else if (!this.ContentName) {
+        alert("컨텐츠 이름을 입력해주세요");
+        return;
+      } else {
+        var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id);
+        this.updateidbycontentid = updateidbycontentid;
+        if (this.updateidbycontentid.success){
+            console.log(this.updateidbycontentid);
+            alert("컨텐츠 업로드가 완료되었습니다.");
+            this.fetchData();
+            this.ContentFrontDialog = false;
+        }
+      }
+    },
+  }
 }
 </script>

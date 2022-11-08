@@ -25,7 +25,7 @@
         <v-btn
           class="mr-4"
           color="green"
-          @click=DeleteContent()
+          @click=fetchdeletecontent()
         >
           삭제
         </v-btn>
@@ -37,8 +37,7 @@
 
 <!---->
 <script>
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
 
 export default {
   props: {
@@ -55,8 +54,9 @@ export default {
   },
 
   methods: {
-    // 컨텐츠 삭제 API : 15. Patch - http://IPAddress/api/content/patch/deletecontent
-    DeleteContent() {
+    // 15. Patch - http://IPAddress/api/content/patch/deletecontent
+    async fetchdeletecontent() {
+      this.deletecontent = await RestAPIManager.API_deletecontent(this.$store.getters.getUserInfo.id);
       var prompStr = prompt(
         '컨텐츠가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
       );
@@ -64,28 +64,21 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = RestAPIURL.Content.PatchDeleteContentAPI;
-
-        var payload = {
-          id: this.info.id
+        if (this.deletecontent.res_success === true) {
+          alert("성공적으로 삭제되었습니다.");
+          //this.$parent.$parent.$parent.$parent.fetchData();
+        } else {
+          alert(this.deletecontent.res_message);
         }
-
-        var config = Config.config;
-
-        this.$http
-          .patch(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.fetchData();
-            } else {
-              alert(res.data.message);
-            }
-          })
-      } else {
+      }
+      else {
         alert("정확하게 입력해주세요.");
         return;
       }
+  
+    
+
+            
     },
   },
 }

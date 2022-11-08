@@ -28,6 +28,13 @@ export function API_lecturelist_Req(startDate, endDate, instructorId) {
     }
 }
 
+// 11. Patch - http://IPAdress/api/lecture/instructor/patch/deletelecture
+export function API_insdeletelecturelist_Req(id) {
+    return {
+        id: id
+    }
+}
+
 // 23. Post - http://localhost:8088/api/lecture/student/delete/deletelecture
 export function API_deletelecturelist_Req(studentId, lectureId) {
     return {
@@ -127,6 +134,7 @@ export function API_createmap_Req(name, maptype, maxUser, instructorId) {
     }
 }
 
+<<<<<<< HEAD
 // 26. Post - http://IPAddress/api/department/post/postdepartment
 export function API_postdepartment_Req(departmentName){
     return {
@@ -188,5 +196,35 @@ export function API_updatequiz_Req(quizId, quizName, data, userId){
         name: quizName,
         data: data,
         instructorId: userId
+=======
+// 6. Patch - http://IPAdress/api/map/patch/deletemap
+export function API_deletemap_Req(id) {
+    return {
+        id: id
+    }
+}
+
+// 13. Post - http://IPAddress/api/content/post/createcontent
+export function API_createcontent_Req(file) {
+    let formData = new FormData();
+    formData.append("file", file);
+    return formData;
+}
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export function API_updateidbycontentid_Req(instructorId, contentId, contentName, playTime) {
+    return {
+        instructorId: String(instructorId),
+        contentId: String(contentId),
+        contentName: String(contentName),
+        playTime: String(playTime)
+    }
+}
+
+// 15. Patch- http://IPAdress/api/content/patch/deletecontent
+export function API_deletecontent_Req(id) {
+    return {
+        id: id
+>>>>>>> 1da83cd56f06eaf11fa962f1f06971057fe3476d
     }
 }

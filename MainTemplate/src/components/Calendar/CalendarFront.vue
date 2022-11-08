@@ -586,11 +586,6 @@
             </v-card>
           </v-dialog>
 
-
-
-
-
-
           <v-dialog
             ref="CreateClassModalStartDateDialog1"
             v-model="CreateClassModalStartDateModal"
@@ -607,8 +602,6 @@
               <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
             </v-date-picker> 
           </v-dialog>
-
-
 
           <v-dialog
             ref="CreateClassModalStartTimeDialog2"
@@ -796,9 +789,6 @@
               </v-col>
             </v-row>
           </template>
-             
-
-
             </v-card-actions>
           </v-list>
           
@@ -859,11 +849,8 @@
     @close="
     CreateClassModal = false;"
     />
-
   </v-col>
 </template>
-
-
 
 
 <!--script-->
@@ -1267,23 +1254,20 @@ export default {
     },
 
     // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
-    async refreshData() { 
+    async inslecturelist() { 
       this.lecturelist = await RestAPIManager.API_lecturelist(this.beforestart, this.beforeend, this.$store.getters.getUserInfo.id);
       for (const lecture of this.lecturelist){
         this.studentlist[lecture.classid] = lecture.studentlist; 
       }
     },
 
-    // 23. Post- http://localhost:8088/api/lecture/student/delete/deletelecture
+    // 11. Patch- http://IPAdress/api/lecture/instructor/patch/deletelecture
     async ClassDelete(classinfo) {
-      this.deletelecture = await RestAPIManager.API_deletelecture(this.$store.getters.getUserInfo.id, classinfo.classid);
+      this.deletelecture = await RestAPIManager.API_insdeletelecture(this.$store.getters.getUserInfo.id, classinfo.classid);
       console.log(this.deletelecture);
-
       if (this.deletelecture[0].res_success === true) {
         alert("강좌 삭제가 완료되었습니다.")
         this.CalendarFrontSelectedOpen = false;
-        this.refreshData();
-
       } else if (this.deletelecture[0].res_success === false) {
         alert(this.deletelecture[0].res_message);
       }
@@ -1300,7 +1284,6 @@ export default {
       if (this.updatelecture.res_success === true) {
         alert("강좌 수정이 완료되었습니다.")
         this.CalendarFrontSelectedOpen = false;
-        this.refreshData();
       } else if (this.updatelecture.res_success === false) {
         alert(this.updatelecture.res_message);
       }
@@ -1318,11 +1301,9 @@ export default {
     this.updatemap = await RestAPIManager.API_updatemap(mapinfo, this.$store.getters.getUserInfo.id);
     console.log(this.updatemap);
     //var Maxnum = parseInt(mapinfo.showevent[5].CalendarClassnameAction);
-    this.updatemap = await RestAPIManager.API_updatemap(this.$store.getters.getUserInfo.id);
     if (this.updatemap.res_success === true) {
           alert("강좌 수정이 완료되었습니다.")
           this.CalendarFrontSelectedOpen = false;
-          this.refreshData();
         } else if (this.updatemap.res_success === false) {
           alert(this.updatemap.res_message);
         }

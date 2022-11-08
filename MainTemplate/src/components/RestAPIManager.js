@@ -1,8 +1,11 @@
 var APIRequest = require('./APIRequest');
 var APIResponse = require('./APIResponse');
 var APIURL = require("../RestAPIURL");
+<<<<<<< HEAD
 var MapEnum = require("./Enum/MapEnum");
 var Config = require("../config");
+=======
+>>>>>>> 1da83cd56f06eaf11fa962f1f06971057fe3476d
 const CalendarFrontColors = ['green', 'red lighten-1'];
 
 // 7. Post  -  http://IPAdress/api/map/post/maplist
@@ -84,8 +87,16 @@ export async function API_contentlist(instructorId) {
 export async function API_quizlist(instructorId) {
     var quizlist = [];
     var url = APIURL.Quiz.GetQuizListAPI + instructorId;
+<<<<<<< HEAD
     var config = Config.config;
 
+=======
+    var config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+>>>>>>> 1da83cd56f06eaf11fa962f1f06971057fe3476d
     var response = {};
     await fetch(url, {
             method: 'GET',
@@ -114,7 +125,7 @@ export async function API_quizlist(instructorId) {
 // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
 export async function API_lecturelist(start, end, instructorId) {
     var lecturelist = [];
-    var url = "http://163.180.117.47:8088/api/lecture/instructor/post/lecturelist";
+    var url = APIURL.Lecture.Instructor.PostInsLectureList;
     var payload = APIRequest.API_lecturelist_Req(start, end, instructorId);
     var config = Config.config;
 
@@ -201,10 +212,41 @@ export async function API_lecturelist(start, end, instructorId) {
     return lecturelist;
 }
 
+// 11. Patch - http://IPAdress/api/lecture/instructor/patch/deletelecture
+export async function API_insdeletelecture(lectureId) {
+    var deletelecture = [];
+    var url = APIURL.Lecture.Instructor.PatchDeleteLectureAPI;
+    var payload = APIRequest.API_insdeletelecturelist_Req(lectureId);
+    var config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    var response = {};
+    await fetch(url, {
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_insdeletelecture_Res(res);
+        })
+    console.log(response);
+    if (response !== {}) {
+        deletelecture.push({
+            success: response.res_success,
+            message: response.res_code,
+            code: response.res_code
+        })
+    }
+    return deletelecture
+}
+
 // 23. Post - api/lecture/student/delete/deletelecture
 export async function API_deletelecture(studentId, lectureId) {
     var deletelecture = [];
-    var url = "http://163.180.117.47:8088/api/lecture/instructor/patch/deletelecture";
+    var url = APIURL.Lecture.Student.DeleteDeleteLectureAPI;
     var payload = APIRequest.API_deletelecturelist_Req(studentId, lectureId);
     var config = Config.config;
 
@@ -452,6 +494,7 @@ export async function API_createmap(name, type, maxUser, instructorId) {
     return createmap
 }
 
+<<<<<<< HEAD
 // 26. Post - http://IPAddress/api/department/post/postdepartment
 export async function API_postdepartment(departmentName){
     var url = APIURL.Department.PostPostDepartmentAPI;
@@ -682,4 +725,130 @@ export async function API_updatequiz(quizId, quizName, data, userId){
         message: response.res_message,
         code: response.res_code
     })
+=======
+// 6. Patch - http://IPAdress/api/map/patch/deletemap
+export async function API_deletemap() {
+    var deletemap = [];
+    var url = "http://163.180.117.47:8088/api/map/patch/deletemap";
+    var payload = APIRequest.API_deletemap_Req();
+    var config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    var response = {};
+    await fetch(url, {
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletemap_Res(res);
+        })
+    if (response !== {}) {
+        deletemap.push({
+            success: response.res_success,
+            message: response.res_message,
+            code: response.res_code
+        })
+    }
+    console.log(deletemap);
+    return deletemap
+}
+
+// 13. Post - http://IPAddress/api/content/post/createcontent
+export async function API_createcontent(onUploadProgress) {
+    var createcontent = [];
+    var url = "http://163.180.117.47:8088/api/content/post/createcontent";
+    var payload = APIRequest.API_createcontent_Req();
+    var config = {
+        headers: {
+            "Content-Type": "application/json",
+            onUploadProgress
+        }
+    }
+    var response = {};
+    await fetch(url, {
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_createcontent_Res(res);
+        })
+    if (response !== {}) {
+        createcontent.push({
+            success: response.res_success,
+            message: response.res_message,
+            code: response.res_code,
+            createcontent: response.res_createcontent
+        })
+    }
+    console.log(createcontent);
+    return createcontent
+}
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export async function API_updateidbycontentid(instructorId, contentId, contentName, playTime) {
+    var updateidbycontentid = [];
+    var url = "http://163.180.117.47:8088/api/content/post/updateidbycontentid";
+    var payload = APIRequest.API_updateidbycontentid_Req(instructorId, contentId, contentName, playTime);
+    var config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    var response = {};
+    await fetch(url, {
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_updateidbycontentid_Res(res);
+        })
+    if (response !== {}) {
+        updateidbycontentid.push({
+            success: response.res_success,
+            message: response.res_message,
+            code: response.res_code
+        })
+    }
+    console.log(updateidbycontentid);
+    return updateidbycontentid
+}
+
+// 15. Patch- http://IPAdress/api/content/patch/deletecontent
+export async function API_deletecontent(id) {
+    var deletecontent = [];
+    var url = "http://163.180.117.47:8088/api/content/patch/deletecontent";
+    var payload = APIRequest.API_deletecontent_Req(id);
+    var config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    var response = {};
+    await fetch(url, {
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletecontent_Res(res);
+        })
+    if (response !== {}) {
+        deletecontent = {
+            success: response.res_success,
+            message: response.res_message,
+            code: response.res_code
+        }
+    }
+    console.log(deletecontent);
+    return deletecontent
+>>>>>>> 1da83cd56f06eaf11fa962f1f06971057fe3476d
 }

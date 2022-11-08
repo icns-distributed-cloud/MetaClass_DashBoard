@@ -6,7 +6,7 @@ export const Users = {
     // 회원 정보 조회 API : 2. Get - http://IPAddress/api/users/get/allstudent
     GetAllStudentAPI: resourceHost + "/api/users/get/allstudent",
     // 회원 정보 삭제 API : 3. Patch - http://IPAddress/api/users/patch/deleteuser
-    PatchDeleteUserAPI : resourceHost + "/api/users/patch/deleteuser",
+    PatchDeleteUserAPI: resourceHost + "/api/users/patch/deleteuser",
     // 회원 가입 API : 4. Post - http://IPAddress/api/users/post/register
     PostRegisterAPI: resourceHost + "/api/users/post/register",
     // 모든 강사 회원 정보 리스트 API : 31. Get - http://IPAddress/api/users/get/allInstructor
