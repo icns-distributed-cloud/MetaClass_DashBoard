@@ -267,6 +267,7 @@
 
 <!---->
 <script>
+var RestAPIManager = require("../RestAPIManager");
 var Config = require("../../config");
 var RestAPIURL = require("../../RestAPIURL");
 
@@ -385,46 +386,27 @@ export default {
     },
 
     // 퀴즈 아이디에 따른 퀴즈 정보 API : 47. Get - http://IPAddress/api/quiz/get/listbyquizid?quizId=9
-    popupUpdateQuiz() {
+    async popupUpdateQuiz() {
       this.data = [];
       this.a = 0;
       this.b = 1;
-      var url = RestAPIURL.Quiz.GetQuizListbyQuizIdAPI + this.info.id;
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, payload, config)
-        .then(res => {
-          if (res.data.success === true) {
-            if (res.data.data.length > 0) {
-              this.QuizModalView = true;
-              res.data.data.forEach(element => {
-                this.data.push({
-                  title: element.title,
-                  quizContext: element.quizContext,
-                  answerYN: [],
-                  score: element.score,
-                })
-              });
-              //this.data = this.data.splice(1, this.data.length+1);
-              console.log(this.data);
-              //this.score_show = true; // score_show
-            }
-          } else {
-            alert(res.data.message);
-            return;
+      var quizList = await RestAPIManager.API_listbyquizid(this.info.id)
+      if (quizList.success === true){
+        if (quizList.quizList.length > 0){
+          this.QuizModalView = true;
+          for (const quiz of quizList.quizList){
+            this.data.push(quiz);
           }
-        })
+          console.log(this.data);
+        }
+      } else {
+        alert(quizList.message);
+        return;
+      }
     },
 
     // 퀴즈 삭제 API : 41. Get - http://IPAddress/api/quiz/get/deletequiz?id=1 (id 는 quiz의 id값)
-    DeleteQuiz() {
+    async DeleteQuiz() {
       var prompStr = prompt(
         '퀴즈가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
       );
@@ -432,26 +414,13 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var id = this.info.id;
-        var url = RestAPIURL.Quiz.GetDeleteQuizAPI + id;
-
-        var payload = {
-          id: this.info.id
+        var deleteQuiz = await RestAPIManager.API_deletequiz(this.info.id);
+        if (deleteQuiz.success === true){
+          alert("성공적으로 삭제되었습니다.");
+          this.$parent.$parent.$parent.$parent.fetchData();
+        } else {
+          alert(deleteQuiz.message);
         }
-
-        var config = Config.config;
-
-        this.$http
-          .get(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.fetchData();
-            } else {
-              alert(res.data.message);
-            }
-            
-          })
           console.log("Delete Quiz");
         } else {
           alert("정확하게 입력해주세요.");
@@ -460,37 +429,21 @@ export default {
     },
 
     // 퀴즈 수정 API : 43. Post - http://IPAddress/api/quiz/post/updatequiz
-    updateQuestion(){
-      var url = RestAPIURL.Quiz.PostUpdateQuizAPI;
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        id: this.info.id,
-        name: this.info.name,
-        data: this.data,
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
+    async updateQuestion(){
       if(this.totalscore > 100){
         alert("점수는 100점을 초과할 수 없습니다.");
       }
       else{
-        console.log(payload);
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            console.log(res.data.success);
-            if (res.data.success === true) {
-              alert("퀴즈 수정이 완료되었습니다.");
-              this.QuizModalView = false;
-              this.QuizScoreModal = false; 
-              this.$parent.$parent.$parent.$parent.fetchData();
-            } else {
-              alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
-              return;
-            }
-          })
+        var updateQuiz = await RestAPIManager.API_updatequiz(this.info.id, this.info.name, this.data, this.$store.getters.getUserInfo.id)
+        if (updateQuiz.success === true){
+          alert("퀴즈 수정이 완료되었습니다.");
+          this.QuizModalView = false;
+          this.QuizScoreModal = false; 
+          this.$parent.$parent.$parent.$parent.fetchData();
+        } else {
+          alert(updateQuiz.message); // "퀴즈 이름이 중복되었습니다."
+          return;
+        }
       }
     },
 

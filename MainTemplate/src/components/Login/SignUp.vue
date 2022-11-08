@@ -115,9 +115,9 @@
 
 <script>
 var SignEnum = require("../Enum/SignEnum");
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
 var UserModes = SignEnum.UserModes;
+var RestAPIManager = require("../RestAPIManager");
+
 
 export default {
   name: "SignUp",
@@ -147,56 +147,34 @@ export default {
   },
 
   // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
-  created() {
+  async created() {
     var vm = this;
-    var url = RestAPIURL.Department.GetDepartmentListAPI;
-
-    var config = Config.config;
-
-    this.$http
-      .get(url, config)
-      .then(res => {
-        if (res.data.data.length > 0) {
-          res.data.data.forEach(element => {
-            vm.departmentItems.push({
-              item_text: element.name,
-              item_value: element.id
-            })
-          })
-        }
-        console.log(vm.departmentItems);
+    var departmentList = await RestAPIManager.API_departmentlist();
+    var departmentItems = [];
+    for (const department of departmentList.departmentList){
+      departmentItems.push({
+        item_text: department.name,
+        item_value: department.id
       })
+    }
+    vm.departmentItems = departmentItems;
   },
 
   methods: {
     // 아이디 중복 체크 API : 48. Request - http://IPAddress/api/users/post/checkLoginId
-    checkLoginId() {
-      var url = RestAPIURL.Users.PostCheckLoginIdAPI;
-    
-      var payload = {
-        loginId: this.userid,
+    async checkLoginId() {
+      var checkLoginId = await RestAPIManager.API_checkloginid(this.userid);
+      if (checkLoginId.success === true){
+        this.IDCHECKED = true;
+        alert("사용가능한 ID 입니다.");
+      } else {
+        alert("사용중인 ID 입니다.");
       }
-      
-      var config = Config.config
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          console.log(res);
-          if (res.data.success == true) {
-            this.IDCHECKED = true;
-            alert("사용가능한 ID 입니다.");
-          } else if (res.data.success == false) {
-            alert("사용중인 ID 입니다.");
-          }
-        })
     },
 
     // 회원가입 API : 4. Post - http://IPAddress/api/users/post/register
-    submit() {
+    async submit() {
       if(this.IDCHECKED){
-        var url = RestAPIURL.Users.PostRegisterAPI;
-
         var usermode = 0;
         if (this.role === "instructor") {
           usermode = UserModes.INSTRUCTOR;
@@ -206,35 +184,14 @@ export default {
           alert("정확하게 입력해주세요.");
           return;
         }
-
-        var payload = {
-          loginId: this.userid,
-          // base64 encoding
-          // password: window.btoa(this.userpass),
-          password: this.userpass,
-          name: this.name,
-          userMode: usermode,
-          email: this.email,
-          departmentId: this.selectedDepartment.item_value,
-          phone: this.phone
+        var register = await RestAPIManager.API_register(this.userid, this.userpass, this.name, usermode, this.email, this.selectedDepartment.item_value, this.phone);
+        if (register.success){
+          alert("회원가입이 완료되었습니다.")
+          this.redirect();
+        } else {
+          alert(register.message);
         }
-
-        var config = Config.config;
-
-        this.$http
-          .post(url, payload, config)
-          .then(res => {
-            console.log(res);
-            if (res.data.success === true) {
-              alert("회원가입이 완료되었습니다.")
-              this.redirect();
-            }
-          })
-          .catch(res => {
-            alert(res);
-          })
-      }
-      else{
+      } else {
         alert("중복체크를 해주세요.");
       }
     },

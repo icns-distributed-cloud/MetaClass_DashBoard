@@ -244,3 +244,135 @@ export function API_createmap_Res(res) {
         res_data: data
     })
 }
+
+// 26. Post - http://IPAddress/api/department/post/postdepartment
+export function API_postdepartment_Res(res) {
+    if (!res.success) {
+        return ({
+            res_success: res.success,
+            res_code: res.code,
+            res_message: res.message,
+            res_data: res.data
+        })
+    } else {
+        return ({
+            res_timestamp: res.timestamp,
+            res_message: res.message,
+            res_details: res.details
+        })
+    }
+}
+
+// 28. post http://localhost:8088/api/department/patch/deletedepartment 
+export function API_deletedepartment_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 48. Post http://localhost:8088/api/users/post/checkLoginId
+export function API_checkloginid_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 4. Post - http://IPAdress/api/users/post/register
+export function API_register_Res(res){
+    if (!res.success) {
+        return ({
+            res_success: res.success,
+            res_code: res.code,
+            res_message: res.message,
+            res_data: res.data
+        })
+    } else {
+        return ({
+            res_timestamp: res.timestamp,
+            res_message: res.message,
+            res_details: res.details
+        })
+    }
+}
+
+// 2. Get - http://IPAdress/api/users/get/allstudent
+export function API_allstudent_Res(res){
+    var res_studentList = [];
+    for (const student of res.data){
+        res_studentList.push({
+            name: student.name,
+            id: student.id,
+            email: student.email,
+            group: student.departmentName
+        })
+    }
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_studentList: res_studentList
+    })
+}
+
+// 3. Patch - http://IPAdress/api/users/patch/deleteuser
+export function API_deleteuser_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 40. post http://163.180.117.47:8088/api/quiz/post/createquiz
+export function API_createquiz_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 47. get http://IPAddress/api/quiz/get/listbyquizid?quizId=
+export function API_listbyquizid_Res(res){
+    var quizList = [];
+    for (const quiz of res.data){
+        quizList.push({
+            title: quiz.title,
+            quizContext: quiz.quizContext,
+            answerYN: [],
+            score: quiz.score
+        })
+    }
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_quizList: quizList
+    })
+}
+
+// 41. Get http://IPAddress/api/quiz/get/deletequiz?id=
+export function API_deletequiz_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}
+
+// 43.post http://IPAddress/api/quiz/post/updatequiz
+export function API_updatequiz_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}

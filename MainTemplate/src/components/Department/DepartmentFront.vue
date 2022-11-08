@@ -106,6 +106,7 @@
 import DepartmentModal from './DepartmentModal.vue';
 var Config = require("../../config");
 var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
 
 export default {
   components: { DepartmentModal },
@@ -125,25 +126,10 @@ export default {
 
   methods: {
     // 부서 리스트 API : 27. Get - http://IPAddress/api/department/get/departmentlist
-    fetchData() {
+    async fetchData() {
       this.DepartmentModalList = [];
-
-      var url = RestAPIURL.Department.GetDepartmentListAPI;
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.DepartmentModalList.push({
-                id: element.id,
-                name: element.name
-              })
-            })
-          }
-        })
+      var departmentModalList = await RestAPIManager.API_departmentlist();
+      this.DepartmentModalList = departmentModalList.departmentList;
     },
 
     empty() {
@@ -188,25 +174,13 @@ export default {
 
     // 부서 입력 API : 26. Post - http://IPAddress/api/department/post/postdepartment
     RegisterDepartment() {
-      var url = RestAPIURL.Department.PostPostDepartmentAPI;
-
-      var payload = {
-          "name" : this.DepartmentName
+      var postDepartment = RestAPIManager.API_postdepartment(this.DepartmentName);
+      if (postDepartment.success){
+        alert("부서 등록 완료")
+        this.ContentFrontDialog = false;
+      } else {
+        alert(postDepartment.message);
       }
-
-      var config = Config.config;
-
-      this.$http
-          .post(url, payload, config)
-          .then((res) => {
-              if (res.data.success === true) {
-                  alert("부서 등록 완료")
-                  this.ContentFrontDialog = false;
-              }
-          })
-          .catch((err) => {
-              alert(err);
-          })
     },
   },
 }

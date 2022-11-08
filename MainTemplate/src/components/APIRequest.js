@@ -126,3 +126,67 @@ export function API_createmap_Req(name, maptype, maxUser, instructorId) {
         maxuser: maxUser
     }
 }
+
+// 26. Post - http://IPAddress/api/department/post/postdepartment
+export function API_postdepartment_Req(departmentName){
+    return {
+        name: departmentName
+    }
+}
+
+// 28. post http://localhost:8088/api/department/patch/deletedepartment 
+export function API_deletedepartment_Req(departmentId){
+    return {
+        id: departmentId
+    }
+}
+
+// 48. Post http://localhost:8088/api/users/post/checkLoginId
+export function API_checkloginid_Req(loginId){
+    return {
+        loginId: loginId
+    }
+}
+
+// 4. Post - http://IPAdress/api/users/post/register
+export function API_register_Req(loginId, password, name, userMode, email, phone, departmentId){
+    return {
+        loginId: loginId,
+        // base64 encoding
+        // password: window.btoa(this.userpass),
+        password: password,
+        name: name,
+        userMode: userMode,
+        email: email,
+        departmentId: departmentId,
+        phone: this.phone
+    }
+}
+
+// 3. Patch - http://IPAdress/api/users/patch/deleteuser
+export function API_deleteuser_Req(userId, loginId, userMode){
+    return {
+        id: userId,
+        loginId: loginId,
+        userMode: userMode
+    }
+}
+
+// 40. post http://163.180.117.47:8088/api/quiz/post/createquiz
+export function API_createquiz_Req(quizFrontMapName, data, userId){
+    return {
+        name: quizFrontMapName,
+        data: data,
+        instructorId: userId
+    }
+}
+
+// 43.post http://IPAddress/api/quiz/post/updatequiz
+export function API_updatequiz_Req(quizId, quizName, data, userId){
+    return {
+        id: quizId,
+        name: quizName,
+        data: data,
+        instructorId: userId
+    }
+}

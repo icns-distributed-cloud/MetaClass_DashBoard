@@ -175,8 +175,9 @@
 // 유리추가 : main.js 안에 있는 코드
 import { EventBus } from '@/main.js';
 import { mapState } from 'vuex';
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
+var SignEnum = require("../Enum/SignEnum");
+var UserModes = SignEnum.UserModes;
 
 export default {
   data: () => ({
@@ -310,37 +311,14 @@ export default {
     // 로그인의 정보를 받아야한다
     // 가져올 데이터는 회원정보의 이름, 아이디, 이메일, 부서
     // 회원 정보 조회 API : 2. Get - http://IPAddress/api/users/get/allstudent
-    memberlist(){
-      var url = RestAPIURL.Users.GetAllStudentAPI;
-      
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.MemberName.push({
-                name: element.name,
-                id: element.loginId,
-                email: element.email,
-                //phone: element.phone,
-                group:element.departmentName,
-                userMode: element.userMode
-              })
-            })
-          }
-        })
+    async memberlist(){
+      var allStudent = await RestAPIManager.API_allstudent();
+      this.MemberName = allStudent.studentList;
     },
 
     // 휴지통 클릭시 삭제
     // 회원 정보 삭제 API : 3. Patch - http://IPAddress/api/users/patch/deleteuser
-    deleteItem(item) {
+    async deleteItem(item) {
       var prompStr = prompt(
         '회원정보가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
       );
@@ -348,31 +326,15 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = RestAPIURL.Users.PatchDeleteUserAPI;
         var userId = this.$store.getters.getUserInfo.id;
         var itemInfo = Object.assign({}, item);
-
-        var SignEnum = require("../Login/SignEnum");
-        var UserModes = SignEnum.UserModes;
-        var payload = {
-          id: userId,
-          loginId: itemInfo.id, 
-          userMode: UserModes.STUDENT // 0이면 강의자 1이면 학습자
+        var deleteUser = await RestAPIManager.API_deleteuser(userId, itemInfo.id, UserModes.STUDENT);
+        if (deleteUser.success === true){
+          alert("회원정보가 성공적으로 삭제되었습니다.");
+          this.$parent.$parent.$parent.$parent.deleteItem(item);
+        } else {
+          alert(deleteUser.message);
         }
-
-        var config = Config.config;
-
-        this.$http
-          .patch(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("회원정보가 성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.deleteItem(item);
-            } else {
-              alert(res.data.message);
-            }
-            
-          })
           console.log("delete item");
       } else {
         alert("정확하게 입력해주세요.");

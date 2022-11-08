@@ -324,8 +324,7 @@
 <!------script-------->
 <script>
 import QuizModal from './QuizModal.vue';
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
 
 export default {
   components: { QuizModal },
@@ -368,28 +367,10 @@ export default {
 
   methods: {
     // 퀴즈 리스트 API : 42. Get - http://IPAddress/api/quiz/get/list?instructorId=1 
-    fetchData() {
+    async fetchData() {
       this.QuizFrontModalList = [];
-      var userId = this.$store.getters.getUserInfo.id;
-      var url = RestAPIURL.Quiz.GetQuizListAPI + userId;
-      var payload = {
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.QuizFrontModalList.push({
-                id: element.id,
-                name: element.name,
-              })
-            })
-          }
-        })
+      var quizFrontModalList = await RestAPIManager.API_quizlist(this.$store.getters.getUserInfo.id)
+      this.QuizFrontModalList = quizFrontModalList;
     },
 
     QuizFrontCreateModal()
@@ -490,34 +471,18 @@ export default {
     },
 
   // 퀴즈 생성 API : 40. Post - http://IPAddress/api/quiz/post/createquiz
-    createQuestion(){
-      var url = RestAPIURL.Quiz.PostCreateQuizAPI;
-
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        name: this.QuizFrontMapName,
-        data: this.data,
-        instructorId: userId
+    async createQuestion(){
+      var createQuiz = await RestAPIManager.API_createquiz(this.QuizFrontMapName, this.data, this.$store.getters.getUserInfo.id);
+      if (createQuiz.success === true){
+        alert("퀴즈 등록이 완료되었습니다.");
+        this.QuizScoreModal = false;
+        this.QuizModalView = false;
+        //this.score_show = true; // score_show
+        this.fetchData();
+      } else {
+        alert(createQuiz.message);
+        return;
       }
-
-      var config = Config.config;
-
-      console.log(this.data);
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          console.log(res.data.success);
-          if (res.data.success === true) {
-            alert("퀴즈 등록이 완료되었습니다.");
-            this.QuizScoreModal = false;
-            this.QuizModalView = false;
-            //this.score_show = true; // score_show
-            this.fetchData();
-          } else {
-            alert(res.data.message); // "퀴즈 이름이 중복되었습니다."
-            return;
-          }
-        })
       // data 초기화
       this.data = [
         {

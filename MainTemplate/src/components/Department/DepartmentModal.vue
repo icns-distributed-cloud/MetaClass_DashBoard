@@ -37,8 +37,7 @@
 
 <!---->
 <script>
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require("../RestAPIManager");
 
 export default {
   props: {
@@ -56,7 +55,7 @@ export default {
 
   methods: {
     // 부서 삭제 API : 28. Post - http://IPAddress/api/department/patch/deletedepartment
-    DeleteDepartment() {
+    async DeleteDepartment() {
       var prompStr = prompt(
         '부서가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
       );
@@ -64,25 +63,13 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        var url = RestAPIURL.Department.PostDeleteDepartmentAPI;
-
-        var payload = {
-          id: this.info.id
+        var deleteDepartment = await RestAPIManager.API_deletedepartment(this.info.id);
+        if (deleteDepartment.success === true){
+          alert("성공적으로 삭제되었습니다.");
+          this.$parent.$parent.$parent.$parent.fetchData();
+        } else {
+          alert(deleteDepartment.message);
         }
-
-        var config = Config.config;
-
-        this.$http
-          .patch(url, payload, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.fetchData();
-            } else {
-              alert(res.data.message);
-            }
-            
-          })
       } else {
         alert("정확하게 입력해주세요.");
         return;
