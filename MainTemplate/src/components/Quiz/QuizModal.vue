@@ -268,8 +268,6 @@
 <!---->
 <script>
 var RestAPIManager = require("../RestAPIManager");
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
 
 export default {
   props: {
