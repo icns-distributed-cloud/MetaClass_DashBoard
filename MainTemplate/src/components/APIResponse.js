@@ -257,7 +257,6 @@ export function API_createmap_Res(res) {
     })
 }
 
-<<<<<<< HEAD
 // 26. Post - http://IPAddress/api/department/post/postdepartment
 export function API_postdepartment_Res(res) {
     if (!res.success) {
@@ -387,66 +386,5 @@ export function API_updatequiz_Res(res){
         res_success: res.success,
         res_message: res.message,
         res_code: res.code
-=======
-// 6. Patch  -  http://IPAdress/api/map/patch/deletemap
-export function API_deletemap_Res(res) {
-    success = res.success;
-    code = res.code;
-    message = res.message;
-    var data = res.data;
-    return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
-        res_data: data
-    })
-}
-
-// 13. Post - http://IPAddress/api/content/post/createcontent
-export function API_createcontent_Res(res) {
-    var res_createcontent = [];
-    success = res.success;
-    code = res.code;
-    message = res.message;
-    for (const createcontent of res.data) {
-        res_createcontent.push({
-            contentId: createcontent.contentId,
-            directory: createcontent.directory
-        })
-    }
-    return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
-        res_createcontent: res_createcontent
-    })
-}
-
-// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
-export function API_updateidbycontentid_Res(res) {
-    success = res.success;
-    code = res.code;
-    message = res.message;
-    var data = res.data;
-    return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
-        res_data: data
-    })
-}
-
-// 15. Patch- http://IPAdress/api/content/patch/deletecontent
-export function API_deletecontent_Res(res) {
-    success = res.success;
-    code = res.code;
-    message = res.message;
-    var data = res.data;
-    return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
-        res_data: data
->>>>>>> 1da83cd56f06eaf11fa962f1f06971057fe3476d
     })
 }
