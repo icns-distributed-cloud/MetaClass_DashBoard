@@ -11,7 +11,6 @@ export async function API_maplist(color, instructorId) {
     var url = APIURL.Map.PostMapListAPI;
     var payload = APIRequest.API_maplist_Req(instructorId);
     var config = Config.config;
-
     var response = {};
     await fetch(url, {
             method: 'POST',
@@ -52,7 +51,6 @@ export async function API_contentlist(instructorId) {
     var url = APIURL.Content.PostContentListAPI;
     var payload = APIRequest.API_contentlist_Req(instructorId);
     var config = Config.config;
-
     var response = {};
     await fetch(url, {
             method: 'POST',
@@ -286,12 +284,12 @@ export async function API_updatelecture(lectureinfo, instructorId) {
 }
 
 // 8. Patch - http://IPAdress/api/map/patch/updatemap
-export async function API_updatemap() {
-    var updatemap = [];
+export async function API_updatemap(mapinfo) {
     var url = APIURL.Map.PatchUpdateMapAPI;
-    var payload = APIRequest.API_updatemap_Req();
+    var payload = APIRequest.API_updatemap_Req(mapinfo);
     var config = Config.config;
     var response = {};
+    console.log(payload);
     await fetch(url, {
             method: 'PATCH',
             headers: config.headers,
@@ -301,15 +299,7 @@ export async function API_updatemap() {
         .then(res => {
             response = APIResponse.API_updatemap_Res(res);
         })
-    if (response !== {}) {
-        updatemap.push({
-            success: response.res_success,
-            message: response.res_message,
-            code: response.res_code
-        })
-    }
-    console.log(updatemap);
-    return updatemap
+    return response;
 }
 
 // 45. post http://localhost:8088/api/mail/sendAll
@@ -367,11 +357,11 @@ export async function API_smssend(context, instructorId) {
 }
 
 // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
-export async function API_createlecture() {
-    var createlecture = [];
+export async function API_createlecture(classInfo, instructorId) {
     var url = APIURL.Lecture.Instructor.PostCreateLectureAPI;
-    var payload = APIRequest.API_createlecture_Req();
+    var payload = APIRequest.API_createlecture_Req(classInfo, instructorId);
     var config = Config.config;
+    console.log(payload);
     var response = {};
     await fetch(url, {
             method: 'POST',
@@ -382,15 +372,7 @@ export async function API_createlecture() {
         .then(res => {
             response = APIResponse.API_createlecture_Res(res);
         })
-    if (response !== {}) {
-        createlecture.push({
-            success: response.res_success,
-            message: response.res_message,
-            code: response.res_code
-        })
-    }
-    console.log(createlecture);
-    return createlecture
+    return response;
 }
 
 // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
@@ -459,6 +441,11 @@ export async function API_createmap(name, type, maxUser, instructorId) {
     var payload = APIRequest.API_createmap_Req(name, type, maxUser, instructorId);
     var config = Config.config;
     var response = [];
+    console.log({
+        method: 'POST',
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
     await fetch(url, {
             method: 'POST',
             headers: config.headers,
@@ -468,6 +455,7 @@ export async function API_createmap(name, type, maxUser, instructorId) {
         .then(res => {
             response = APIResponse.API_createmap_Res(res);
         })
+    console.log(response);
     if (response !== {}) {
         createmap = {
             success: response.res_success,
@@ -555,11 +543,12 @@ export async function API_checkloginid(loginId){
 }
 
 // 4. Post - http://IPAdress/api/users/post/register
-export async function API_register(loginId, password, name, userMode, email, phone, departmentId){
+export async function API_register(loginId, password, name, userMode, email, departmentId, phone){
     var url = APIURL.Users.PostRegisterAPI;
-    var payload = APIRequest.API_register_Req(loginId, password, name, userMode, email, phone, departmentId);
+    var payload = APIRequest.API_register_Req(loginId, password, name, userMode, email, departmentId, phone,);
     var config = Config.config;
     var response = [];
+    console.log(payload);
     await fetch(url, {
         method: 'POST',
         headers: config.headers,
@@ -630,7 +619,7 @@ export async function API_deleteuser(userId, loginId, userMode){
 // 40. post http://IPAddress/api/quiz/post/createquiz
 export async function API_createquiz(quizFrontMapName, data, userId){
     var url = APIURL.Quiz.PostCreateQuizAPI;
-    var payload = APIRequest(quizFrontMapName, data, userId);
+    var payload = APIRequest.API_createquiz_Req(quizFrontMapName, data, userId);
     var config = Config.config;
     var response = [];
     await fetch(url, {
@@ -666,7 +655,7 @@ export async function API_listbyquizid(quizId){
         success: response.res_success,
         message: response.res_message,
         code: response.res_code,
-        quizList: response.res_quizlist
+        quizList: response.res_quizList
     })
 }
 
@@ -691,9 +680,9 @@ export async function API_deletequiz(quizId){
 }
 
 // 43.post http://IPAddress/api/quiz/post/updatequiz
-export async function API_updatequiz(quizId, quizName, data, userId){
+export async function API_updatequiz(quizId, quizName, data){
     var url = APIURL.Quiz.PostUpdateQuizAPI;
-    var payload = APIRequest.API_updatequiz_Req(quizId, quizName, data, userId);
+    var payload = APIRequest.API_updatequiz_Req(quizId, quizName, data);
     var config = Config.config;
     var response = [];
     await fetch(url, {

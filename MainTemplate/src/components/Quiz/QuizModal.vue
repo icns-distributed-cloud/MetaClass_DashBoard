@@ -388,14 +388,18 @@ export default {
       this.data = [];
       this.a = 0;
       this.b = 1;
-      var quizList = await RestAPIManager.API_listbyquizid(this.info.id)
+      var quizList = await RestAPIManager.API_listbyquizid(this.info.id);
       if (quizList.success === true){
         if (quizList.quizList.length > 0){
           this.QuizModalView = true;
           for (const quiz of quizList.quizList){
-            this.data.push(quiz);
+            this.data.push({
+              title: quiz.title,
+              quizContext: quiz.quizContext,
+              answerYN: quiz.answerYN,
+              score: quiz.score
+            });
           }
-          console.log(this.data);
         }
       } else {
         alert(quizList.message);
@@ -432,7 +436,8 @@ export default {
         alert("점수는 100점을 초과할 수 없습니다.");
       }
       else{
-        var updateQuiz = await RestAPIManager.API_updatequiz(this.info.id, this.info.name, this.data, this.$store.getters.getUserInfo.id)
+        var updateQuiz = await RestAPIManager.API_updatequiz(this.info.id, this.info.name, this.data);
+        console.log(updateQuiz);
         if (updateQuiz.success === true){
           alert("퀴즈 수정이 완료되었습니다.");
           this.QuizModalView = false;

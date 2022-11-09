@@ -173,8 +173,8 @@ export default {
     },
 
     // 부서 입력 API : 26. Post - http://IPAddress/api/department/post/postdepartment
-    RegisterDepartment() {
-      var postDepartment = RestAPIManager.API_postdepartment(this.DepartmentName);
+    async RegisterDepartment() {
+      var postDepartment = await RestAPIManager.API_postdepartment(this.DepartmentName);
       if (postDepartment.success){
         alert("부서 등록 완료")
         this.ContentFrontDialog = false;

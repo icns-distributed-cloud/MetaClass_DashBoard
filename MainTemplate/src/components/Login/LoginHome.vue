@@ -95,8 +95,7 @@ export default {
     validateUser() {
       // 추후 형식 맞는지 검사
       // base64 encoding
-      // this.onSubmit(this.id, window.btoa(this.password));
-      this.onSubmit(this.id, this.password);
+      this.onSubmit(this.id, window.btoa(this.password));
     },
 
     // signin

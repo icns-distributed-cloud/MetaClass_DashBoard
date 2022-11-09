@@ -1,4 +1,4 @@
-var resourceHost = "http://163.180.117.47:8088";
+var resourceHost = "http://163.180.117.43:8088";
 
 export const Users = {
     // 로그인 관련 API : 1. Post - http://IPAddress/api/users/post/login
@@ -79,8 +79,8 @@ export const Quiz = {
     GetDeleteQuizAPI: resourceHost + "/api/quiz/get/deletequiz?id=",
     // 퀴즈 리스트 API : 42. Get - http://IPAddress/api/quiz/get/list?instructorId=
     GetQuizListAPI: resourceHost + "/api/quiz/get/list?instructorId=",
-    // 퀴즈 수정 API : 43. Post - http://IPAddress/api/quiz/updatequiz
-    PostUpdateQuizAPI: resourceHost + "/api/quiz/updatequiz",
+    // 퀴즈 수정 API : 43. Post - http://IPAddress/api/quiz/post/updatequiz
+    PostUpdateQuizAPI: resourceHost + "/api/quiz/post/updatequiz",
     // 점수 채점 API : 44. Post - http://IPAddress/api/quiz/post/scoring
     PostScoringAPI: resourceHost + "/api/quiz/post/scoring",
     // 퀴즈 정보 API : 47. Get - http://IPAddress/api/quiz/get/listbyquizid?quizId=

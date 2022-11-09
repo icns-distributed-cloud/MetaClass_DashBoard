@@ -68,8 +68,8 @@
 </template>
 
 <script>
-var LayoutEnum = require("../Enum/LayoutEnum");
-var UserModes = LayoutEnum.UserModes;
+var SignEnum = require("../Enum/SignEnum");
+var UserModes = SignEnum.UserModes;
 export default {
   data () {
     return {

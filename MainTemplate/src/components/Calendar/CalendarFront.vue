@@ -1228,21 +1228,18 @@ export default {
     // 7. Post  -  http://IPAdress/api/map/post/maplist 
     async fetchMapData () {
       this.maplist = await RestAPIManager.API_maplist(this.CalendarFrontGetEventColor(), this.$store.getters.getUserInfo.id);
-      console.log(this.maplist);
     },
     
     // 16. Post- http://IPAdress/api/content/post/contentlist
     async fetchContentData() {
       this.contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
-      console.log(this.contentlist);
     },
 
     // 42. Get - http://163.180.117.47:8088/api/quiz/get/list?instructorId=1 
     async fetchQuizData() {
       this.quizlist = await RestAPIManager.API_quizlist(this.$store.getters.getUserInfo.id);
-      console.log(this.quizlist); 
     },
-   
+  
     // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
     async CalendarFrontUpdateRange({ start, end }) {
       this.beforestart = start;

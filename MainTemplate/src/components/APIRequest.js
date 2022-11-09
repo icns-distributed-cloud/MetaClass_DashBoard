@@ -60,14 +60,12 @@ export function API_updatelecture_Req(lectureinfo, instructorId) {
 }
 
 // 8. Patch - http://IPAdress/api/map/patch/updatemap
-export function API_updatemap_Req(mapinfo, instructorId) {
-    var Maxnum = mapinfo.showevent[5].CalendarClassnameAction;
+export function API_updatemap_Req(mapinfo) {
     return {
-        id: String(mapinfo.instructorId),
+        id: mapinfo.id,
         name: mapinfo.name,
-        instructorId: String(instructorId),
-        type: mapinfo.maptype,
-        maxuser: Maxnum
+        type: mapinfo.type,
+        maxUser: mapinfo.maxUser
     }
 }
 
@@ -89,18 +87,15 @@ export function API_smssend_Req(context, instructorId) {
 
 // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
 export function API_createlecture_Req(createinfo, instructorId) {
-    var startTime = new Date(createinfo.CreateClassModalStartDate1 + ":00");
-    var endTime = new Date(createinfo.CreateClassModalFinishDate3 + ":00");
-    var studentlist = [];
     return {
         name: createinfo.name,
-        instructorId: String(instructorId),
-        mapId: String(createinfo.mapId),
-        quizId: String(createinfo.quizId),
-        contentId: String(createinfo.contentId),
-        stulist: studentlist,
-        startTime: startTime,
-        endTime: endTime
+        instructorId: instructorId,
+        mapId: createinfo.mapId,
+        quizId: createinfo.quizId,
+        contentId: createinfo.contentId,
+        stulist: createinfo.stulist,
+        startTime: createinfo.startTime,
+        endTime: createinfo.endTime
     }
 }
 
@@ -129,8 +124,8 @@ export function API_createmap_Req(name, maptype, maxUser, instructorId) {
     return {
         name: name,
         type: maptype,
-        instructorId: instructorId,
-        maxuser: maxUser
+        maxUser: maxUser,
+        instructorId: instructorId
     }
 }
 
@@ -156,7 +151,7 @@ export function API_checkloginid_Req(loginId){
 }
 
 // 4. Post - http://IPAdress/api/users/post/register
-export function API_register_Req(loginId, password, name, userMode, email, phone, departmentId){
+export function API_register_Req(loginId, password, name, userMode, email, departmentId, phone){
     return {
         loginId: loginId,
         // base64 encoding
@@ -166,7 +161,7 @@ export function API_register_Req(loginId, password, name, userMode, email, phone
         userMode: userMode,
         email: email,
         departmentId: departmentId,
-        phone: this.phone
+        phone: phone
     }
 }
 
@@ -189,11 +184,10 @@ export function API_createquiz_Req(quizFrontMapName, data, userId){
 }
 
 // 43.post http://IPAddress/api/quiz/post/updatequiz
-export function API_updatequiz_Req(quizId, quizName, data, userId){
+export function API_updatequiz_Req(quizId, quizName, data){
     return {
         id: quizId,
         name: quizName,
-        data: data,
-        instructorId: userId
+        data: data
     }
 }
