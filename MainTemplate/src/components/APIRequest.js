@@ -191,3 +191,7 @@ export function API_updatequiz_Req(quizId, quizName, data){
         data: data
     }
 }
+
+
+
+// 35. Get http://IPAddress/api/ip/get/list
