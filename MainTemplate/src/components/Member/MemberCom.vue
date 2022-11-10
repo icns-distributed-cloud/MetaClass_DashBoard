@@ -239,6 +239,7 @@ export default {
     MemberComDialog (val) {
       val || this.close()
     },
+
     dialogDelete (val) {
       val || this.closeDelete()
     },
@@ -311,7 +312,7 @@ export default {
     // 로그인의 정보를 받아야한다
     // 가져올 데이터는 회원정보의 이름, 아이디, 이메일, 부서
     // 회원 정보 조회 API : 2. Get - http://IPAddress/api/users/get/allstudent
-    async memberlist(){
+    async memberlist() {
       var allStudent = await RestAPIManager.API_allstudent();
       this.MemberName = allStudent.studentList;
     },
@@ -340,7 +341,7 @@ export default {
         alert("정확하게 입력해주세요.");
         return;
       }
-    }
+    },
   },
 }
 </script>

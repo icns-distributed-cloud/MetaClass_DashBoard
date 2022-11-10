@@ -13,7 +13,6 @@ import axios from "axios";
 
 import store from "./store";
 
-
 // Vue chart
 import "chart.js";
 //import "hchs-vue-charts";

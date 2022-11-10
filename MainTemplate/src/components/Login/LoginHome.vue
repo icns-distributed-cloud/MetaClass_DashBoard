@@ -72,6 +72,7 @@ export default {
   components: {
     
   },
+
   data: () => ({
     overlay: false,
     absolute: true,
@@ -133,7 +134,7 @@ export default {
       if (this.$store.getters.getUserInfo.status === Status.NOT_AVAILABLE){
         // 비밀번호 변경 modal or page 이동
       } else {
-          if (userMode === UserModes.INSTRUCTOR) {
+        if (userMode === UserModes.INSTRUCTOR) {
           redirectPath = "/CalendarPage"
         } else if (userMode === UserModes.STUDENT) {
           redirectPath = "/StudentCalendar"

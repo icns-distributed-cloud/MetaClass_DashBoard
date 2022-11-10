@@ -118,7 +118,6 @@ var SignEnum = require("../Enum/SignEnum");
 var UserModes = SignEnum.UserModes;
 var RestAPIManager = require("../RestAPIManager");
 
-
 export default {
   name: "SignUp",
 

@@ -1,301 +1,255 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-dialog
-        v-model="CreateClassModalDialog"
-        max-width="500px"
-      >
-      <!--강의실 상단 box-->
-        <v-card>
+<v-row>
+  <v-col>
+    <v-dialog
+      v-model="CreateClassModalDialog"
+      max-width="600px"
+    >
+      <v-card>
+        <v-col cols="auto">
+          <template>
+          <v-card>
             <v-toolbar
-              class="overflow-hidden mx-auto"
-              color="primary"
-              dark  
-            >
-            
-            <v-toolbar-title><strong>강의실 선택</strong></v-toolbar-title>
-            <v-spacer></v-spacer>
-              <v-btn
-              icon
+              :color="CreateClassModalColor"
               dark
-              @click="mainDialogClose()"
-              >
+            >
+              <strong>강좌 생성</strong>
+              <v-spacer></v-spacer>
+              <v-btn
+                icon
+                dark
+                @click="SetSelectClassActive(CreateClassModalDialog)"
+                >
                 <v-icon>mdi-close</v-icon>
               </v-btn>
-          </v-toolbar>
-          <!--강의실 A--> 
-          <v-col cols="auto">
-            <v-dialog
-              transition="dialog-bottom-transition"
-              max-width="600"
-              v-model="mainDialog"
-            >
-            <!--<v-list>
-              <v-list-item
-                v-for="(item, index) in maplist"
-                :key=index
-              > <v-btn>{{ item.id }}</v-btn>
-              </v-list-item>
-            </v-list>-->
-              <template v-slot:activator="{ on, attrs }">
-                
-                <v-list>
-                  <v-list-item
-                    v-for="(item, index) in maplist"
-                    :key=index,
-                  > 
-                  <v-btn
-                    width="98%"
-                    color="grey lighten-2"
-                    v-bind="attrs"
-                    v-on=on
-                    @click="selectedMap=item.id"
-                  >{{ item.name }}: {{ item.typename }}/{{ item.maxUser }}명</v-btn>
-                  </v-list-item>
-                </v-list>
-              </template>
-              
-              <!--강의실 A 클릭 후에 나타나는 page-->
-              <template v-slot:default="CreateClassModalDialog">
-                <v-card>
-                  <v-toolbar
-                    :color="CreateClassModalColor"
-                    dark
-                  ><strong>강좌 생성</strong>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    icon
-                    dark
-                    @click="SetSelectClassActive(CreateClassModalDialog)"
+            </v-toolbar>
+              <!--강좌명 입력-->
+            <div>
+              <v-card-text>
+                <v-text-field
+                  v-model="CreateClassModalTitle"
+                  :counter="10"
+                  label="강좌명 입력"
+                  required
+                  prepend-icon="mdi-pencil"
+                  outlined
+                >
+                </v-text-field>    
+                <!--강의 시작 날짜 및 시간-->
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <v-dialog
+                      ref="CreateClassModalStartDateDialog1"
+                      v-model="CreateClassModalStartDateModal"
+                      :return-value.sync="CreateClassModalStartDate1"
+                      persistent
+                      lazy
+                      full-width
+                      width="290px"
+                      outlined
+                    >  
+                      <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="CreateClassModalStartDate1"
+                        label="강의 시작 날짜 및 시간"
+                        outlined
+                        readonly
+                        prepend-icon="mdi-clock"
+                        v-on="on"
+                      >
+                      </v-text-field>
+                      </template>
+                      <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="currentDate">
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
+                      </v-date-picker> 
+                    </v-dialog>
+
+                    <v-dialog
+                      ref="CreateClassModalStartTimeDialog2"
+                      v-model="CreateClassModalStartTimeModal"
+                      :return-value.sync="CreateClassModalStartTime2"
+                      persistent
+                      lazy
+                      full-width
+                      width="290px"
                     >
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-toolbar>
-                  
-                  <!--강좌명 입력-->
-                  <div>
-                  <v-card-text>
-                    <v-text-field
-                      v-model="CreateClassModalTitle"
-                      :counter="10"
-                      label="강좌명 입력"
-                      required
-                      prepend-icon="mdi-pencil"
+                      <v-time-picker
+                        v-if="CreateClassModalStartTimeModal"
+                        v-model="CreateClassModalStartTime2"
+                        full-width
+                        :allowed-minutes="allowedInterval"
+                        :min="currentTime"
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
+                      </v-time-picker>
+                    </v-dialog>
+                  </v-col>
+                  <!--강의 종료 날짜 및 시간--> 
+                  <v-col cols="12" sm="6">
+                    <v-dialog
+                      ref="CreateClassModalFinishDateDialog3"
+                      v-model="CreateClassModalFinishDateModal"
+                      :return-value.sync="CreateClassModalFinishDate3"
+                      persistent
+                      lazy
+                      full-width
+                      width="290px"
                       outlined
                     >
-                    </v-text-field>    
-
-                  <!--강의 시작 날짜 및 시간-->
-                    <v-row>
-                      <v-col cols="12" sm="6">
-                        <v-dialog
-                          ref="CreateClassModalStartDateDialog1"
-                          v-model="CreateClassModalStartDateModal"
-                          :return-value.sync="CreateClassModalStartDate1"
-                          persistent
-                          lazy
-                          full-width
-                          width="290px"
-                          outlined
-                        >  
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="CreateClassModalStartDate1"
-                              label="강의 시작 날짜 및 시간"
-                              outlined
-                              readonly
-                              prepend-icon="mdi-clock"
-                              v-on="on"
-                            >
-                            </v-text-field>
-                          </template>
-                          <v-date-picker v-model="CreateClassModalStartDate1" scrollable :min="currentDate">
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="CreateClassModalStartDateModal = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="CreateClassModalStartTimeModal = true">OK</v-btn>
-                          </v-date-picker> 
-                        </v-dialog>
-
-                        <v-dialog
-                          ref="CreateClassModalStartTimeDialog2"
-                          v-model="CreateClassModalStartTimeModal"
-                          :return-value.sync="CreateClassModalStartTime2"
-                          persistent
-                          lazy
-                          full-width
-                          width="290px"
-                        >
-                          <v-time-picker
-                            v-if="CreateClassModalStartTimeModal"
-                            v-model="CreateClassModalStartTime2"
-                            full-width
-                            :allowed-minutes="allowedInterval"
-                            :min="currentTime"
-                          >
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="CreateClassModalStartTimeModal = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="CreateClassModalStartSet()">OK</v-btn>
-                          </v-time-picker>
-                        </v-dialog>
-                      </v-col>
-                     
-                      <!--강의 종료 날짜 및 시간--> 
-                      <v-col cols="12" sm="6">
-                        <v-dialog
-                          ref="CreateClassModalFinishDateDialog3"
-                          v-model="CreateClassModalFinishDateModal"
-                          :return-value.sync="CreateClassModalFinishDate3"
-                          persistent
-                          lazy
-                          full-width
-                          width="290px"
-                          outlined
-                          
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="CreateClassModalFinishDate3"
-                              label="강의 종료 날짜 및 시간"
-                              outlined
-                              readonly
-                              v-on="on"
-                              :disabled="createClassModalFinish"
-                            >  
-                            </v-text-field>
-                          </template>  
-                          <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
-                          </v-date-picker> 
-                        </v-dialog>
-                        <v-dialog
-                          ref="CreateClassModalFinishTimeDialog4"
-                          v-model="CreateClassModalFinishTimeModal"
-                          :return-value.sync="CreateClassModalFinishTime4"
-                          persistent
-                          lazy
-                          full-width
-                          width="290px"
-                        >
-                          <v-time-picker
-                            v-if="CreateClassModalFinishTimeModal"
-                            v-model="CreateClassModalFinishTime4"
-                            full-width
-                            :min="classStartTime"
-                          >
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
-                          </v-time-picker>
-                        </v-dialog>
-                      </v-col>
-                    </v-row>
-
-                    <!-- 소속 선택-->
-                    <div>
-                      <v-select
-                        v-model="CreateClassModalBelong"
-                        :items="CreateClassModalBelongItems"
-                        item-text="item_text"
-                        item-value="item_value"
-                        label="소속 선택"
-                        @change="department()"
+                      <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="CreateClassModalFinishDate3"
+                        label="강의 종료 날짜 및 시간"
                         outlined
-                        prepend-icon="mdi-domain"
-                      >    
-                      </v-select> 
-                    </div>
-                    
-                    <!--single select-->
-                    <v-card class="mx-auto">
-                    <v-data-table v-if="showStudents"
-                      v-model="selectedStudents"
-                      :headers="headers"
-                      :items="belongstudents"
-                      :single-select="singleSelect"
-                      item-key="name"
-                      hide-default-footer
-                      show-select
-                      @click:row="selectstudent()"
+                        readonly
+                        v-on="on"
+                        :disabled="createClassModalFinish"
+                      >  
+                      </v-text-field>
+                      </template>  
+                      <v-date-picker v-model="CreateClassModalFinishDate3" scrollable :min="CreateClassModalStartDate1">
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="CreateClassModalFinishDateModal = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = true">OK</v-btn>
+                      </v-date-picker> 
+                    </v-dialog>
+
+                    <v-dialog
+                      ref="CreateClassModalFinishTimeDialog4"
+                      v-model="CreateClassModalFinishTimeModal"
+                      :return-value.sync="CreateClassModalFinishTime4"
+                      persistent
+                      lazy
+                      full-width
+                      width="290px"
                     >
-                      <template v-slot:top>
-                        <v-switch
-                          v-model="singleSelect"
-                          label="Single select"
-                          class="pa-3"
-                        ></v-switch>
-
-                      </template>
-                    </v-data-table>
-                    </v-card>
-                 
-
-                    <!-- 컨텐츠 파일 선택-->
-                    <div>
-                      <v-select
-                        v-model="CreateClassModalFile"
-                        :items="CreateClassModalFileItem"
-                        item-text="item_text"
-                        item-value="item_value"
-                        label="컨텐츠 파일 선택"
-                        prepend-icon="folder_open"
-                        outlined
-                      >    
-                      </v-select> 
-                    </div> 
-                    
-                    <!-- 퀴즈 선택-->
-                    <div>
-                      <v-select
-                        v-model="CreateClassModalQuiz"
-                        :items="CreateClassModalQuizItem"
-                        label="퀴즈 선택"
-                        item-text="item_text"
-                        item-value="item_value"
-                        prepend-icon="mdi-check"
-                        outlined
-                      >    
-                      </v-select> 
-                    </div> 
-              
-
-                  <!-- 컬러 선택-->
-                    <div>
-                      <v-select
-                        v-model="CreateClassModalColor"
-                        :items="CreateClassModalColorItem"
-                        label="컬러 선택"
-                        item-text="item_text"
-                        item-value="item_value"
-                        prepend-icon="invert_colors"
-                        outlined
-                      >    
-                      </v-select> 
-                    </div> 
-                  </v-card-text>
-                  </div>
-
-                  <!--등록 확인-->
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary"
-                      text
-                      @click="CreateClass()"
-                    >등록 확인
-                    </v-btn>
-                  </v-card-actions>
-                 </v-card>
-              </template> 
-              <!--강의실 A 클릭 후 sumit 끝 부분-->
-            </v-dialog>
-           </v-col>
-            
-         </v-card> 
-      </v-dialog>
-    </v-col>
-  </v-row> 
+                      <v-time-picker
+                        v-if="CreateClassModalFinishTimeModal"
+                        v-model="CreateClassModalFinishTime4"
+                        full-width
+                        :min="classStartTime"
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="CreateClassModalFinishTimeModal = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="CreateClassModalFinishSet()">OK</v-btn>
+                      </v-time-picker>
+                    </v-dialog>
+                  </v-col>
+                </v-row>
+                <!--강의실 선택-->
+                <v-row class="mx-auto">
+                  <v-select
+                    v-model="selectedMap"
+                    :items="maplist"
+                    item-text="name"
+                    item-value="id"
+                    label="강의실 선택"
+                    outlined
+                    prepend-icon="mdi-domain"
+                  >    
+                  </v-select>
+                  <v-btn>등록</v-btn>
+                </v-row>
+                <!-- 소속 선택-->
+                <v-row class="mx-auto">
+                  <v-select
+                    v-model="CreateClassModalBelong"
+                    :items="CreateClassModalBelongItems"
+                    item-text="item_text"
+                    item-value="item_value"
+                    label="소속 선택"
+                    @change="department()"
+                    outlined
+                    prepend-icon="mdi-domain"
+                  >    
+                  </v-select> 
+                  <v-btn>등록</v-btn>
+                </v-row>
+                <!--single select-->
+                <!-- <v-card class="mx-auto">
+                  <v-data-table v-if="showStudents"
+                    v-model="selectedStudents"
+                    :headers="headers"
+                    :items="belongstudents"
+                    :single-select="singleSelect"
+                    item-key="name"
+                    hide-default-footer
+                    show-select
+                    @click:row="selectstudent()"
+                  >
+                    <template v-slot:top>
+                    <v-switch
+                      v-model="singleSelect"
+                      label="Single select"
+                      class="pa-3"
+                    ></v-switch>
+                    </template>
+                  </v-data-table>
+                </v-card> -->
+                <!-- 컨텐츠 파일 선택-->
+                <v-row class="mx-auto">
+                  <v-select
+                    v-model="CreateClassModalFile"
+                    :items="CreateClassModalFileItem"
+                    item-text="item_text"
+                    item-value="item_value"
+                    label="컨텐츠 파일 선택"
+                    prepend-icon="folder_open"
+                    outlined
+                  >    
+                  </v-select>
+                  <v-btn>등록</v-btn>
+                </v-row> 
+                <!-- 퀴즈 선택-->
+                <v-row class="mx-auto">
+                  <v-select
+                    v-model="CreateClassModalQuiz"
+                    :items="CreateClassModalQuizItem"
+                    label="퀴즈 선택"
+                    item-text="item_text"
+                    item-value="item_value"
+                    prepend-icon="mdi-check"
+                    outlined
+                  >    
+                  </v-select>
+                  <v-btn>등록</v-btn>
+                </v-row>
+                <!-- 컬러 선택-->
+                <v-row class="mx-auto">
+                  <v-select
+                    v-model="CreateClassModalColor"
+                    :items="CreateClassModalColorItem"
+                    label="컬러 선택"
+                    item-text="item_text"
+                    item-value="item_value"
+                    prepend-icon="invert_colors"
+                    outlined
+                  >    
+                  </v-select> 
+                </v-row>
+              </v-card-text>
+            </div>
+            <!--등록 확인-->
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                text
+                @click="CreateClass()"
+              >등록 확인
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          </template> 
+        </v-col>
+      </v-card> 
+    </v-dialog>
+  </v-col>
+</v-row> 
 </template>
 
 <!--script--->
@@ -306,69 +260,72 @@ var RestAPIManager = require('../RestAPIManager');
 
 export default {
   data () {
-      return {
-        CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
-        CreateClassModalColor: 'Primary',
-        mainDialog: false,
-        maplist: [],
-        ButtonValue: "",
-        selectedMap: "",
-        hello: "",
+    return {
+      CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
+      CreateClassModalColor: 'Primary',
+      mainDialog: false,
+      maplist: [],
+      ButtonValue: "",
+      selectedMap: "",
+      hello: "",
 
-        belongstudents: [],
-        singleSelect: false,
-        headers: [
-          {
-            text: "이름",
-            align: "start",
-            sortable: false,
-            value: "name"
-          }
-        ],
+      belongstudents: [],
+      singleSelect: false,
+      headers: [
+        {
+          text: "이름",
+          align: "start",
+          sortable: false,
+          value: "name"
+        }
+      ],
 
-        selectedStudents: [],
-        showStudents: false,
+      selectedStudents: [],
+      showStudents: false,
 
-        // 강의실 선택
-        CreateClassModalDialog: true,
-        // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
-        //CreateClassModalStartDate1: "",
-        CreateClassModalStartDateModal: false,
-        CreateClassModalStartTime2: "",
-        CreateClassModalStartTimeModal: false,
-        // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
-        //CreateClassModalFinishDate3: "",
-        CreateClassModalFinishDateModal: false,
-        CreateClassModalFinishTime4: "",
-        CreateClassModalFinishTimeModal: false, 
-        // 소속 선택
-        CreateClassModalBelong: "",
-        CreateClassModalBelongItems: [],
-        BelongStudents: [],
-        // 컨텐츠 파일 선택
-        CreateClassModalFile: "",
-        CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
-        // 퀴즈 선택
-        CreateClassModalQuiz: [],
-        CreateClassModalQuizItem: [], // 퀴즈 item 선택
-        CreateClassModalTitle: "",
-        createClassModalFinish: true,
-        classStartTime: "",
+      // 강의실 선택
+      CreateClassModalDialog: true,
+      // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
+      //CreateClassModalStartDate1: "",
+      CreateClassModalStartDateModal: false,
+      CreateClassModalStartTime2: "",
+      CreateClassModalStartTimeModal: false,
+      // 강의 종료 날짜 및 시간 : CreateClassModalFinishDate1
+      //CreateClassModalFinishDate3: "",
+      CreateClassModalFinishDateModal: false,
+      CreateClassModalFinishTime4: "",
+      CreateClassModalFinishTimeModal: false, 
+      // 소속 선택
+      CreateClassModalBelong: "",
+      CreateClassModalBelongItems: [],
+      BelongStudents: [],
+      // 컨텐츠 파일 선택
+      CreateClassModalFile: "",
+      CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
+      // 퀴즈 선택
+      CreateClassModalQuiz: [],
+      CreateClassModalQuizItem: [], // 퀴즈 item 선택
+      CreateClassModalTitle: "",
+      createClassModalFinish: true,
+      classStartTime: "",
 
-        // 시간 시작, 종료 지정
-        date: moment().format('YYYY-MM-DD'),
-        currentDate: moment().format('YYYY-MM-DD'),
-        currentTime: "",
-        CreateClassModalStartDate1: moment().format('YYYY-MM-DD'),
-        CreateClassModalFinishDate3: moment().format('YYYY-MM-DD'),
-      }
+      // 시간 시작, 종료 지정
+      date: moment().format('YYYY-MM-DD'),
+      currentDate: moment().format('YYYY-MM-DD'),
+      currentTime: "",
+      CreateClassModalStartDate1: moment().format('YYYY-MM-DD'),
+      CreateClassModalFinishDate3: moment().format('YYYY-MM-DD'),
+    }
   },
+
   created() {
     this.fetchMapData();
+    console.log(this.maplist);
     this.fecthDepartment();
     this.fetchContent();
     this.fetchQuizData();
   },
+
   watch: {
     CreateClassModalStartDate1() {
       if (this.CreateClassModalStartDate1 === this.currentDate) {
@@ -377,6 +334,7 @@ export default {
         this.currentTime = "";
       }
     },
+
     CreateClassModalFinishDate3() {
       if (this.CreateClassModalFinishDate3 === this.saveStartDate) {
         this.classStartTime = this.CreateClassModalStartTime2;
@@ -389,9 +347,11 @@ export default {
   methods: {
     // 시간 5분 간격으로 나눠질 때 TRUE
     allowedInterval: m => m % 5 == 0,
+
     selectstudent() {
       console.log(this.selectedStudents)
     },
+
     mainDialogClose(){
     this.CreateClassModalDialog = false
     },
@@ -418,16 +378,14 @@ export default {
 
     SetSelectClassActive()
     {
-        if(this.CreateClassModalDialog == true)
-        {
-            this.CreateClassModalDialog = false;
-        }
+      if(this.CreateClassModalDialog == true) {
+        this.CreateClassModalDialog = false;
+      }
     },
 
     // 16. Post- http://IPAdress/api/content/post/contentlist
     async fetchContent() {
       var contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
-      console.log(contentlist);
       var CreateClassModalFileItem = [];
       for (const content of contentlist){
         CreateClassModalFileItem.push({
@@ -466,15 +424,15 @@ export default {
 
     // 7. Post  -  http://IPAdress/api/map/post/maplist 
     async fetchMapData () {
-      this.maplist = await RestAPIManager.API_maplist("", this.$store.getters.getUserInfo.id);
+      var maplist = await RestAPIManager.API_maplist("", this.$store.getters.getUserInfo.id);
+      this.maplist = maplist;
+      console.log(this.maplist);
     },
 
     // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
     async CreateClass() {
       var startdate = new Date(this.CreateClassModalStartDate1+":"+this.CreateClassModalStartTime2).toISOString().split('T');
       var enddate = new Date(this.CreateClassModalFinishDate3+":"+this.CreateClassModalFinishTime4).toISOString().split('T');
-      console.log(startdate);
-      console.log(enddate);
       var classInfo = {
         name: this.CreateClassModalTitle,
         mapId: this.selectedMap,
@@ -495,8 +453,7 @@ export default {
             alert("정확하게 입력해주세요.");
             return;
           }
-      }
-        else {
+      } else {
           alert("강의 끝 시간은 시작 시간보다 빠를 수 없습니다.")
       }
       if (this.CreateClassModalBelong === "") {
@@ -514,7 +471,7 @@ export default {
           this.belongstudents.push(studentlistbydepartment)
         }
       }
-    }             
-  }
+    },
+  },
 }
 </script>

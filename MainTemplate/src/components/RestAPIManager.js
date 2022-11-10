@@ -21,7 +21,6 @@ export async function API_maplist(color, instructorId) {
         .then(res => {
             response = APIResponse.API_maplist_Res(res);
         })
-    console.log(response);
     if (response !== {}) {
         for (const map of response.res_maplist) {
             var maptype = map.type;
@@ -201,7 +200,6 @@ export async function API_lecturelist(start, end, instructorId) {
 
 // 11. Patch - http://IPAdress/api/lecture/instructor/patch/deletelecture
 export async function API_insdeletelecture(lectureId) {
-    var deletelecture = [];
     var url = APIURL.Lecture.Instructor.PatchDeleteLectureAPI;
     var payload = APIRequest.API_insdeletelecturelist_Req(lectureId);
     var config = Config.config;
@@ -216,15 +214,7 @@ export async function API_insdeletelecture(lectureId) {
         .then(res => {
             response = APIResponse.API_insdeletelecture_Res(res);
         })
-    console.log(response);
-    if (response !== {}) {
-        deletelecture.push({
-            success: response.res_success,
-            message: response.res_code,
-            code: response.res_code
-        })
-    }
-    return deletelecture
+    return response;
 }
 
 // 23. Post - api/lecture/student/delete/deletelecture
@@ -244,7 +234,6 @@ export async function API_deletelecture(studentId, lectureId) {
         .then(res => {
             response = APIResponse.API_deletelecture_Res(res);
         })
-    console.log(response);
     if (response !== {}) {
         deletelecture.push({
             success: response.res_success,
@@ -279,7 +268,6 @@ export async function API_updatelecture(lectureinfo, instructorId) {
             code: response.res_code
         })
     }
-    console.log(updatelecture);
     return updatelecture[0]
 }
 
@@ -289,7 +277,6 @@ export async function API_updatemap(mapinfo) {
     var payload = APIRequest.API_updatemap_Req(mapinfo);
     var config = Config.config;
     var response = {};
-    console.log(payload);
     await fetch(url, {
             method: 'PATCH',
             headers: config.headers,
@@ -299,6 +286,7 @@ export async function API_updatemap(mapinfo) {
         .then(res => {
             response = APIResponse.API_updatemap_Res(res);
         })
+    console.log(response)
     return response;
 }
 
@@ -325,7 +313,6 @@ export async function API_mailsend(context, instructorId) {
             code: response.res_code
         })
     }
-    console.log(mailsend);
     return mailsend
 }
 
@@ -352,7 +339,6 @@ export async function API_smssend(context, instructorId) {
             code: response.res_code
         })
     }
-    console.log(smssend);
     return smssend
 }
 
@@ -361,7 +347,6 @@ export async function API_createlecture(classInfo, instructorId) {
     var url = APIURL.Lecture.Instructor.PostCreateLectureAPI;
     var payload = APIRequest.API_createlecture_Req(classInfo, instructorId);
     var config = Config.config;
-    console.log(payload);
     var response = {};
     await fetch(url, {
             method: 'POST',
@@ -400,7 +385,6 @@ export async function API_studentlistbydepartment(departmentId) {
             studentlistbydepartment: response.res_studentlistbydepartment
         })
     }
-    console.log(studentlistbydepartment);
     return studentlistbydepartment
 }
 
@@ -436,16 +420,10 @@ export async function API_departmentlist() {
 
 // 5. Post - http://IPAdress/api/map/post/createmap
 export async function API_createmap(name, type, maxUser, instructorId) {
-    var createmap = {};
     var url = APIURL.Map.PostCreateMapAPI;
     var payload = APIRequest.API_createmap_Req(name, type, maxUser, instructorId);
     var config = Config.config;
     var response = [];
-    console.log({
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
     await fetch(url, {
             method: 'POST',
             headers: config.headers,
@@ -455,17 +433,7 @@ export async function API_createmap(name, type, maxUser, instructorId) {
         .then(res => {
             response = APIResponse.API_createmap_Res(res);
         })
-    console.log(response);
-    if (response !== {}) {
-        createmap = {
-            success: response.res_success,
-            message: response.res_message,
-            code: response.res_code,
-            createmap: response.res_createmap
-        }
-    }
-    console.log(createmap);
-    return createmap
+    return response;
 }
 
 // 26. Post - http://IPAddress/api/department/post/postdepartment
@@ -548,7 +516,6 @@ export async function API_register(loginId, password, name, userMode, email, dep
     var payload = APIRequest.API_register_Req(loginId, password, name, userMode, email, departmentId, phone,);
     var config = Config.config;
     var response = [];
-    console.log(payload);
     await fetch(url, {
         method: 'POST',
         headers: config.headers,
@@ -597,7 +564,7 @@ export async function API_allstudent(){
 // 3. Patch - http://IPAdress/api/users/patch/deleteuser
 export async function API_deleteuser(userId, loginId, userMode){
     var url = APIURL.Users.PatchDeleteUserAPI;
-    var payload = APIRequest(userId, loginId, userMode);
+    var payload = APIRequest.API_deleteuser_Req(userId, loginId, userMode);
     var config = Config.config;
     var response = [];
     await fetch(url, {
@@ -693,6 +660,28 @@ export async function API_updatequiz(quizId, quizName, data){
     .then(res => res.json())
     .then(res => {
         response = APIResponse.API_listbyquizid_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 6. Patch - http://IPAdress/api/map/patch/deletemap
+export async function API_deletemap(mapId){
+    var url = APIURL.Map.PatchDeleteMapAPI;
+    var payload = APIRequest.API_deletemap_Req(mapId);
+    var config = Config.config;
+    var response = [];
+    await fetch(url, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_deletemap_Res(res);
     })
     return ({
         success: response.res_success,

@@ -388,3 +388,12 @@ export function API_updatequiz_Res(res){
         res_code: res.code
     })
 }
+
+// 6. Patch - http://IPAdress/api/map/patch/deletemap
+export function API_deletemap_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}

@@ -22,7 +22,7 @@
           </v-col>
         </v-row>
       </div>
-    <!--스크롤 내리기-->
+      <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
     <!--컨텐츠 등록-->
@@ -76,19 +76,19 @@
             </v-card-text>                     
             <!--하단 취소, 확인 버튼-->
             <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="blue-grey"
-                    @click="ContentFrontDialog = false"
-                >
-                    취소
-                </v-btn>
-                <v-btn
-                    color="green"
-                    @click="RegisterDepartment()"
-                >
-                    확인
-                </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-grey"
+                @click="ContentFrontDialog = false"
+              >
+                취소
+              </v-btn>
+              <v-btn
+                color="green"
+                @click="RegisterDepartment()"
+              >
+                  확인
+              </v-btn>
             </v-card-actions>  
           </v-card>
         </v-dialog>
@@ -110,6 +110,7 @@ var RestAPIManager = require("../RestAPIManager");
 
 export default {
   components: { DepartmentModal },
+
   data: () => ({
     contentId: "",
 
@@ -136,16 +137,14 @@ export default {
       this.DepartmentName = "";
     },
 
-    ContentFrontCreateClassModal()
-    {
+    ContentFrontCreateClassModal() {
       this.ContentFrontModalList.push({
         com : DepartmentModal
       })   
       console.log("aaaaaaaaa")
     },
 
-    ContentFrontDeleteClassModal()
-    {
+    ContentFrontDeleteClassModal() {
       this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
     },
 

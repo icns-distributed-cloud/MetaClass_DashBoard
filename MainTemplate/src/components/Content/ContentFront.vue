@@ -58,8 +58,8 @@
           >
             <!--상단 컨텐츠 등록-->   
             <v-toolbar
-                flat
-                color="purple"
+              flat
+              color="purple"
             >
               <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
             </v-toolbar>
@@ -105,7 +105,7 @@
                   {{ text }}
                 </v-chip>
                 <span
-                color="blue"
+                  color="blue"
                   v-else-if="index === 2"
                   class="text-overline grey--text text--darken-3 mx-2"
                 >
@@ -203,8 +203,7 @@ export default {
       this.contentProgress();
     },
 
-    ContentFrontDeleteClassModal()
-    {
+    ContentFrontDeleteClassModal() {
       this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
     },
 
@@ -225,18 +224,18 @@ export default {
       this.contentlist = await RestAPIManager.API_contentlist(instructorId, this.$store.getters.getUserInfo.id);
       console.log(this.contentlist);
       this.ContentFrontModalList = [];
-        if (this.contentlist.length > 0) {
-          this.contentlist.forEach(contentlist => {
-            if (contentlist.id !== 51) {
-              var filename = contentlist.directory.slice(contentlist.directory.indexOf("_")+1);
-              this.ContentFrontModalList.push({
-              id: contentlist.id,
-              name: contentlist.name,
-              filename: filename
-            })
-            }
+      if (this.contentlist.length > 0) {
+        this.contentlist.forEach(contentlist => {
+          if (contentlist.id !== 51) {
+            var filename = contentlist.directory.slice(contentlist.directory.indexOf("_")+1);
+            this.ContentFrontModalList.push({
+            id: contentlist.id,
+            name: contentlist.name,
+            filename: filename
           })
-        }
+          }
+        })
+      }
     },
 
     // 13. Post - http://IPAddress/api/content/post/createcontent
@@ -279,13 +278,13 @@ export default {
         var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id);
         this.updateidbycontentid = updateidbycontentid;
         if (this.updateidbycontentid.success){
-            console.log(this.updateidbycontentid);
-            alert("컨텐츠 업로드가 완료되었습니다.");
-            this.fetchData();
-            this.ContentFrontDialog = false;
+          console.log(this.updateidbycontentid);
+          alert("컨텐츠 업로드가 완료되었습니다.");
+          this.fetchData();
+          this.ContentFrontDialog = false;
         }
       }
     },
-  }
+  },
 }
 </script>

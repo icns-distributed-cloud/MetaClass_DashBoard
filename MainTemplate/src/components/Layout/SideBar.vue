@@ -70,26 +70,27 @@
 <script>
 var SignEnum = require("../Enum/SignEnum");
 var UserModes = SignEnum.UserModes;
+
 export default {
   data () {
     return {
       studentMenus: [
-          { title: '강좌 정보', icon: 'event', action: "StudentCalendar" },
-          { title: '학생 평가 정보', icon: 'mdi-clipboard-text', action: "StudentEvaluation" },
-          { title: '회원 정보', icon: 'mdi-account-circle', action: "StudentInformation" },
+        { title: '강좌 정보', icon: 'event', action: "StudentCalendar" },
+        { title: '사원 평가 정보', icon: 'mdi-clipboard-text', action: "StudentEvaluation" },
+        { title: '사원 정보', icon: 'mdi-account-circle', action: "StudentInformation" },
       ],
       teacherMenus: [
-          { title: '강좌 관리', icon: 'event', action: "Calendar" },
-          { title: '학생 평가 관리', icon: 'mdi-clipboard-text', action: "Student" },
-          { title: '강의실 등록', icon: 'class', action: "ClassMap" },
-          { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" },
-          { title: '퀴즈 등록', icon: 'quiz' , action: "Quiz"},
-          { title: '회원 관리', icon: 'mdi-account-circle' , action: "Member"},
-          { title: '부서 관리', icon: 'mdi-clipboard-text', action: "Department" }
+        { title: '강좌 관리', icon: 'event', action: "Calendar" },
+        { title: '사원 평가 관리', icon: 'mdi-clipboard-text', action: "Student" },
+        { title: '강의실 등록', icon: 'class', action: "ClassMap" },
+        { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" },
+        { title: '퀴즈 등록', icon: 'quiz' , action: "Quiz"},
+        { title: '사원 관리', icon: 'mdi-account-circle' , action: "Member"},
+        { title: '부서 관리', icon: 'mdi-clipboard-text', action: "Department" }
       ],
       serverManagerMenus: [
-          { title: "서버 등록", icon: 'mdi-server', action: "serverRegister" },
-          { title: "서버 관리", icon: 'mdi-server', action: "serverManage" }
+        { title: "서버 등록", icon: 'mdi-server', action: "serverRegister" },
+        { title: "서버 관리", icon: 'mdi-server', action: "serverManage" }
       ],
       right: null,
       logolink: ""
@@ -119,10 +120,12 @@ export default {
       var userInfo = this.$store.getters.getUserInfo;
       return userInfo.userMode == UserModes.INSTRUCTOR;
     },
+
     isStudent: function() {
       var userInfo = this.$store.getters.getUserInfo;
       return userInfo.userMode == UserModes.STUDENT;
     },
+    
     isServerManager: function() {
       var userInfo = this.$store.getters.getUserInfo;
       return userInfo.userMode == UserModes.SERVER_MANAGER;
@@ -177,23 +180,23 @@ export default {
       }
       else if(action=="StudentCalendar")
       {
-          this.$router.push('/StudentCalendar');
+        this.$router.push('/StudentCalendar');
       }
       else if(action=="StudentEvaluation")
       {
-          this.$router.push('/StudentEvaluation');
+        this.$router.push('/StudentEvaluation');
       }
       else if(action=="StudentInformation")
       {
-          this.$router.push('/StudentInformation');
+        this.$router.push('/StudentInformation');
       }
       else if(action=="serverRegister")
       {
-          this.$router.push('/ServerRegister');
+        this.$router.push('/ServerRegister');
       }
       else if(action=="serverManage")
       {
-          this.$router.push('/ServerManage');
+        this.$router.push('/ServerManage');
       }
     },
   },

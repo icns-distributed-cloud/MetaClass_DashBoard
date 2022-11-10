@@ -304,7 +304,7 @@ export default {
 
   methods: {
     // 퀴즈 모달
-    selecResponse(e){
+    selecResponse(e) {
       this.select = true;
       if (e.correct) {
         this.score++;
@@ -319,7 +319,7 @@ export default {
       }
     },
 
-    nextQuestion(){
+    nextQuestion() {
       this.a++;
       this.b++;
       if(this.data.length - 1 < this.a) {
@@ -332,7 +332,7 @@ export default {
       }
     },
 
-    backQuestion(){
+    backQuestion() {
       if(this.a > 0){
         this.a--;
         this.b--;
@@ -349,7 +349,7 @@ export default {
     },
 
     // 퀴즈 리스트 삭제 (리스트는 4개까지만!)
-    quiz_delete_list(index){
+    quiz_delete_list(index) {
       if(this.data[this.a]["quizContext"].length > -1 ) {
         this.data[this.a]["quizContext"].splice(index, 1);
         this.data[this.a]["answerYN"].splice(index, 1);
@@ -431,11 +431,10 @@ export default {
     },
 
     // 퀴즈 수정 API : 43. Post - http://IPAddress/api/quiz/post/updatequiz
-    async updateQuestion(){
+    async updateQuestion() {
       if(this.totalscore > 100){
         alert("점수는 100점을 초과할 수 없습니다.");
-      }
-      else{
+      } else {
         var updateQuiz = await RestAPIManager.API_updatequiz(this.info.id, this.info.name, this.data);
         console.log(updateQuiz);
         if (updateQuiz.success === true){

@@ -345,13 +345,13 @@ export default {
     QuizModalView:false,
 
     data: [
-        {
-          title: '',
-          quizContext: [],
-          answerYN: [],
-          score: 0,
-        },
-      ],
+      {
+        title: '',
+        quizContext: [],
+        answerYN: [],
+        score: 0,
+      },
+    ],
     a:0,
     b:1,
     select:false,
@@ -373,21 +373,18 @@ export default {
       this.QuizFrontModalList = quizFrontModalList;
     },
 
-    QuizFrontCreateModal()
-    {
+    QuizFrontCreateModal() {
       this.QuizFrontModalList.push({
         com : QuizModal
       })   
       console.log("aaaaaaaaa")
     },
 
-    QuizFrontDeleteClassModal()
-    {
+    QuizFrontDeleteClassModal() {
       this.QuizFrontModalList.splice(this.QuizFrontModalList.length, 1)
     },
 
-    QuizFrontModal()
-    {
+    QuizFrontModal() {
       this.QuizFrontDialog = false
       this.QuizModalView = true
     },
@@ -408,7 +405,7 @@ export default {
       }
     },
 
-    nextQuestion(){
+    nextQuestion() {
       this.a++;
       this.b++;
       if(this.data.length -1 < this.a) {
@@ -421,7 +418,7 @@ export default {
       }
     },
 
-    backQuestion(){
+    backQuestion() {
       if(this.a > 0){
         this.a--;
         this.b--;
@@ -429,7 +426,7 @@ export default {
     },
 
   // 퀴즈 리스트 생성 (리스트는 4개까지만!)
-    quiz_create_list(){
+    quiz_create_list() {
       if(this.data[this.a]["quizContext"].length < 4 ) {
         this.data[this.a]["quizContext"].push('');
         this.data[this.a]["answerYN"].push(false);
@@ -437,7 +434,7 @@ export default {
     },
 
     // 퀴즈 리스트 삭제 (리스트는 4개까지만!)
-    quiz_delete_list(index){
+    quiz_delete_list(index) {
       if(this.data[this.a]["quizContext"].length > -1 ) {
         this.data[this.a]["quizContext"].splice(index, 1);
         this.data[this.a]["answerYN"].splice(index, 1);
@@ -473,7 +470,7 @@ export default {
   // 퀴즈 생성 API : 40. Post - http://IPAddress/api/quiz/post/createquiz
     async createQuestion(){
       var createQuiz = await RestAPIManager.API_createquiz(this.QuizFrontMapName, this.data, this.$store.getters.getUserInfo.id);
-      if (createQuiz.success === true){
+      if (createQuiz.success === true) {
         alert("퀴즈 등록이 완료되었습니다.");
         this.QuizScoreModal = false;
         this.QuizModalView = false;
@@ -496,12 +493,12 @@ export default {
     },
     
     // 퀴즈 등록 창 닫기
-    quizDialogClose (){
+    quizDialogClose() {
       this.QuizModalView = false
     },
 
     // 점수 등록 창 닫기
-    QuizScoreDialogClose(){
+    QuizScoreDialogClose() {
       this.QuizScoreModal = false
     },
   },

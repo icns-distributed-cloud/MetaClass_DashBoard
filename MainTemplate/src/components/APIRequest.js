@@ -191,3 +191,10 @@ export function API_updatequiz_Req(quizId, quizName, data){
         data: data
     }
 }
+
+// 6. Patch - http://IPAdress/api/map/patch/deletemap
+export function API_deletemap_Req(mapId){
+    return {
+        id: mapId
+    }
+}
