@@ -108,7 +108,7 @@ export function API_createlecture_Req(createinfo, instructorId) {
     stulist: studentlist,
     startTime: this.CreateClassModalStartDate1+":00",
     endTime: this.CreateClassModalFinishDate3+":00"
-  }*/
+}*/
 
 // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
 export function API_studentlistbydepartment_Req(departmentId) {
