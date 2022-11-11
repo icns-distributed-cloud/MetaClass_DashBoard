@@ -150,10 +150,73 @@
                     label="강의실 선택"
                     outlined
                     prepend-icon="mdi-domain"
-                  >    
+                  >  
                   </v-select>
-                  <v-btn>등록</v-btn>
+                  <v-btn
+                    @click="CreateClassMapModalDialog = true"
+                  >등록</v-btn>
                 </v-row>
+                <v-dialog
+                  v-model="CreateClassMapModalDialog"
+                  max-width="600px"
+                >
+                  <v-card
+                    class="overflow-hidden"
+                    color="purple lighten-1"
+                    dark
+                  >
+                    <v-toolbar
+                      flat
+                      color="purple"
+                    >
+                      <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
+                    </v-toolbar>
+                    <!--강의실 이름: ClassMapName-->
+                    <v-card-text>
+                      <v-text-field
+                        v-model="ClassMapName"
+                        label="강의실 이름"
+                        color="white"
+                      >
+                    </v-text-field>
+                    <!--강의실 유형 (type)-->
+                    <v-autocomplete
+                      v-model="ClassMapType"
+                      :items="ClassMapTypeItem"
+                      label="강의실 유형"
+                      color="white"
+                    ></v-autocomplete>     
+                    <!--강의실 참여 인원-->
+                    <v-text-field
+                      v-model="ClassNumValue"
+                      label="강의실 참여 인원수"
+                      class="numer"
+                      :ClassRules="[ClassRules.required, ClassRules.min, ClassRules.max]"
+                      type="number"
+                      @click:append-outer="ClassIncrement"
+                      @click:prepend="ClassDecrement"
+                      color="white"
+                      required
+                    >
+                    </v-text-field>                 
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="blue-grey"
+                      @click="CreateClassMapModalDialog = false"
+                    >
+                      취소
+                    </v-btn>
+                    <v-btn
+                      color="green"
+                      @click="CreateClassMap()"
+                    >
+                      확인
+                    </v-btn>
+                  </v-card-actions>  
+                </v-card>
+                </v-dialog>
                 <!-- 소속 선택-->
                 <v-row class="mx-auto">
                   <v-select
@@ -162,13 +225,56 @@
                     item-text="item_text"
                     item-value="item_value"
                     label="소속 선택"
-                    @change="department()"
                     outlined
                     prepend-icon="mdi-domain"
                   >    
                   </v-select> 
-                  <v-btn>등록</v-btn>
+                  <v-btn
+                    @click="CreateDepartmentModalDialog = true"
+                  >등록</v-btn>
                 </v-row>
+                <v-dialog
+                  v-model="CreateDepartmentModalDialog"
+                  max-width="600px"
+                >
+                  <v-card
+                    class="overflow-hidden"
+                    color="purple lighten-1"
+                    dark
+                  >
+                    <v-toolbar
+                      flat
+                      color="purple"
+                    >
+                      <v-toolbar-title class="front-weight-light">부서 등록</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-text-field
+                        v-model="DepartmentName"
+                        label="부서 이름"
+                        required
+                        color="white"
+                      >
+                      </v-text-field>
+                    </v-card-text>                     
+                    <!--하단 취소, 확인 버튼-->
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue-grey"
+                        @click="CreateDepartmentModalDialog = false"
+                      >
+                        취소
+                      </v-btn>
+                      <v-btn
+                        color="green"
+                        @click="CreateDepartment()"
+                      >
+                        확인
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
                 <!--single select-->
                 <!-- <v-card class="mx-auto">
                   <v-data-table v-if="showStudents"
@@ -285,6 +391,24 @@ export default {
 
       // 강의실 선택
       CreateClassModalDialog: true,
+      // 강의실 등록 모달
+      CreateClassMapModalDialog: false,
+      ClassMapName: "",
+      ClassMapType: [],
+      ClassMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
+      // 참여 인원수 체크 (참여 인원)   s
+      ClassNumValue: 50,
+      ClassForm : {
+        min: 2,
+        max: 10
+      },
+      ClassRules: {
+        required: value => !!value || "Required.",
+        min: v => v >= this.ClassForm .min || `The Min is ${this.ClassForm .min}`,
+        max: v => v <= this.ClassForm .max || `The Max is ${this.ClassForm .max}`
+      },
+      ///
+      ClassModalList:[],
       // 강의 시작 날짜 및 시간 : CreateClassModalStartDate1
       //CreateClassModalStartDate1: "",
       CreateClassModalStartDateModal: false,
@@ -295,10 +419,15 @@ export default {
       CreateClassModalFinishDateModal: false,
       CreateClassModalFinishTime4: "",
       CreateClassModalFinishTimeModal: false, 
+
       // 소속 선택
       CreateClassModalBelong: "",
       CreateClassModalBelongItems: [],
       BelongStudents: [],
+      // 소속 등록 모달
+      CreateDepartmentModalDialog: false,
+      DepartmentName: "",
+
       // 컨텐츠 파일 선택
       CreateClassModalFile: "",
       CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
@@ -320,7 +449,6 @@ export default {
 
   created() {
     this.fetchMapData();
-    console.log(this.maplist);
     this.fecthDepartment();
     this.fetchContent();
     this.fetchQuizData();
@@ -376,10 +504,21 @@ export default {
       this.showStudents = true;
     },
 
-    SetSelectClassActive()
-    {
+    SetSelectClassActive() {
       if(this.CreateClassModalDialog == true) {
         this.CreateClassModalDialog = false;
+      }
+    },
+
+    ClassIncrement() {
+      if (this.ClassNumValue < this.ClassForm .max) {
+        this.ClassNumValue = parseInt(this.ClassNumValue, 10) + 1;
+      }
+    },
+
+    ClassDecrement() {
+      if (this.ClassNumValue > this.ClassForm .min) {
+        this.ClassNumValue = parseInt(this.ClassNumValue, 10) - 1;
       }
     },
 
@@ -426,7 +565,6 @@ export default {
     async fetchMapData () {
       var maplist = await RestAPIManager.API_maplist("", this.$store.getters.getUserInfo.id);
       this.maplist = maplist;
-      console.log(this.maplist);
     },
 
     // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
@@ -465,11 +603,49 @@ export default {
     // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
     async department() {
       var res_studentlistbydepartment = await RestAPIManager.API_studentlistbydepartment(this.CreateClassModalBelong);
-      console.log(this.belongstudents);
       if (this.belongstudents.length > 0) {
         for (const studentlistbydepartment of res_studentlistbydepartment.res_studentlistbydepartment){
           this.belongstudents.push(studentlistbydepartment)
         }
+      }
+    },
+
+    // 5. Post - http://IPAdress/api/map/post/createmap
+    async CreateClassMap() {
+      var maptype = 0;
+      if (this.ClassMapType === "오픈형") {
+        maptype = 0
+      } else if (this.ClassMapType === "계단식") {
+        maptype = 1
+      } else if (this.ClassMapType === "소회의실") {
+        maptype = 2
+      } else {
+        alert("강의실 유형을 정확하게 입력해주세요.")
+        return;
+      }
+
+      var createmap = await RestAPIManager.API_createmap(this.ClassMapName, maptype, this.ClassNumValue, this.$store.getters.getUserInfo.id);
+
+      if (createmap.res_success === true) {
+        alert("강의실 생성이 완료되었습니다.");
+        this.CreateClassMapModalDialog = false;
+        this.fetchMapData();
+      } else {
+        alert("강의실 이름이 중복되었습니다");
+        return;
+      }
+    },
+
+    // 부서 입력 API : 26. Post - http://IPAddress/api/department/post/postdepartment
+    async CreateDepartment() {
+      var postDepartment = await RestAPIManager.API_postdepartment(this.DepartmentName);
+      if (postDepartment.res_success){
+        alert("부서 등록 완료");
+        this.CreateDepartmentModalDialog = false;
+        this.fecthDepartment();
+      } else {
+        alert(postDepartment.res_message);
+        return;
       }
     },
   },

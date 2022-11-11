@@ -451,19 +451,7 @@ export async function API_postdepartment(departmentName){
     .then(res => {
         response = APIResponse.API_postdepartment_Res(res);
     })
-    if (!response.res_success){
-        return ({
-            success: response.res_success,
-            code: response.res_code,
-            message: response.res_message
-        })
-    } else {
-        return ({
-            timestamp: response.res_timestamp,
-            message: response.res_message,
-            details: response.res_details
-        })
-    }
+    return response;
 }
 
 // 28. post http://IPAddress/api/department/patch/deletedepartment 

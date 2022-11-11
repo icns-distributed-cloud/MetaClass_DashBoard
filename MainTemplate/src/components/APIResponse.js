@@ -259,7 +259,7 @@ export function API_createmap_Res(res) {
 
 // 26. Post - http://IPAddress/api/department/post/postdepartment
 export function API_postdepartment_Res(res) {
-    if (!res.success) {
+    if (res.success) {
         return ({
             res_success: res.success,
             res_code: res.code,

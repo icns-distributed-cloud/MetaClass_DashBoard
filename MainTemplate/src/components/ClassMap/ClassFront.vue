@@ -122,33 +122,33 @@
 <script>
 var RestAPIManager = require('../RestAPIManager')
 import ClassMapModal from './ClassMapModal.vue'
-  export default {
-    //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
+export default {
+  //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
 
-  components: { ClassMapModal },
-    data: () => ({
-    
-      ClassFrontMapName: "",
-      ClassFrontDialog: false,
-      ClassFrontMapType: [],
-      ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
+components: { ClassMapModal },
+  data: () => ({
+  
+    ClassFrontMapName: "",
+    ClassFrontDialog: false,
+    ClassFrontMapType: [],
+    ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
 
-      // 참여 인원수 체크 (참여 인원)   s
-      ClassFrontNumValue: 50,
-      ClassFrontForm : {
-        min: 2,
-        max: 10
-      },
-      ClassFrontRules: {
-        required: value => !!value || "Required.",
-        min: v => v >= this.ClassFrontForm .min || `The Min is ${this.ClassFrontForm .min}`,
-        max: v => v <= this.ClassFrontForm .max || `The Max is ${this.ClassFrontForm .max}`
-      },
-      ///
-      ClassFrontModalList:[],
-      ModalInfo: []
-    }),
-    ClassFrontMapType: "ClassFront",
+    // 참여 인원수 체크 (참여 인원)   s
+    ClassFrontNumValue: 50,
+    ClassFrontForm : {
+      min: 2,
+      max: 10
+    },
+    ClassFrontRules: {
+      required: value => !!value || "Required.",
+      min: v => v >= this.ClassFrontForm .min || `The Min is ${this.ClassFrontForm .min}`,
+      max: v => v <= this.ClassFrontForm .max || `The Max is ${this.ClassFrontForm .max}`
+    },
+    ///
+    ClassFrontModalList:[],
+    ModalInfo: []
+  }),
+  ClassFrontMapType: "ClassFront",
 
   created() {
     this.fetchMapData();
