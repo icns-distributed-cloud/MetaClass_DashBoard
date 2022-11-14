@@ -198,3 +198,20 @@ export function API_deletemap_Req(mapId) {
         id: mapId
     }
 }
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export function API_updateidbycontentid_Req(instructorId, contentId, contentName, playtime) {
+    return {
+        instructorId: instructorId,
+        contentId: contentId,
+        contentName: contentName,
+        playtime: playtime
+    }
+}
+
+// 15. Patch - http://IPAddress/api/content/patch/deletecontent
+export function API_deletecontent_Req(contentId) {
+    return {
+        id: contentId
+    }
+}

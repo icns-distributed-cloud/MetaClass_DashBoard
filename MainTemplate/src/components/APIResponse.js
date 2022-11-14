@@ -27,9 +27,6 @@ export function API_maplist_Res(res) {
 // 16. Post- http://IPAdress/api/content/post/contentlist
 export function API_contentlist_Res(res) {
     var res_contentlist = [];
-    success = res.success;
-    code = res.code;
-    message = res.message;
     for (const contentlist of res.data) {
         res_contentlist.push({
             id: contentlist.id,
@@ -38,9 +35,9 @@ export function API_contentlist_Res(res) {
         })
     }
     return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
+        res_success: res.success,
+        res_code: res.code,
+        res_message: res.message,
         res_contentlist: res_contentlist
     })
 }
@@ -206,9 +203,6 @@ export function API_createlecture_Res(res) {
 // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
 export function API_studentlistbydepartment_Res(res) {
     var res_studentlistbydepartment = [];
-    success = res.success;
-    code = res.code;
-    message = res.message;
     for (const studentlistbydepartment of res.data) {
         res_studentlistbydepartment.push({
             studentId: studentlistbydepartment.studentId,
@@ -216,9 +210,9 @@ export function API_studentlistbydepartment_Res(res) {
         })
     }
     return ({
-        res_success: success,
-        res_code: code,
-        res_message: message,
+        res_success: res.success,
+        res_code: res.code,
+        res_message: res.message,
         res_studentlistbydepartment: res_studentlistbydepartment
     })
 }
@@ -280,8 +274,7 @@ export function API_deletedepartment_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
-        res_code: res.code,
-        res_data: res.data
+        res_code: res.code
     })
 }
 
@@ -396,5 +389,33 @@ export function API_deletemap_Res(res) {
         res_success: res.success,
         res_message: res.message,
         res_code: res.code
+    })
+}
+
+// 13. Post - http://IPAdress/api/content/post/createcontent
+export function API_createcontent_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export function API_updateidbycontentid_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+    })
+}
+
+// 15. Patch - http://IPAddress/api/content/patch/deletecontent
+export function API_deletecontent_Res(res){
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
     })
 }

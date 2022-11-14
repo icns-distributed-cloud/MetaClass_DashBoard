@@ -50,7 +50,7 @@ export async function API_contentlist(instructorId) {
     var url = APIURL.Content.PostContentListAPI;
     var payload = APIRequest.API_contentlist_Req(instructorId);
     var config = Config.config;
-    var response = {};
+    var response = [];
     await fetch(url, {
             method: 'POST',
             headers: config.headers,
@@ -58,20 +58,13 @@ export async function API_contentlist(instructorId) {
         })
         .then(res => res.json())
         .then(res => {
-            response = APIRequest.API_contentlist_Req(res);
+            response = APIResponse.API_contentlist_Res(res);
         })
-    if (response.instructorId.data.length > 0) {
-        for (const content of response.res_contentlist) {
-            contentlist.push({
-                id: content.id,
-                name: content.name,
-                directory: content.directory
-            })
-        }
-    } else {
+    for (const content of response.res_contentlist) {
         contentlist.push({
-            id: null,
-            name: "컨텐츠 없음"
+            id: content.id,
+            name: content.name,
+            directory: content.directory
         })
     }
     return contentlist;
@@ -286,7 +279,6 @@ export async function API_updatemap(mapinfo) {
         .then(res => {
             response = APIResponse.API_updatemap_Res(res);
         })
-    console.log(response)
     return response;
 }
 
@@ -362,7 +354,6 @@ export async function API_createlecture(classInfo, instructorId) {
 
 // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
 export async function API_studentlistbydepartment(departmentId) {
-    var studentlistbydepartment = [];
     var url = APIURL.Users.PostStudentListbyDepartmentAPI;
     var payload = APIRequest.API_studentlistbydepartment_Req(departmentId);
     var config = Config.config;
@@ -377,15 +368,7 @@ export async function API_studentlistbydepartment(departmentId) {
         .then(res => {
             response = APIResponse.API_studentlistbydepartment_Res(res);
         })
-    if (response !== {}) {
-        studentlistbydepartment.push({
-            success: response.res_success,
-            message: response.res_message,
-            code: response.res_code,
-            studentlistbydepartment: response.res_studentlistbydepartment
-        })
-    }
-    return studentlistbydepartment
+    return response;
 }
 
 // 27. Get- http://localhost:8088/api/department/get/departmentlist
@@ -461,7 +444,7 @@ export async function API_deletedepartment(departmentId) {
     var config = Config.config;
     var response = [];
     await fetch(url, {
-            method: 'POST',
+            method: 'PATCH',
             headers: config.headers,
             body: JSON.stringify(payload)
         })
@@ -671,6 +654,71 @@ export async function API_deletemap(mapId) {
         .then(res => {
             response = APIResponse.API_deletemap_Res(res);
         })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 13. Post - http://IPAdress/api/content/post/createcontent
+export async function API_createcontent(formData) {
+    var url = APIURL.Content.PostCreateContentAPI;
+    var response = [];
+    await fetch(url, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_createcontent_Res(res);
+        })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
+}
+
+// 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+export async function API_updateidbycontentid(instructorId, contentId, contentName, playtime) {
+    var url = APIURL.Content.PostUpdateIdbyContentIdAPI;
+    var config = Config.config;
+    var payload = APIRequest.API_updateidbycontentid_Req(instructorId, contentId, contentName, playtime);
+    var response = [];
+    await fetch(url, {
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_updateidbycontentid_Res(res)
+        })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 15. Patch - http://IPAddress/api/content/patch/deletecontent
+export async function API_deletecontent(contentId) {
+    var url = APIURL.Content.PatchDeleteContentAPI;
+    var config = Config.config;
+    var payload = APIRequest.API_deletecontent_Req(contentId);
+    var response = [];
+    await fetch(url, {
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletecontent_Res(res);
+        })
+    console.log(response);
     return ({
         success: response.res_success,
         message: response.res_message,
