@@ -465,6 +465,13 @@ var RestAPIManager = require('../RestAPIManager');
 // var CalendarEnum = require("../Enum/CalendarEnum");
 
 export default {
+  props: {
+    CreateClassDone: {
+      type: Function,
+      require: true
+    }
+  },
+
   data () {
     return {
       CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
@@ -698,7 +705,7 @@ export default {
         if (createlecture.res_success === true) {
           alert("강좌 생성이 완료되었습니다.");
           this.CreateClassModalDialog = false;
-          this.refreshData();
+          this.CreateClassDone();
         } else {
             alert("정확하게 입력해주세요.");
             return;

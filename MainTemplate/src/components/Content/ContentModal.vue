@@ -44,6 +44,10 @@ export default {
     info: {
       type: Object,
       require: true
+    },
+    fetchContentData: {
+      type: Function,
+      require: true
     }
   },
 
@@ -67,7 +71,7 @@ export default {
         console.log(deletecontent);
         if (deletecontent.success === true) {
           alert("성공적으로 삭제되었습니다.");
-          this.$parent.fetchContentData();
+          this.fetchContentData();
         } else {
           alert(deletecontent.message);
         }

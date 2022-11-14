@@ -18,7 +18,7 @@
             :key="index"
             cols="4"
           >
-            <Content-Modal v-bind:info="ContentFrontModalList[index]"></Content-Modal>
+            <Content-Modal v-bind:info="ContentFrontModalList[index]" v-bind:fetchContentData="fetchContentData"></Content-Modal>
           </v-col>
         </v-row>
       </div>

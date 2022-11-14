@@ -124,6 +124,10 @@ export default {
     info: {
       type: Object,
       require: true
+    },
+    fetchMapData: {
+      type: Function,
+      require: true
     }
   },
 
@@ -226,12 +230,11 @@ export default {
       );
       if (prompStr == null) {
         return;
-      } else if (prompStr == "삭제") {
-        var deletemap = await RestAPIManager.API_deletemap(this.$store.getters.getUserInfo.id);
+      } else if (prompStr === "삭제") {
+        var deletemap = await RestAPIManager.API_deletemap(this.info.id);
         if (deletemap.success === true) {
           alert("성공적으로 삭제되었습니다.");
           this.fetchMapData();
-          //this.$parent.$parent.$parent.$parent.fetchData();
         } else {
           alert(deletemap.message);
         }

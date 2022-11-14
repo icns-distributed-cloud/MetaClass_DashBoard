@@ -20,7 +20,7 @@
               :key="index"
               cols="4"
             >
-              <Quiz-Modal v-bind:info="QuizFrontModalList[index]"></Quiz-Modal>
+              <Quiz-Modal v-bind:info="QuizFrontModalList[index]" v-bind:fetchData="fetchData"></Quiz-Modal>
             </v-col>
           </v-row>
         </div>

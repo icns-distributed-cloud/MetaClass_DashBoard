@@ -274,6 +274,10 @@ export default {
     info: {
       type: Object,
       require: true
+    },
+    fetchData: {
+      type: Function,
+      require: true
     }
   },
 
@@ -419,7 +423,7 @@ export default {
         var deleteQuiz = await RestAPIManager.API_deletequiz(this.info.id);
         if (deleteQuiz.success === true){
           alert("성공적으로 삭제되었습니다.");
-          this.$parent.$parent.$parent.$parent.fetchData();
+          this.fetchData();
         } else {
           alert(deleteQuiz.message);
         }
@@ -441,7 +445,7 @@ export default {
           alert("퀴즈 수정이 완료되었습니다.");
           this.QuizModalView = false;
           this.QuizScoreModal = false; 
-          this.$parent.$parent.$parent.$parent.fetchData();
+          this.fetchData();
         } else {
           alert(updateQuiz.message); // "퀴즈 이름이 중복되었습니다."
           return;

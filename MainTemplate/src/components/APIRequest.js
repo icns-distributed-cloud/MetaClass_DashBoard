@@ -23,8 +23,8 @@ export function API_quizlist_Req(instructorId) {
 export function API_lecturelist_Req(startDate, endDate, instructorId) {
     return {
         instructorId: String(instructorId),
-        startDate: startDate.date,
-        endDate: endDate.date
+        startDate: startDate,
+        endDate: endDate
     }
 }
 

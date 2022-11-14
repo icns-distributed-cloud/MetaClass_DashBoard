@@ -778,6 +778,7 @@
   <!--create-class-modal-->
   <create-class-modal
   v-if="CreateClassModal"
+  v-bind:CreateClassDone="CreateClassDone"
   @close="CreateClassDone()"
   />
 </v-col>
@@ -1067,7 +1068,7 @@ export default {
 
     CreateClassDone() {
       this.CreateClassModal = false;
-      this.CalendarFrontUpdateRange(this.MonthStartDate, this.MonthEndDate);
+      this.CalendarFrontUpdate();
     },
 
     Setmapdata(item){
@@ -1189,7 +1190,18 @@ export default {
     async CalendarFrontUpdateRange({ start, end }) {
       this.beforestart = start;
       this.beforeend = end;
-      var CalendarFrontEvents = await RestAPIManager.API_lecturelist(start, end, this.$store.getters.getUserInfo.id);
+      var CalendarFrontEvents = await RestAPIManager.API_lecturelist(this.beforestart.date, this.beforeend.date, this.$store.getters.getUserInfo.id);
+      this.CalendarFrontEvents = CalendarFrontEvents;
+      var studentList = [];
+      for (const lecture of this.CalendarFrontEvents){
+        studentList[lecture.classid] = lecture.studentlist; 
+      }
+      this.studentlist = studentList;
+    },
+
+    // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+    async CalendarFrontUpdate() {
+      var CalendarFrontEvents = await RestAPIManager.API_lecturelist(this.MonthStartDate, this.MonthEndDate, this.$store.getters.getUserInfo.id);
       this.CalendarFrontEvents = CalendarFrontEvents;
       var studentList = [];
       for (const lecture of this.CalendarFrontEvents){

@@ -18,8 +18,9 @@
           v-for="(item, index) in ClassFrontModalList"
           :key="index"
           cols="4"
+          @change="fetchMapData"
         >
-          <ClassMap-Modal v-bind:info="ClassFrontModalList[index]"></ClassMap-Modal>
+          <ClassMap-Modal v-bind:info="ClassFrontModalList[index]" v-bind:fetchMapData="fetchMapData"></ClassMap-Modal>
         </v-col>
       </v-row>
     </div>
@@ -124,10 +125,8 @@ var RestAPIManager = require('../RestAPIManager')
 import ClassMapModal from './ClassMapModal.vue'
 export default {
   //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
-
 components: { ClassMapModal },
   data: () => ({
-  
     ClassFrontMapName: "",
     ClassFrontDialog: false,
     ClassFrontMapType: [],
@@ -146,7 +145,9 @@ components: { ClassMapModal },
     },
     ///
     ClassFrontModalList:[],
-    ModalInfo: []
+    ModalInfo: [],
+
+    componentKey: 0
   }),
   ClassFrontMapType: "ClassFront",
 
@@ -155,6 +156,10 @@ components: { ClassMapModal },
   },
 
   methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
+
     ClassFrontIncrement() {
       if (this.ClassFrontNumValue < this.ClassFrontForm .max) {
         this.ClassFrontNumValue = parseInt(this.ClassFrontNumValue, 10) + 1;
@@ -175,16 +180,15 @@ components: { ClassMapModal },
       this.fetchMapData();
     },
 
-    ClassFrontDeleteClassModal()
-      {
-        this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
-      },
+    ClassFrontDeleteClassModal(){
+      this.ClassFrontModalList.splice(this.ClassFrontModalList.length, 1)
+    },
 
     // 7. Post - http://IPAdress/api/map/post/maplist
     async fetchMapData() {
       this.ClassFrontModalList = [];
-      this.maplist = await RestAPIManager.API_maplist("",this.$store.getters.getUserInfo.id);
-      this.ClassFrontModalList = this.maplist;
+      var maplist = await RestAPIManager.API_maplist("", this.$store.getters.getUserInfo.id);
+      this.ClassFrontModalList = maplist;
     },
 
     // 5. Post - http://IPAdress/api/map/post/createmap
@@ -203,7 +207,7 @@ components: { ClassMapModal },
 
       var createmap = await RestAPIManager.API_createmap(this.ClassFrontMapName, maptype, this.ClassFrontNumValue, this.$store.getters.getUserInfo.id);
 
-      if (createmap.success === true) {
+      if (createmap.res_success === true) {
         alert("강의실 생성이 완료되었습니다.");
         this.ClassFrontDialog = false;
         this.fetchMapData();
