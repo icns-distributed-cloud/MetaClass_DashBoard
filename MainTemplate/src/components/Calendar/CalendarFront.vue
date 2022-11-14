@@ -471,7 +471,7 @@
             <v-col cols="auto">
               <v-dialog
                 transition="dialog-bottom-transition"
-                max-width="600"
+                max-width="600" 
               >
                 <template v-slot:activator="{ on, attrs }">
                 <v-list>
@@ -778,8 +778,7 @@
   <!--create-class-modal-->
   <create-class-modal
   v-if="CreateClassModal"
-  @close="
-  CreateClassModal = false;"
+  @close="CreateClassDone()"
   />
 </v-col>
 </template>
@@ -829,6 +828,9 @@ export default {
     date: new Date().toISOString().substr(0, 10),
     CreateClassModalStartDate1: new Date().toISOString().substr(0, 10),
     CreateClassModalFinishDate3: new Date().toISOString().substr(0, 10),
+
+    MonthStartDate: "",
+    MonthEndDate: "",
 
     maplist: [],
     studentlist: {}, // 학생 리스트
@@ -926,10 +928,16 @@ export default {
   name: "CalendarFront", // CalendarFront
 
   mounted () {
+    this.GetMonthDate();
     this.$refs.calendar.checkChange()
   },
 
   methods: {
+    GetMonthDate() {
+      this.MonthStartDate = new Date(this.date.split('-')[0], this.date.split('-')[1] - 1, 2).toISOString().split('T')[0];
+      this.MonthEndDate = new Date(this.date.split('-')[0], this.date.split('-')[1], 1).toISOString().split('T')[0];
+    },
+
     GetEventColor (event) {
       return event.color
     },
@@ -1052,8 +1060,14 @@ export default {
       this.fetchQuizData()
       this.popupQuizListDialog = true
     },
+
     closeQuizList(){
       this.popupQuizListDialog = false
+    },
+
+    CreateClassDone() {
+      this.CreateClassModal = false;
+      this.CalendarFrontUpdateRange(this.MonthStartDate, this.MonthEndDate);
     },
 
     Setmapdata(item){
@@ -1175,18 +1189,19 @@ export default {
     async CalendarFrontUpdateRange({ start, end }) {
       this.beforestart = start;
       this.beforeend = end;
-      this.CalendarFrontEvents = await RestAPIManager.API_lecturelist(start, end, this.$store.getters.getUserInfo.id);
+      var CalendarFrontEvents = await RestAPIManager.API_lecturelist(start, end, this.$store.getters.getUserInfo.id);
+      this.CalendarFrontEvents = CalendarFrontEvents;
+      var studentList = [];
       for (const lecture of this.CalendarFrontEvents){
-        this.studentlist[lecture.classid] = lecture.studentlist; 
+        studentList[lecture.classid] = lecture.studentlist; 
       }
+      this.studentlist = studentList;
     },
 
     // 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
     async inslecturelist() { 
-      this.lecturelist = await RestAPIManager.API_lecturelist(this.beforestart, this.beforeend, this.$store.getters.getUserInfo.id);
-      for (const lecture of this.lecturelist){
-        this.studentlist[lecture.classid] = lecture.studentlist; 
-      }
+      var lecturelist = await RestAPIManager.API_lecturelist(this.MonthStartDate, this.MonthEndDate, this.$store.getters.getUserInfo.id);
+      this.CalendarFrontEvents = lecturelist;
     },
 
     // 11. Patch- http://IPAdress/api/lecture/instructor/patch/deletelecture
@@ -1257,6 +1272,6 @@ export default {
         }
       }
     },
-}
+  }
 }
 </script>

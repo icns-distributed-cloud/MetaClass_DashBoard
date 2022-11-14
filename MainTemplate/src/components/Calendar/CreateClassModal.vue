@@ -227,6 +227,7 @@
                     label="소속 선택"
                     outlined
                     prepend-icon="mdi-domain"
+                    @change="GetStudentList()"
                   >    
                   </v-select> 
                   <v-btn
@@ -276,26 +277,28 @@
                   </v-card>
                 </v-dialog>
                 <!--single select-->
-                <!-- <v-card class="mx-auto">
+                <v-card class="mx-auto">
                   <v-data-table v-if="showStudents"
                     v-model="selectedStudents"
                     :headers="headers"
                     :items="belongstudents"
                     :single-select="singleSelect"
-                    item-key="name"
+                    item-key="studentName"
                     hide-default-footer
                     show-select
                     @click:row="selectstudent()"
                   >
                     <template v-slot:top>
-                    <v-switch
-                      v-model="singleSelect"
-                      label="Single select"
-                      class="pa-3"
-                    ></v-switch>
+                    <v-row>
+                      <v-switch
+                        v-model="singleSelect"
+                        label="Single select"
+                        class="pa-3"
+                      ></v-switch>
+                    </v-row>
                     </template>
                   </v-data-table>
-                </v-card> -->
+                </v-card>
                 <!-- 컨텐츠 파일 선택-->
                 <v-row class="mx-auto">
                   <v-select
@@ -308,8 +311,105 @@
                     outlined
                   >    
                   </v-select>
-                  <v-btn>등록</v-btn>
-                </v-row> 
+                  <v-btn
+                    @click="CreateContentModalDialog = true"
+                  >등록</v-btn>
+                </v-row>
+                <v-dialog
+                  v-model="CreateContentModalDialog"
+                  max-width="600px"
+                >
+                  <v-card
+                    class="overflow-hidden"
+                    color="purple lighten-1"
+                    dark
+                  >
+                    <!--상단 컨텐츠 등록-->   
+                    <v-toolbar
+                      flat
+                      color="purple"
+                    >
+                      <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
+                    </v-toolbar>
+                    <!--컨텐츠 이름: ContentName-->
+                    <v-card-text>
+                      <v-text-field
+                        v-model="ContentName"
+                        label="컨텐츠 이름"
+                        required
+                        color="white"
+                      >
+                      </v-text-field>
+                      <v-progress-linear
+                        v-if="uploading"
+                        indeterminate
+                        rounded
+                        color="light-blue"
+                        height="20px"
+                      >
+                      </v-progress-linear>
+                      <!-- 콘텐츠 파일 첨부-->
+                      <v-file-input
+                        v-model="ContentFrontFiles"
+                        :accept="fileAccept"
+                        color="blue lighten-3"
+                        counter
+                        label="File input"
+                        placeholder="Select your files"
+                        prepend-icon="mdi-paperclip"
+                        outlined
+                        :show-size="1000"
+                        loading=true
+                        @change="selectFile"
+                      >
+                        <template v-slot:selection="{ index, text }">
+                        <v-chip
+                          v-if="index < 2"
+                          color="blue lighten-3"
+                          dark
+                          label
+                          small
+                        >
+                          {{ text }}
+                        </v-chip>
+                        <span
+                          color="blue"
+                          v-else-if="index === 2"
+                          class="text-overline grey--text text--darken-3 mx-2"
+                        >
+                          +{{ files.length - 2 }} File(s)
+                        </span>
+                        </template>
+                      </v-file-input>
+                    </v-card-text>
+                    <!--하단 취소, 확인 버튼-->
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue-grey"
+                        @click="CreateContentModalDialog = false"
+                      >
+                        취소
+                      </v-btn>
+                      <v-btn
+                        color="green"
+                        @click=UpdateId()
+                        :disabled="!isUploaded"
+                      >
+                        확인
+                      </v-btn>
+                    </v-card-actions>  
+                    <v-snackbar
+                      v-model="contentSaved"
+                      :timeout="2000"
+                      absolute
+                      bottom
+                      left
+                    >
+                      업로드가 완료되었습니다.
+                    </v-snackbar>
+                  </v-card>
+                </v-dialog>
                 <!-- 퀴즈 선택-->
                 <v-row class="mx-auto">
                   <v-select
@@ -382,7 +482,7 @@ export default {
           text: "이름",
           align: "start",
           sortable: false,
-          value: "name"
+          value: "studentName"
         }
       ],
 
@@ -431,6 +531,18 @@ export default {
       // 컨텐츠 파일 선택
       CreateClassModalFile: "",
       CreateClassModalFileItem: [],  // 컨텐츠 item 선택 
+      // 컨텐츠 등록 모달
+      CreateContentModalDialog: false,
+      contentSaved: false,
+      durationaa: 0,
+      uploading: false,
+      progress: 0,
+      isUploaded: false,
+      ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
+      fileAccept: 'video/*',
+      contentId: "",
+      ContentName: "", // 컨텐츠 이름
+
       // 퀴즈 선택
       CreateClassModalQuiz: [],
       CreateClassModalQuizItem: [], // 퀴즈 item 선택
@@ -601,13 +713,16 @@ export default {
     },
 
     // 32. post - http://localhost:8088/api/users/post/studentlistbydepartment
-    async department() {
+    async GetStudentList() {
+      this.showStudents = true;
       var res_studentlistbydepartment = await RestAPIManager.API_studentlistbydepartment(this.CreateClassModalBelong);
-      if (this.belongstudents.length > 0) {
+      var studentlist = [];
+      if (res_studentlistbydepartment.res_studentlistbydepartment.length > 0) {
         for (const studentlistbydepartment of res_studentlistbydepartment.res_studentlistbydepartment){
-          this.belongstudents.push(studentlistbydepartment)
+          studentlist.push(studentlistbydepartment)
         }
       }
+      this.belongstudents = studentlist;
     },
 
     // 5. Post - http://IPAdress/api/map/post/createmap
@@ -646,6 +761,90 @@ export default {
       } else {
         alert(postDepartment.res_message);
         return;
+      }
+    },
+
+    selectFile(file) {
+      this.uploading = false;
+      this.progress = 0;
+      this.currentFile = file;
+      if (!this.currentFile) {
+        this.durationaa = 0
+        this.isUploaded = false;
+        return;
+      }
+      var vm = this;
+      var video = document.createElement("video");
+      video.preload = "metadata";
+
+      video.onloadedmetadata = function() {
+        window.URL.revokeObjectURL(video.src);
+        var duration = video.duration;
+
+        vm.durationaa = vm.numbertoTime(duration);
+      }
+
+      video.src = URL.createObjectURL(this.currentFile);
+      this.testProgress();
+    },
+
+    // 13. Post - http://IPAddress/api/content/post/createcontent
+    fileUpload(file, onUploadProgress) {
+        this.uploading = false;
+        this.progress = 0;
+        let formData = new FormData();
+        formData.append("file", file);
+        this.uploading = true;
+        return ({
+          formData: formData,
+          onUploadProgress: onUploadProgress
+        });
+      },
+
+    async testProgress() {
+      var tempfile = this.currentFile;
+      this.isUploaded = false;
+
+      var fileUploaded = this.fileUpload(this.currentFile, (event) => {
+        this.progress = Math.round((100 * event.loaded) / event.total)
+      })
+
+      var createContent = await RestAPIManager.API_createcontent(fileUploaded.formData);
+      
+      if (tempfile === this.currentFile){
+        if (createContent.success === true){
+          this.contentSaved = true;
+          this.uploading = false;
+          this.contentId = createContent.data.contentId;
+          this.isUploaded = true;
+        } else {
+          alert("업로드 실패");
+          this.uploading = false;
+          return;
+        }
+      } else {
+        this.uploading = false;
+        this.progress = 0;
+        this.currentFile = undefined
+      }
+    },
+
+    // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+    async UpdateId() {  
+      if (this.contentId === "") {
+        alert("파일을 선택해주세요");
+        return;
+      } else if (!this.ContentName) {
+        alert("컨텐츠 이름을 입력해주세요");
+        return;
+      } else {
+        var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id, this.contentId, this.ContentName, this.durationaa);
+        this.updateidbycontentid = updateidbycontentid;
+        if (this.updateidbycontentid.success){
+          alert("컨텐츠 업로드가 완료되었습니다.");
+          this.fetchContent();
+          this.CreateContentModalDialog = false;
+        }
       }
     },
   },

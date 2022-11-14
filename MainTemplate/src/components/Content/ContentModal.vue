@@ -63,12 +63,13 @@ export default {
         return;
       }
       if (prompStr == "삭제") {
-        this.deletecontent = await RestAPIManager.API_deletecontent(this.$store.getters.getUserInfo.id);
-        if (this.deletecontent.res_success === true) {
+        var deletecontent = await RestAPIManager.API_deletecontent(this.info.id);
+        console.log(deletecontent);
+        if (deletecontent.success === true) {
           alert("성공적으로 삭제되었습니다.");
-          //this.$parent.$parent.$parent.$parent.fetchData();
+          this.$parent.fetchContentData();
         } else {
-          alert(this.deletecontent.res_message);
+          alert(deletecontent.message);
         }
       } else {
         alert("정확하게 입력해주세요.");

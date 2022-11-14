@@ -175,6 +175,7 @@ export default {
   }),
 
   created() {
+    this.fetchContentData();
   },    
 
   methods: {
@@ -196,11 +197,10 @@ export default {
         var duration = video.duration;
 
         vm.durationaa = vm.numbertoTime(duration);
-        console.log(vm.durationaa);
       }
 
       video.src = URL.createObjectURL(this.currentFile);
-      this.contentProgress();
+      this.testProgress();
     },
 
     ContentFrontDeleteClassModal() {
@@ -220,51 +220,63 @@ export default {
     },
 
     // 16. Post- http://IPAdress/api/content/post/contentlist 
-    async fetchContentData(instructorId) {
-      this.contentlist = await RestAPIManager.API_contentlist(instructorId, this.$store.getters.getUserInfo.id);
-      console.log(this.contentlist);
-      this.ContentFrontModalList = [];
-      if (this.contentlist.length > 0) {
-        this.contentlist.forEach(contentlist => {
-          if (contentlist.id !== 51) {
-            var filename = contentlist.directory.slice(contentlist.directory.indexOf("_")+1);
-            this.ContentFrontModalList.push({
-            id: contentlist.id,
-            name: contentlist.name,
+    async fetchContentData() {
+      var contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
+      this.contentlist = contentlist;
+      var ContentFrontModalList = [];
+      for (const content of this.contentlist){
+        if (content.id !== 51){
+          var filename = content.directory.slice(content.directory.indexOf("_")+ 1);
+          ContentFrontModalList.push({
+            id: content.id,
+            name: content.name,
             filename: filename
           })
-          }
-        })
+        }
       }
+      this.ContentFrontModalList = ContentFrontModalList;
     },
 
     // 13. Post - http://IPAddress/api/content/post/createcontent
-    async fileUpload(file, onUploadProgress, contentProgress) {
-      if (!this.currentFile) {
-        return;
-      }
-      this.createcontent = await RestAPIManager.API_createcontent(file, onUploadProgress, contentProgress, this.$store.getters.getUserInfo.id);
-      console.log(this.createcontent);
-      this.progress = 0;
+    fileUpload(file, onUploadProgress) {
+        this.uploading = false;
+        this.progress = 0;
+        let formData = new FormData();
+        formData.append("file", file);
+        this.uploading = true;
+        return ({
+          formData: formData,
+          onUploadProgress: onUploadProgress
+        });
+      },
+
+    async testProgress() {
       var tempfile = this.currentFile;
       this.isUploaded = false;
-      this.fileUpload(this.currentFile, (event) => {
+
+      var fileUploaded = this.fileUpload(this.currentFile, (event) => {
         this.progress = Math.round((100 * event.loaded) / event.total)
       })
-      if (tempfile === this.currentFile) {
-        if (this.createcontent.res_success === true) {
+
+      var createContent = await RestAPIManager.API_createcontent(fileUploaded.formData);
+      
+      if (tempfile === this.currentFile){
+        if (createContent.success === true){
           this.contentSaved = true;
           this.uploading = false;
-          this.contentId = this.createcontent.contentId;
+          this.contentId = createContent.data.contentId;
           this.isUploaded = true;
-          this.UpdateId();
         } else {
           alert("업로드 실패");
           this.uploading = false;
           return;
         }
+      } else {
+        this.uploading = false;
+        this.progress = 0;
+        this.currentFile = undefined
       }
-    }, 
+    },
 
     // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
     async UpdateId() {  
@@ -275,12 +287,11 @@ export default {
         alert("컨텐츠 이름을 입력해주세요");
         return;
       } else {
-        var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id);
+        var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id, this.contentId, this.ContentName, this.durationaa);
         this.updateidbycontentid = updateidbycontentid;
         if (this.updateidbycontentid.success){
-          console.log(this.updateidbycontentid);
           alert("컨텐츠 업로드가 완료되었습니다.");
-          this.fetchData();
+          this.fetchContentData();
           this.ContentFrontDialog = false;
         }
       }
