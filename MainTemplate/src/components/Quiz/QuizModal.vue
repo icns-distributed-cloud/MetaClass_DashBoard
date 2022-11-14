@@ -415,11 +415,12 @@ export default {
       if (prompStr == null) {
         return;
       }
-      if (prompStr == "삭제") {
+      if (prompStr === "삭제") {
         var deleteQuiz = await RestAPIManager.API_deletequiz(this.info.id);
+        console.log(deleteQuiz);
         if (deleteQuiz.success === true){
           alert("성공적으로 삭제되었습니다.");
-          this.$parent.$parent.$parent.$parent.fetchData();
+          this.$parent.$parent.$parent.$parent.fetchQuizData();
         } else {
           alert(deleteQuiz.message);
         }
@@ -441,7 +442,7 @@ export default {
           alert("퀴즈 수정이 완료되었습니다.");
           this.QuizModalView = false;
           this.QuizScoreModal = false; 
-          this.$parent.$parent.$parent.$parent.fetchData();
+          this.$parent.$parent.$parent.$parent.fetchQuizData();
         } else {
           alert(updateQuiz.message); // "퀴즈 이름이 중복되었습니다."
           return;

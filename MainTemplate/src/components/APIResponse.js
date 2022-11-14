@@ -276,7 +276,7 @@ export function API_postdepartment_Res(res) {
 }
 
 // 28. post http://localhost:8088/api/department/patch/deletedepartment 
-export function API_deletedepartment_Res(res){
+export function API_deletedepartment_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -286,7 +286,7 @@ export function API_deletedepartment_Res(res){
 }
 
 // 48. Post http://localhost:8088/api/users/post/checkLoginId
-export function API_checkloginid_Res(res){
+export function API_checkloginid_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -296,7 +296,7 @@ export function API_checkloginid_Res(res){
 }
 
 // 4. Post - http://IPAdress/api/users/post/register
-export function API_register_Res(res){
+export function API_register_Res(res) {
     if (!res.success) {
         return ({
             res_success: res.success,
@@ -314,9 +314,9 @@ export function API_register_Res(res){
 }
 
 // 2. Get - http://IPAdress/api/users/get/allstudent
-export function API_allstudent_Res(res){
+export function API_allstudent_Res(res) {
     var res_studentList = [];
-    for (const student of res.data){
+    for (const student of res.data) {
         res_studentList.push({
             name: student.name,
             id: student.id,
@@ -333,7 +333,7 @@ export function API_allstudent_Res(res){
 }
 
 // 3. Patch - http://IPAdress/api/users/patch/deleteuser
-export function API_deleteuser_Res(res){
+export function API_deleteuser_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -343,7 +343,7 @@ export function API_deleteuser_Res(res){
 }
 
 // 40. post http://163.180.117.47:8088/api/quiz/post/createquiz
-export function API_createquiz_Res(res){
+export function API_createquiz_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -353,9 +353,9 @@ export function API_createquiz_Res(res){
 }
 
 // 47. get http://IPAddress/api/quiz/get/listbyquizid?quizId=
-export function API_listbyquizid_Res(res){
+export function API_listbyquizid_Res(res) {
     var quizList = [];
-    for (const quiz of res.data){
+    for (const quiz of res.data) {
         quizList.push({
             title: quiz.title,
             quizContext: quiz.quizContext,
@@ -372,7 +372,8 @@ export function API_listbyquizid_Res(res){
 }
 
 // 41. Get http://IPAddress/api/quiz/get/deletequiz?id=
-export function API_deletequiz_Res(res){
+export function API_deletequiz_Res(res) {
+    console.log(res);
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -381,7 +382,7 @@ export function API_deletequiz_Res(res){
 }
 
 // 43.post http://IPAddress/api/quiz/post/updatequiz
-export function API_updatequiz_Res(res){
+export function API_updatequiz_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -390,7 +391,7 @@ export function API_updatequiz_Res(res){
 }
 
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
-export function API_deletemap_Res(res){
+export function API_deletemap_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
