@@ -52,14 +52,14 @@ export async function API_contentlist(instructorId) {
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_contentlist_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_contentlist_Res(res);
+        })
     for (const content of response.res_contentlist) {
         contentlist.push({
             id: content.id,
@@ -420,38 +420,38 @@ export async function API_createmap(name, type, maxUser, instructorId) {
 }
 
 // 26. Post - http://IPAddress/api/department/post/postdepartment
-export async function API_postdepartment(departmentName){
+export async function API_postdepartment(departmentName) {
     var url = APIURL.Department.PostPostDepartmentAPI;
     var payload = APIRequest.API_postdepartment_Req(departmentName);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_postdepartment_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_postdepartment_Res(res);
+        })
     return response;
 }
 
 // 28. post http://IPAddress/api/department/patch/deletedepartment 
-export async function API_deletedepartment(departmentId){
+export async function API_deletedepartment(departmentId) {
     var url = APIURL.Department.PostDeleteDepartmentAPI;
     var payload = APIRequest.API_deletedepartment_Req(departmentId);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'PATCH',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_deletedepartment_Res(res);
-    })
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletedepartment_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -460,20 +460,20 @@ export async function API_deletedepartment(departmentId){
 }
 
 // 48. Post http://localhost:8088/api/users/post/checkLoginId
-export async function API_checkloginid(loginId){
+export async function API_checkloginid(loginId) {
     var url = APIURL.Users.PostCheckLoginIdAPI;
     var payload = APIRequest.API_checkloginid_Req(loginId);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_checkloginid_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_checkloginid_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -482,21 +482,21 @@ export async function API_checkloginid(loginId){
 }
 
 // 4. Post - http://IPAdress/api/users/post/register
-export async function API_register(loginId, password, name, userMode, email, departmentId, phone){
+export async function API_register(loginId, password, name, userMode, email, departmentId, phone) {
     var url = APIURL.Users.PostRegisterAPI;
-    var payload = APIRequest.API_register_Req(loginId, password, name, userMode, email, departmentId, phone,);
+    var payload = APIRequest.API_register_Req(loginId, password, name, userMode, email, departmentId, phone, );
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_register_Res(res);
-    })
-    if (!response.res_success){
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_register_Res(res);
+        })
+    if (!response.res_success) {
         return ({
             success: response.res_success,
             code: response.res_code,
@@ -512,18 +512,18 @@ export async function API_register(loginId, password, name, userMode, email, dep
 }
 
 // 2. Get - http://IPAdress/api/users/get/allstudent
-export async function API_allstudent(){
+export async function API_allstudent() {
     var url = APIURL.Users.GetAllStudentAPI;
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        methid: 'GET',
-        headers: config.headers
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_allstudent_Res(res);
-    })
+            methid: 'GET',
+            headers: config.headers
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_allstudent_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -533,20 +533,20 @@ export async function API_allstudent(){
 }
 
 // 3. Patch - http://IPAdress/api/users/patch/deleteuser
-export async function API_deleteuser(userId, loginId, userMode){
+export async function API_deleteuser(userId, loginId, userMode) {
     var url = APIURL.Users.PatchDeleteUserAPI;
     var payload = APIRequest.API_deleteuser_Req(userId, loginId, userMode);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'PATCH',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_deleteuser_Res(res);
-    })
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deleteuser_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -555,20 +555,20 @@ export async function API_deleteuser(userId, loginId, userMode){
 }
 
 // 40. post http://IPAddress/api/quiz/post/createquiz
-export async function API_createquiz(quizFrontMapName, data, userId){
+export async function API_createquiz(quizFrontMapName, data, userId) {
     var url = APIURL.Quiz.PostCreateQuizAPI;
     var payload = APIRequest.API_createquiz_Req(quizFrontMapName, data, userId);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_createquiz_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_createquiz_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -577,18 +577,18 @@ export async function API_createquiz(quizFrontMapName, data, userId){
 }
 
 // 47. Get http://IPAddress/api/quiz/get/listbyquizid?quizId=
-export async function API_listbyquizid(quizId){
+export async function API_listbyquizid(quizId) {
     var url = APIURL.Quiz.GetQuizListbyQuizIdAPI + quizId;
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'GET',
-        headers: config.headers
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_listbyquizid_Res(res);
-    })
+            method: 'GET',
+            headers: config.headers
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_listbyquizid_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -598,18 +598,18 @@ export async function API_listbyquizid(quizId){
 }
 
 // 41. Get http://IPAddress/api/quiz/get/deletequiz?id=
-export async function API_deletequiz(quizId){
+export async function API_deletequiz(quizId) {
     var url = APIURL.Quiz.GetDeleteQuizAPI + quizId;
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'GET',
-        headers: config.headers
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_listbyquizid_Res(res);
-    })
+            method: 'GET',
+            headers: config.headers
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletequiz_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -618,20 +618,20 @@ export async function API_deletequiz(quizId){
 }
 
 // 43.post http://IPAddress/api/quiz/post/updatequiz
-export async function API_updatequiz(quizId, quizName, data){
+export async function API_updatequiz(quizId, quizName, data) {
     var url = APIURL.Quiz.PostUpdateQuizAPI;
     var payload = APIRequest.API_updatequiz_Req(quizId, quizName, data);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_listbyquizid_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_listbyquizid_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -640,20 +640,20 @@ export async function API_updatequiz(quizId, quizName, data){
 }
 
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
-export async function API_deletemap(mapId){
+export async function API_deletemap(mapId) {
     var url = APIURL.Map.PatchDeleteMapAPI;
     var payload = APIRequest.API_deletemap_Req(mapId);
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'PATCH',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_deletemap_Res(res);
-    })
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletemap_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -662,17 +662,17 @@ export async function API_deletemap(mapId){
 }
 
 // 13. Post - http://IPAdress/api/content/post/createcontent
-export async function API_createcontent(formData){
+export async function API_createcontent(formData) {
     var url = APIURL.Content.PostCreateContentAPI;
     var response = [];
     await fetch(url, {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_createcontent_Res(res);
-    })
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_createcontent_Res(res);
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -682,20 +682,20 @@ export async function API_createcontent(formData){
 }
 
 // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
-export async function API_updateidbycontentid(instructorId, contentId, contentName, playtime){
+export async function API_updateidbycontentid(instructorId, contentId, contentName, playtime) {
     var url = APIURL.Content.PostUpdateIdbyContentIdAPI;
     var config = Config.config;
     var payload = APIRequest.API_updateidbycontentid_Req(instructorId, contentId, contentName, playtime);
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_updateidbycontentid_Res(res)
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_updateidbycontentid_Res(res)
+        })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -704,20 +704,20 @@ export async function API_updateidbycontentid(instructorId, contentId, contentNa
 }
 
 // 15. Patch - http://IPAddress/api/content/patch/deletecontent
-export async function API_deletecontent(contentId){
+export async function API_deletecontent(contentId) {
     var url = APIURL.Content.PatchDeleteContentAPI;
     var config = Config.config;
     var payload = APIRequest.API_deletecontent_Req(contentId);
     var response = [];
     await fetch(url, {
-        method: 'PATCH',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_deletecontent_Res(res);
-    })
+            method: 'PATCH',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_deletecontent_Res(res);
+        })
     console.log(response);
     return ({
         success: response.res_success,

@@ -419,8 +419,9 @@ export default {
       if (prompStr == null) {
         return;
       }
-      if (prompStr == "삭제") {
+      if (prompStr === "삭제") {
         var deleteQuiz = await RestAPIManager.API_deletequiz(this.info.id);
+        console.log(deleteQuiz);
         if (deleteQuiz.success === true){
           alert("성공적으로 삭제되었습니다.");
           this.fetchData();

@@ -130,28 +130,28 @@ export function API_createmap_Req(name, maptype, maxUser, instructorId) {
 }
 
 // 26. Post - http://IPAddress/api/department/post/postdepartment
-export function API_postdepartment_Req(departmentName){
+export function API_postdepartment_Req(departmentName) {
     return {
         name: departmentName
     }
 }
 
 // 28. post http://localhost:8088/api/department/patch/deletedepartment 
-export function API_deletedepartment_Req(departmentId){
+export function API_deletedepartment_Req(departmentId) {
     return {
         id: departmentId
     }
 }
 
 // 48. Post http://localhost:8088/api/users/post/checkLoginId
-export function API_checkloginid_Req(loginId){
+export function API_checkloginid_Req(loginId) {
     return {
         loginId: loginId
     }
 }
 
 // 4. Post - http://IPAdress/api/users/post/register
-export function API_register_Req(loginId, password, name, userMode, email, departmentId, phone){
+export function API_register_Req(loginId, password, name, userMode, email, departmentId, phone) {
     return {
         loginId: loginId,
         // base64 encoding
@@ -166,7 +166,7 @@ export function API_register_Req(loginId, password, name, userMode, email, depar
 }
 
 // 3. Patch - http://IPAdress/api/users/patch/deleteuser
-export function API_deleteuser_Req(userId, loginId, userMode){
+export function API_deleteuser_Req(userId, loginId, userMode) {
     return {
         id: userId,
         loginId: loginId,
@@ -175,7 +175,7 @@ export function API_deleteuser_Req(userId, loginId, userMode){
 }
 
 // 40. post http://163.180.117.47:8088/api/quiz/post/createquiz
-export function API_createquiz_Req(quizFrontMapName, data, userId){
+export function API_createquiz_Req(quizFrontMapName, data, userId) {
     return {
         name: quizFrontMapName,
         data: data,
@@ -184,7 +184,7 @@ export function API_createquiz_Req(quizFrontMapName, data, userId){
 }
 
 // 43.post http://IPAddress/api/quiz/post/updatequiz
-export function API_updatequiz_Req(quizId, quizName, data){
+export function API_updatequiz_Req(quizId, quizName, data) {
     return {
         id: quizId,
         name: quizName,
@@ -193,14 +193,14 @@ export function API_updatequiz_Req(quizId, quizName, data){
 }
 
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
-export function API_deletemap_Req(mapId){
+export function API_deletemap_Req(mapId) {
     return {
         id: mapId
     }
 }
 
 // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
-export function API_updateidbycontentid_Req(instructorId, contentId, contentName, playtime){
+export function API_updateidbycontentid_Req(instructorId, contentId, contentName, playtime) {
     return {
         instructorId: instructorId,
         contentId: contentId,
@@ -210,7 +210,7 @@ export function API_updateidbycontentid_Req(instructorId, contentId, contentName
 }
 
 // 15. Patch - http://IPAddress/api/content/patch/deletecontent
-export function API_deletecontent_Req(contentId){
+export function API_deletecontent_Req(contentId) {
     return {
         id: contentId
     }

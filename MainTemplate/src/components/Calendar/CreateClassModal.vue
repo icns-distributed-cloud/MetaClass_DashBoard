@@ -422,7 +422,9 @@
                     outlined
                   >    
                   </v-select>
-                  <v-btn>등록</v-btn>
+                  <v-row class="quiz-button">
+                  <QuizCreateModal>퀴즈 등록</QuizCreateModal>
+                  </v-row>
                 </v-row>
                 <!-- 컬러 선택-->
                 <v-row class="mx-auto">
@@ -461,10 +463,12 @@
 <!--script--->
 <script>
 import moment from 'moment';
+import QuizCreateModal from '../Quiz/QuizCreateModal.vue';
 var RestAPIManager = require('../RestAPIManager');
 // var CalendarEnum = require("../Enum/CalendarEnum");
 
 export default {
+  components: { QuizCreateModal },
   props: {
     CreateClassDone: {
       type: Function,
@@ -857,3 +861,10 @@ export default {
   },
 }
 </script>
+
+<style>
+.quiz-button {
+  justify-content: center;
+  margin: 0;
+}
+</style>
