@@ -393,7 +393,7 @@ export function API_deletemap_Res(res) {
 }
 
 // 13. Post - http://IPAdress/api/content/post/createcontent
-export function API_createcontent_Res(res){
+export function API_createcontent_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -403,7 +403,7 @@ export function API_createcontent_Res(res){
 }
 
 // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
-export function API_updateidbycontentid_Res(res){
+export function API_updateidbycontentid_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,
@@ -412,7 +412,7 @@ export function API_updateidbycontentid_Res(res){
 }
 
 // 15. Patch - http://IPAddress/api/content/patch/deletecontent
-export function API_deletecontent_Res(res){
+export function API_deletecontent_Res(res) {
     return ({
         res_success: res.success,
         res_message: res.message,

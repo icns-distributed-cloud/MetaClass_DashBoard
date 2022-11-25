@@ -408,14 +408,14 @@ export async function API_createmap(name, type, maxUser, instructorId) {
     var config = Config.config;
     var response = [];
     await fetch(url, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-        response = APIResponse.API_createmap_Res(res);
-    })
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_createmap_Res(res);
+        })
     return response;
 }
 

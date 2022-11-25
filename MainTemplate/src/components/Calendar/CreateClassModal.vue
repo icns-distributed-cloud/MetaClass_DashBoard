@@ -4,7 +4,9 @@
     <v-dialog
       v-model="CreateClassModalDialog"
       max-width="600px"
+      @click:outside="onClickOutside"
     >
+ 
       <v-card>
         <v-col cols="auto">
           <template>
@@ -18,13 +20,14 @@
               <v-btn
                 icon
                 dark
-                @click="SetSelectClassActive(CreateClassModalDialog)"
+                @click="CreateClassDone()"
                 >
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
               <!--강좌명 입력-->
             <div>
+              
               <v-card-text>
                 <v-text-field
                   v-model="CreateClassModalTitle"
@@ -478,6 +481,13 @@ export default {
 
   data () {
     return {
+
+      active: false,
+
+
+
+
+
       CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
       CreateClassModalColor: 'Primary',
       mainDialog: false,
@@ -596,15 +606,19 @@ export default {
   },
 
   methods: {
+    set(){
+      this.$emit('input', "showCreateClassModal=false");
+    },
+
+    onClickOutside () {
+       this.CreateClassDone();
+    },
+
     // 시간 5분 간격으로 나눠질 때 TRUE
     allowedInterval: m => m % 5 == 0,
 
     selectstudent() {
       console.log(this.selectedStudents)
-    },
-
-    mainDialogClose(){
-    this.CreateClassModalDialog = false
     },
 
     // 강의실 생성 시작 date, time
@@ -697,6 +711,7 @@ export default {
       var classInfo = {
         name: this.CreateClassModalTitle,
         mapId: this.selectedMap,
+        isAutoClass: false,
         quizId: this.CreateClassModalQuiz,
         contentId: this.CreateClassModalFile,
         stulist: this.selectedStudents,
@@ -711,7 +726,7 @@ export default {
           this.CreateClassModalDialog = false;
           this.CreateClassDone();
         } else {
-            alert("정확하게 입력해주세요.");
+            alert(createlecture.res_message);
             return;
           }
       } else {

@@ -90,6 +90,7 @@ export function API_createlecture_Req(createinfo, instructorId) {
     return {
         name: createinfo.name,
         instructorId: instructorId,
+        isAutoClass: createinfo.isAutoClass,
         mapId: createinfo.mapId,
         quizId: createinfo.quizId,
         contentId: createinfo.contentId,

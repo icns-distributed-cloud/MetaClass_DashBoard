@@ -765,7 +765,7 @@
   </v-sheet>
   <!--하단 버튼 클릭-->
   <div class="text-right">
-    <v-btn
+    <v-btn 
       fab
       color="primary"
       right
@@ -775,9 +775,10 @@
       <v-icon>mdi-plus</v-icon>
     </v-btn>
   </div>
+  <!--<CreateClassModal v-if="showCreateClassModal"></CreateClassModal>-->
   <!--create-class-modal-->
-  <create-class-modal
-  v-if="CreateClassModal"
+  <CreateClassModal
+  v-if="showCreateClassModal"
   v-bind:CreateClassDone="CreateClassDone"
   @close="CreateClassDone()"
   />
@@ -793,6 +794,7 @@ import CreateClassModal from './CreateClassModal.vue' // CreateClassModal
 export default {
   components: { CreateClassModal },
   data: () => ({
+    showCreateClassModal: false,
     color:" ",
     CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
     dialog: false,
@@ -934,6 +936,16 @@ export default {
   },
 
   methods: {
+
+
+    
+    onClickOutside () {
+        console.log(333333);
+      },
+
+    closeCreateClassModal(){
+      this.showCreateClassModal=false;
+    },
     GetMonthDate() {
       this.MonthStartDate = new Date(this.date.split('-')[0], this.date.split('-')[1] - 1, 2).toISOString().split('T')[0];
       this.MonthEndDate = new Date(this.date.split('-')[0], this.date.split('-')[1], 1).toISOString().split('T')[0];
@@ -1067,7 +1079,7 @@ export default {
     },
 
     CreateClassDone() {
-      this.CreateClassModal = false;
+      this.showCreateClassModal = false;
       this.CalendarFrontUpdate();
     },
 
@@ -1164,10 +1176,12 @@ export default {
     },
 
     CalendarFrontSetActivePopup(modal){
-      if(modal == true) {
-        this.CreateClassModal = false;
-      } else {
-        this.CreateClassModal = true; 
+      console.log(modal.isActive);
+      if(this.showCreateClassModal){
+        this.showCreateClassModal = false;
+      }
+      else{
+        this.showCreateClassModal = true;
       }
     },
 
