@@ -6,7 +6,6 @@
       max-width="600px"
       @click:outside="onClickOutside"
     >
- 
       <v-card>
         <v-col cols="auto">
           <template>

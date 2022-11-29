@@ -216,3 +216,49 @@ export function API_deletecontent_Req(contentId) {
         id: contentId
     }
 }
+
+// 49. Patch - http://IPAddress/api/users/patch/updateuser
+export function API_updateuser_Req(userInfo) {
+    return {
+        id: userInfo.id,
+        password: userInfo.password,
+        name: userInfo.name,
+        userMode: userInfo.userMode,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        departmentId: userInfo.departmentId,
+        status: userInfo.status
+    }
+}
+
+// 53. Post - http://IPAddress/api/certificate/post/getcertificateinfobyid
+export function API_getcertificateinfobyid_Req(instructorId, certificateId, certificateName) {
+    return {
+        instructorId: instructorId,
+        certificateId: certificateId,
+        certificateName: certificateName
+    }
+}
+
+// 54. Post - http://IPAddress/api/certificate/post/certificatelist
+export function API_certificatelist_Req(instructorId) {
+    return {
+        instructorId: instructorId
+    }
+}
+
+// 55. Patch - http://IPAddress/api/certificate/patch/deletecertificate
+export function API_deletecertificate_Req(certificateId) {
+    return {
+        id: certificateId
+    }
+}
+
+// 56. Patch - http://IPAddres/api/users/patch/updateuserstatus
+export function API_updateuserstatus_Req(userId, userMode, status) {
+    return {
+        id: userId,
+        userMode: userMode,
+        status: status
+    }
+}

@@ -86,7 +86,8 @@ export default {
         { title: '컨텐츠 등록', icon: 'mdi-folder', action: "Content" },
         { title: '퀴즈 등록', icon: 'quiz' , action: "Quiz"},
         { title: '사원 관리', icon: 'mdi-account-circle' , action: "Member"},
-        { title: '부서 관리', icon: 'mdi-clipboard-text', action: "Department" }
+        { title: '부서 관리', icon: 'mdi-clipboard-text', action: "Department" },
+        { title: '수료증 관리', icon: "mdi-certificate-outline", action: "Certificate"}
       ],
       serverManagerMenus: [
         { title: "서버 등록", icon: 'mdi-server', action: "serverRegister" },
@@ -197,6 +198,10 @@ export default {
       else if(action=="serverManage")
       {
         this.$router.push('/ServerManage');
+      }
+      else if(action=="Certificate")
+      {
+        this.$router.push('/Certificate');
       }
     },
   },

@@ -517,13 +517,13 @@ export async function API_allstudent() {
     var config = Config.config;
     var response = [];
     await fetch(url, {
-            methid: 'GET',
-            headers: config.headers
-        })
-        .then(res => res.json())
-        .then(res => {
-            response = APIResponse.API_allstudent_Res(res);
-        })
+        methid: 'GET',
+        headers: config.headers
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_allstudent_Res(res);
+    })
     return ({
         success: response.res_success,
         message: response.res_message,
@@ -710,15 +710,145 @@ export async function API_deletecontent(contentId) {
     var payload = APIRequest.API_deletecontent_Req(contentId);
     var response = [];
     await fetch(url, {
-            method: 'PATCH',
-            headers: config.headers,
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            response = APIResponse.API_deletecontent_Res(res);
-        })
-    console.log(response);
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_deletecontent_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 49. Patch - http://IPAddress/api/users/patch/updateuser
+export async function API_updateuser(userInfo) {
+    var url = APIURL.Users.PatchUpdateUserAPI;
+    var payload = APIRequest.API_updateuser_Req(userInfo);
+    var config = Config.config;
+    var response = [];
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_updateuser_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 52. Post - http://IPAddress/api/certificate/post/createcertificate
+export async function API_createcertificate(formData) {
+    var url = APIURL.Certificate.PostCreateCertificateAPI;
+    var response = [];
+    await fetch(url, {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_createcertificate_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
+}
+
+// 53. Post - http://IPAddress/api/certificate/post/getcertificateinfobyid
+export async function API_getcertificateinfobyid(instructorId, certificateId, certificateName) {
+    var url = APIURL.Certificate.PostGetCertificateInfobyIdAPI;
+    var payload = APIRequest.API_getcertificateinfobyid_Req(instructorId, certificateId, certificateName);
+    var config = Config.config;
+    var response = [];
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_getcertificateinfobyid_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 54. Post - http://IPAddress/api/certificate/post/certificatelist
+export async function API_certificatelist(instructorId) {
+    var url = APIURL.Certificate.PostCertificateListAPI;
+    var payload = APIRequest.API_certificatelist_Req(instructorId);
+    var config = Config.config;
+    var response = [];
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_certificatelist_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        certificateList: response.res_certificateList
+    })
+}
+
+// 55. Patch - http://IPAddress/api/certificate/patch/deletecertificate
+export async function API_deletecertificate(certificateId) {
+    var url = APIURL.Certificate.PatchDeleteCertificateAPI;
+    var config = Config.config;
+    var payload = APIRequest.API_deletecertificate_Req(certificateId);
+    var response = [];
+    await fetch(url, {
+        method: "PATCH",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_deletecertificate_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 56. Patch - http://IPAddress/api/users/patch/updateuserstatus
+export async function API_updateuserstatus(userId, userMode, status) {
+    var url = APIURL.Users.PatchUpdateUserStatusAPI;
+    var config = Config.config;
+    var payload = APIRequest.API_updateuserstatus_Req(userId, userMode, status);
+    var response = [];
+    await fetch(url, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_updateuserstatus_Res(res);
+    })
     return ({
         success: response.res_success,
         message: response.res_message,

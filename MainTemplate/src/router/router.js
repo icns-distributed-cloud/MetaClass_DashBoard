@@ -17,6 +17,7 @@ import ServerManagePage from "../components/ServerManage/ServerManagePage.vue";
 import StudentCalendarPage from "../components/StudentFolder/StudentCalendar/StudentCalendarPage.vue";
 import StudentEvaluationPage from "../components/StudentFolder/StudentEvaluation/StudentEvaluationPage.vue";
 import StudentInformationPage from "../components/StudentFolder/StudentInformation/StudentInformationPage.vue";
+import CertificatePage from "../components/Certificate/CertificatePage";
 import store from "@/store";
 
 
@@ -165,6 +166,12 @@ const routes = [
                 path: "/QuizPage",
                 name: QuizPage,
                 component: QuizPage,
+                beforeEnter: teacherAuth()
+            },
+            {
+                path: "/Certificate",
+                name: CertificatePage,
+                component: CertificatePage,
                 beforeEnter: teacherAuth()
             }
         ]

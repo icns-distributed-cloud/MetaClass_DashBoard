@@ -1,4 +1,4 @@
-<!--Content front-->
+<!--Certificate front-->
 <template>
 <v-card class="overflow-hidden">
   <v-responsive :aspect-ratio="16/9">
@@ -14,20 +14,20 @@
       <div> 
         <v-row>
           <v-col
-            v-for="(item, index) in ContentFrontModalList"
+            v-for="(item, index) in CertificateFrontModalList"
             :key="index"
             cols="4"
           >
-            <Content-Modal v-bind:info="ContentFrontModalList[index]" v-bind:fetchContentData="fetchContentData"></Content-Modal>
+            <Certificate-Modal v-bind:info="CertificateFrontModalList[index]" v-bind:fetchCertificateData="fetchCertificateData"></Certificate-Modal>
           </v-col>
         </v-row>
       </div>
       <!--스크롤 내리기-->
       <v-container style="height: 1000px;"></v-container>
     </v-sheet>
-    <!--컨텐츠 등록-->
+    <!--수료증 등록-->
     <template>
-    <!--컨텐츠 등록 우측으로 이동-->
+    <!--수료증 등록 우측으로 이동-->
     <div class="text-right">
       <v-col
         cols="12"
@@ -36,7 +36,7 @@
         offset-md="4"
       >
         <v-dialog
-          v-model="ContentFrontDialog"
+          v-model="CertificateFrontDialog"
           persistent
           max-width="600px"
         >
@@ -47,27 +47,27 @@
             v-bind="attrs"
             v-on="on"
           >
-            컨텐츠 등록
+            수료증 등록
           </v-btn>  
           </template>
-          <!--컨텐츠 등록 팝업창-->
+          <!--수료증 등록 팝업창-->
           <v-card
             class="overflow-hidden"
             color="purple lighten-1"
             dark
           >
-            <!--상단 컨텐츠 등록-->   
+            <!--상단 수료증 등록-->   
             <v-toolbar
               flat
               color="purple"
             >
-              <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
+              <v-toolbar-title class="front-weight-light">수료증 등록</v-toolbar-title> 
             </v-toolbar>
-            <!--컨텐츠 이름: ContentName-->
+            <!--수료증 이름: CertificateName-->
             <v-card-text>
               <v-text-field
-                v-model="ContentName"
-                label="컨텐츠 이름"
+                v-model="CertificateName"
+                label="수료증 이름"
                 required
                 color="white"
               >
@@ -82,7 +82,7 @@
               </v-progress-linear>
               <!-- 콘텐츠 파일 첨부-->
               <v-file-input
-                v-model="ContentFrontFiles"
+                v-model="CertificateFrontFiles"
                 :accept="fileAccept"
                 color="blue lighten-3"
                 counter
@@ -119,7 +119,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 color="blue-grey"
-                @click="ContentFrontDialog = false"
+                @click="CertificateFrontDialog = false"
               >
                 취소
               </v-btn>
@@ -132,7 +132,7 @@
               </v-btn>
             </v-card-actions>  
             <v-snackbar
-              v-model="contentSaved"
+              v-model="certificateSaved"
               :timeout="2000"
               absolute
               bottom
@@ -153,29 +153,28 @@
 
 <!------script-------->
 <script>
-import ContentModal from './ContentModal.vue';
+import CertificateModal from './CertificateModal.vue';
 var RestAPIManager = require("../RestAPIManager");
 
 export default {
-  components: { ContentModal },
+  components: { CertificateModal },
   data: () => ({
-    // 컨텐츠 파일업로드 형식 지정
-    contentSaved: false,
-    durationaa: 0,
+    // 수료증 파일업로드 형식 지정
+    certificateSaved: false,
     uploading: false,
     progress: 0,
     isUploaded: false,
-    ContentFrontFiles: null, // v-model=ContentFrontFiles 파일 업로드
-    fileAccept: 'video/*',
-    contentId: "",
-    ContentName: "", // 컨텐츠 이름
-    ContentFrontDialog: false, // ContentFrontDialog 선택시, 입력 값
-  // ContentFrontModalList
-    ContentFrontModalList:[],
+    CertificateFrontFiles: null, // v-model=CertificateFrontFiles 파일 업로드
+    fileAccept: 'image/*',
+    certificateId: "",
+    CertificateName: "", // 수료증 이름
+    CertificateFrontDialog: false, // CertificateFrontDialog 선택시, 입력 값
+  // CertificateFrontModalList
+    CertificateFrontModalList:[],
   }),
 
   created() {
-    this.fetchContentData();
+    this.fetchCertificateData();
   },    
 
   methods: {
@@ -184,27 +183,14 @@ export default {
       this.progress = 0;
       this.currentFile = file;
       if (!this.currentFile) {
-        this.durationaa = 0
         this.isUploaded = false;
         return;
       }
-      var vm = this;
-      var video = document.createElement("video");
-      video.preload = "metadata";
-
-      video.onloadedmetadata = function() {
-        window.URL.revokeObjectURL(video.src);
-        var duration = video.duration;
-
-        vm.durationaa = vm.numbertoTime(duration);
-      }
-
-      video.src = URL.createObjectURL(this.currentFile);
       this.testProgress();
     },
 
-    ContentFrontDeleteClassModal() {
-      this.ContentFrontModalList.splice(this.ContentFrontModalList.length, 1)
+    CertificateFrontDeleteClassModal() {
+      this.CertificateFrontModalList.splice(this.CertificateFrontModalList.length, 1)
     },
 
     numbertoTime(value) {
@@ -219,26 +205,25 @@ export default {
       return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
     },
 
-    // 16. Post- http://IPAdress/api/content/post/contentlist 
-    async fetchContentData() {
-      var contentlist = await RestAPIManager.API_contentlist(this.$store.getters.getUserInfo.id);
-      this.contentlist = contentlist;
-      var ContentFrontModalList = [];
-      for (const content of this.contentlist){
-        console.log(content);
-        if (content.id !== 51){
-          var filename = content.directory.slice(content.directory.indexOf("_")+ 1);
-          ContentFrontModalList.push({
-            id: content.id,
-            name: content.name,
+    // 54. Post- http://IPAdress/api/certificate/post/certificatelist 
+    async fetchCertificateData() {
+      var certificatelist = await RestAPIManager.API_certificatelist(this.$store.getters.getUserInfo.id);
+      this.certificatelist = certificatelist.certificateList;
+      var CertificateFrontModalList = [];
+      for (const certificate of this.certificatelist){
+        if (certificate.id !== 51){
+          var filename = certificate.directory.slice(certificate.directory.indexOf("_")+ 1);
+          CertificateFrontModalList.push({
+            id: certificate.id,
+            name: certificate.name,
             filename: filename
           })
         }
       }
-      this.ContentFrontModalList = ContentFrontModalList;
+      this.CertificateFrontModalList = CertificateFrontModalList;
     },
 
-    // 13. Post - http://IPAddress/api/content/post/createcontent
+    // 52. Post - http://IPAddress/api/certificate/post/createcertificate
     fileUpload(file, onUploadProgress) {
         this.uploading = false;
         this.progress = 0;
@@ -259,13 +244,13 @@ export default {
         this.progress = Math.round((100 * event.loaded) / event.total)
       })
 
-      var createContent = await RestAPIManager.API_createcontent(fileUploaded.formData);
+      var createCertificate = await RestAPIManager.API_createcertificate(fileUploaded.formData);
       
       if (tempfile === this.currentFile){
-        if (createContent.success === true){
-          this.contentSaved = true;
+        if (createCertificate.success === true){
+          this.certificateSaved = true;
           this.uploading = false;
-          this.contentId = createContent.data.contentId;
+          this.certificateId = createCertificate.data.certificateId;
           this.isUploaded = true;
         } else {
           alert("업로드 실패");
@@ -279,21 +264,21 @@ export default {
       }
     },
 
-    // 14. Post - http://IPAddress/api/content/post/updateidbycontentid
+    // 53. Post - http://IPAddress/api/certificate/post/getcertificateinfobyid
     async UpdateId() {  
-      if (this.contentId === "") {
+      if (this.certificateId === "") {
         alert("파일을 선택해주세요");
         return;
-      } else if (!this.ContentName) {
-        alert("컨텐츠 이름을 입력해주세요");
+      } else if (!this.CertificateName) {
+        alert("수료증 이름을 입력해주세요");
         return;
       } else {
-        var updateidbycontentid = await RestAPIManager.API_updateidbycontentid(this.$store.getters.getUserInfo.id, this.contentId, this.ContentName, this.durationaa);
-        this.updateidbycontentid = updateidbycontentid;
-        if (this.updateidbycontentid.success){
-          alert("컨텐츠 업로드가 완료되었습니다.");
-          this.fetchContentData();
-          this.ContentFrontDialog = false;
+        var getcertificateinfobyid = await RestAPIManager.API_getcertificateinfobyid(this.$store.getters.getUserInfo.id, this.certificateId, this.CertificateName);
+        this.getcertificateinfobyid = getcertificateinfobyid;
+        if (this.getcertificateinfobyid.success){
+          alert("수료증 업로드가 완료되었습니다.");
+          this.fetchCertificateData();
+          this.CertificateFrontDialog = false;
         }
       }
     },

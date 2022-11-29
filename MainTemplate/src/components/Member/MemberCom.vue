@@ -39,8 +39,7 @@
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
-          <!--
-          <v-card-text>
+          <!--<v-card-text>
             <v-container>
               <v-row>
                 <v-col
@@ -87,24 +86,17 @@
               </v-row>
             </v-container>
           </v-card-text>-->
-          <!--펜 클릭시 나타나는 화면 editname
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="MemberComDialog" max-width="500px">
+        <v-card>
+          <v-card-title class="text-h5">회원 정보 수정</v-card-title> 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="close"
-            >
-              취소
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="save"
-            >
-              수정 확인
-            </v-btn>
-          </v-card-actions>-->
+            <v-btn color="blue darken-1" text @click="close">취소</v-btn>
+            <v-btn color="blue darken-1" text @click="save">삭제</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </v-card>
       </v-dialog>
       <!--휴지통 클릭시 나타나는 화면
@@ -122,33 +114,64 @@
       <!--휴지통 클릭시 나타나는 화면 끝!-->
       </template>
       <!--MemberComDialog 끝-->
+      <!--수정 아이콘 생성-->
       <template v-slot:[`item.actions`]="{ item }">
-      <!--펜 아이콘 생성
-      <v-btn
-        class="mx-1"
-        fab
-        dark
-        samll
-        color="green lighten-1"
-        @click="editItem(item)"
-        >
-        <v-icon>mdi-pencil</v-icon>
-        </v-btn>-->
-      <!--휴지통 아이콘 생성-->
-      <v-btn
+      <v-row>
+        <v-select
+          class="edit"
+          :items="status"
+          item-text="text"
+          item-value="value"
+          v-model="item.status"
+          @change="editItem(item)"
+          outlined
+        >  
+        </v-select>
+        <v-btn
+          class="mx-1"
+          fab
+          dark
+          x-small
+          color="red lighten-1"
+          @click="deleteItem(item)"
+          >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-row>
+      <!-- <v-btn
         class="mx-1"
         fab
         dark
         x-small
-        color="red lighten-1"
-        @click="deleteItem(item)"
+        color="green lighten-1"
+        @click="editItem(item)"
         >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn> -->
+      <!--휴지통 아이콘 생성-->
       </template>
     </v-data-table>
   </v-card>
   <!--페이지--> <!--:length="pageCount" -->
+  <div class="text-right">
+    <v-col
+      cols="12"
+      sm="12"
+      md="8"
+      offset-md="4"
+    >
+      <!-- <v-btn
+        class="mx-1"
+        fab
+        dark
+        x-small
+        color="green lighten-1"
+        @click="editItem(item)"
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn> -->
+    </v-col>
+  </div>
   <template>
   <div class="text-center">
     <v-container>
@@ -190,20 +213,21 @@ export default {
     MemberComDialog: false,
     dialogDelete: false,
     headers: [
-      {
-        text: '이름', // Member Name
-        align: 'start',
-        filterable: true, // 모든 항목에 오름차순, 내림차순
-        //sortable: false,
-        value: 'name',
-      },
-      { text: 'ID', value: 'id' }, // 아이디
+      { text: 'ID', value: 'id', align: 'start', filterable: true }, // 아이디, 모든 항목에 오름차순, 내림차순
+      { text: '이름', value: 'name', },
+      { text: '재직 상태'},
       { text: 'Email', value: 'email' }, // 이메일
       { text: 'Phone', value: 'phone' }, // 핸드폰 번호
-      { text: '부서', value: 'group' }, // grop
-      { text: '정보삭제', value: 'actions', sortable: false },
+      { text: '부서', value: 'group' }, // group
+      { text: '재직 정보', value: 'actions', sortable: false },
     ],
     MemberName: [ ], // MemberName
+    status: [
+      { text: "재직", value: 1 },
+      { text: "휴직", value: 2 },
+      { text: "퇴직", value: 3 }
+    ],
+    updateUserStatus: ""
     /*editedIndex: -1,
     editedItem: {
       name: ' ',
@@ -262,11 +286,12 @@ export default {
       ]
     },**/
 
-    /**editItem (item) {
-      this.editedIndex = this.MemberName.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.MemberComDialog = true
-    },**/
+    async editItem (item) {
+      RestAPIManager.API_updateuserstatus(item.id, 1, item.status);
+      // this.editedIndex = this.MemberName.indexOf(item)
+      // this.editedItem = Object.assign({}, item)
+      // console.log(this.editedItem);
+    },
 
     /**deleteItem (item) {
       this.editedIndex = this.MemberName.indexOf(item)
@@ -274,10 +299,10 @@ export default {
       this.dialogDelete = true
     },**/
 
-    /**deleteItemConfirm () {
-      this.MemberName.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
+    // deleteItemConfirm () {
+    //   this.MemberName.splice(this.editedIndex, 1)
+    //   this.closeDelete()
+    // },
 
     close () {
       this.MemberComDialog = false
@@ -287,13 +312,13 @@ export default {
       })
     },
 
-    closeDelete () {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
+    // closeDelete () {
+    //   this.dialogDelete = false
+    //   this.$nextTick(() => {
+    //     this.editedItem = Object.assign({}, this.defaultItem)
+    //     this.editedIndex = -1
+    //   })
+    // },
 
     save () {
       if (this.editedIndex > -1) {
@@ -301,8 +326,8 @@ export default {
       } else {
         this.MemberName.push(this.editedItem)
       }
-      this.close()
-    },**/
+      this.close();
+    },
 
     isNotEmpty() {
     return this.items && this.items.length > 0;
@@ -314,7 +339,19 @@ export default {
     // 회원 정보 조회 API : 2. Get - http://IPAddress/api/users/get/allstudent
     async memberlist() {
       var allStudent = await RestAPIManager.API_allstudent();
-      this.MemberName = allStudent.studentList;
+      for (const student of allStudent.studentList) {
+        var status = student.status
+        if (status === 0) {
+          status = 1;
+        }
+        this.MemberName.push({
+          id: student.id,
+          name: student.name,
+          email: student.email,
+          group: student.group,
+          status: status
+        })
+      }
     },
 
     // 휴지통 클릭시 삭제
@@ -345,3 +382,10 @@ export default {
   },
 }
 </script>
+
+<style>
+.edit {
+  width: 80px;
+  height: 80px;
+}
+</style>

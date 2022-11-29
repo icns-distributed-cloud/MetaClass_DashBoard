@@ -19,6 +19,8 @@ export const Users = {
     PatchUpdateUserAPI: resourceHost + "/api/users/patch/updateuser",
     // 첫 로그인 시 비밀번호 0000 체크 API : 51. Post - http://IPAddress/api/users/post/changePassword
     PostChangePasswordAPI: resourceHost + "/api/users/post/changePassword",
+    // status 변경 API : 56. Patch - http://IPAddress/api/users/patch/updateuserstatus
+    PatchUpdateUserStatusAPI: resourceHost + "/api/users/patch/updateuserstatus"
 }
 
 export const Map = {
@@ -143,4 +145,15 @@ export const Send = {
         // 문자 전송 API : 46. Post - http://IPAddress/api/sms/send
         PostSMSSendAPI: resourceHost + "/api/sms/send",
     }
+}
+
+export const Certificate = {
+    // 수료증 생성 API : 52. Post - http://IPAddress/api/certificate/post/createcertificate
+    PostCreateCertificateAPI: resourceHost + "/api/certificate/post/createcertificate",
+    // 수료증 수정 API : 53. Post - http://IPAddress/api/certificate/post/getcertificateinfobyid
+    PostGetCertificateInfobyIdAPI: resourceHost + "/api/certificate/post/getcertificateinfobyid",
+    // 수료증 목록 API : 54. Post - http://IPAddress/api/certificate/post/certificatelist
+    PostCertificateListAPI: resourceHost + "/api/certificate/post/certificatelist",
+    // 수료증 삭제 API : 55. Patch - http://IPAddress/api/certificate/patch/deletecertificate
+    PatchDeleteCertificateAPI: resourceHost + "/api/certificate/patch/deletecertificate"
 }

@@ -314,7 +314,8 @@ export function API_allstudent_Res(res) {
             name: student.name,
             id: student.id,
             email: student.email,
-            group: student.departmentName
+            group: student.departmentName,
+            status: student.status
         })
     }
     return ({
@@ -417,5 +418,61 @@ export function API_deletecontent_Res(res) {
         res_success: res.success,
         res_message: res.message,
         res_code: res.code,
+    })
+}
+
+// 49. Patch - http://IPAddress/api/users/patch/updateuser
+export function API_updateuser_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}
+
+// 52. Post - http://IPAddress/api/certificate/post/createcertificate
+export function API_createcertificate_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 53. Post - http://IPAddress/api/certificate/post/getcertificateinfobyid
+export function API_getcertificateinfobyid_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}
+
+// 54. Post - http://IPAddress/api/certificate/post/certificatelist
+export function API_certificatelist_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_certificateList: res.data
+    })
+}
+
+// 55. Patch - http://IPAddress/api/certificate/patch/deletecertificate
+export function API_deletecertificate_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}
+
+// 56. Patch - http://IPAddress/api/users/patch/updateuserstatus
+export function API_updateuserstatus_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
     })
 }
