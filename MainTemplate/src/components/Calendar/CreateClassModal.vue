@@ -443,6 +443,15 @@
                 </v-row>
               </v-card-text>
             </div>
+            <v-row>
+            <v-col class='d-flex justify-center'>
+              <v-checkbox
+              v-model="isAutoClass"
+              label="실시간 강좌"
+              >
+              </v-checkbox>
+            </v-col>
+            </v-row>
             <!--등록 확인-->
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -710,7 +719,7 @@ export default {
       var classInfo = {
         name: this.CreateClassModalTitle,
         mapId: this.selectedMap,
-        isAutoClass: false,
+        isAutoClass: this.isAutoClass,
         quizId: this.CreateClassModalQuiz,
         contentId: this.CreateClassModalFile,
         stulist: this.selectedStudents,

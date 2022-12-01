@@ -128,10 +128,7 @@
 <!------script-------->
 <script>
 import ServerManageModal from './ServerManageModal.vue';
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
-var ClassMapEnum = require("../Enum/MapEnum");
-var MapType = ClassMapEnum.Maptype;
+var RestAPIManager = require('../RestAPIManager');
 
 export default {
   components: { ServerManageModal },
@@ -197,170 +194,72 @@ export default {
     },
 
     // 서버 아이피 등록 API : 18. Post - http://IPAddress/api/server/post/createserver
-    save() {
-      var url = RestAPIURL.Server.PostCreateServerAPI;
+    async save() {
+      var createserverRes = await RestAPIManager.API_createserver(this.ServerSubjectList, this.ServerIpList);
 
-      var payload = {
-        lectureId: this.ServerSubjectList,
-        ipId: this.ServerIpList
+      if (createserverRes.success === true) {
+        alert("서버-강좌 등록 완료");
+        this.ServerSaved = true;
+        this.ServerFrontDialog = false;
+        this.fetchData();
       }
 
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then((res) => {
-          if (res.data.success === true) {
-            alert("서버-강좌 등록 완료");
-            this.ServerSaved = true;
-            this.fetchData();
-          }
-        })
-        .catch((err) => {
-          alert(err);
-        })
-      this.ServerSaved = true
     },
 
     // 등록한 아이피 리스트 API : 35. Get - http://IPAddress/api/ip/get/list
-    fetchIP() {
-      var url = RestAPIURL.IP.GetIPListAPI;
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, config)
-        .then((res) => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              console.log(element);
-              this.ServerIpListItem.push({
-                name: element.address,
-                value: element.id
-              })
-            })
-          }
+    async fetchIP() {
+      var iplistRes = await RestAPIManager.API_iplist();
+      for (const ip of iplistRes.ipList) {
+        this.ServerIpListItem.push({
+          name: ip.address,
+          value: ip.id
         })
+      }
     },
 
     // 서버 아이피 등록 시 모든 강사 회원 정보 리스트 API : 31. Get - http://IPAddress/api/users/get/allInstructor
-    fetchTeacher() {
-      var url = RestAPIURL.Users.GetAllInstructorAPI;
+    async fetchTeacher() {
+      var instructorlistRes = await RestAPIManager.API_instructorlist();
 
-      var config = Config.config;
-
-      this.$http
-        .get(url, config)
-        .then((res) => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.ServerTeacherListItem.push({
-                name: element.name,
-                value: element.id
-              })
-            }) 
-          }
+      for (const instructor of instructorlistRes.instructorList) {
+        this.ServerTeacherListItem.push({
+          name: instructor.name,
+          value: instructor.id
         })
+      }
     },
 
     // 강사가 강좌 예정인 강좌 리스트 API : 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId=
-    fetchSubject() {
-      this.ServerSubjectListItem = [];
-      var url = RestAPIURL.Server.GetFindLectureInfoAPI + this.ServerTeacherList;
-      var config = Config.config;
+    async fetchSubject() {
+      var lecturelistRes = await RestAPIManager.API_findlecture(this.ServerTeacherList);
 
-      this.$http
-        .get(url, config)
-        .then((res) => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              console.log(element)
-              var time = element.lectureStartTime + " ~ " + element.lectureEndTime;
-              this.ServerSubjectListItem.push({
-                name: element.lectureName,
-                value: element.lecturId,
-                time: time
-              })
-            })
-          }
+      for (const lecture of lecturelistRes.lectureList) {
+        var time = lecture.lectureStartTime + " ~ " + lecture.lectureEndTime;
+        this.ServerSubjectListItem.push({
+          name: lecture.lectureName,
+          value: lecture.lectureId,
+          time: time
         })
+      }
     },
 
     // 서버 아이피 리스트 API : 19. Post - http://IPAddress/api/server/post/listserver
-    fetchData() {
-      // var vm = this;
-      this.ServerFrontModalList = [];
-      var url = RestAPIURL.Server.PostListServerAPI;
+    async fetchData() {
+      var serverlistRes = await RestAPIManager.API_serverlist(0)
+      console.log(serverlistRes)
 
-      var payload = {
-        instructorId: 0
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var time = element.lectureStartTime + " ~ " + element.lectureEndTime;
-              this.ServerFrontModalList.push({
-                id: element.id,
-                ipId: element.ipId,
-                ipAddress: element.ipAddress,
-                ipName: element.ipName,
-                lectureId: element.lectureId,
-                lectureName: element.lectureName,
-                time: time
-              })
-            })
-          }
-          console.log(this.ServerFrontModalList);
-          // console.log(this.ServerFrontModalList[0]);
+      for (const server of serverlistRes.serverList) {
+        var time = server.lectureStartTime + " ~ " + server.lectureEndTime;
+        this.ServerFrontModalList.push({
+          id: server.id,
+          ipId: server.ipId,
+          ipAddress: server.ipAddress,
+          ipName: server.ipName,
+          lectureId: server.lectureId,
+          lectureName: server.lectureName,
+          time: time
         })
-    },
-
-    // 강의실 맵 생성 API : 5. Post - http://IPAddress/api/map/post/createmap
-    ServerFrontManage()
-    {
-      var url = RestAPIURL.Map.PostCreateMapAPI;
-      var maptype = 0;
-      if (this.ServerTeacherList === "손덕인") {
-        maptype = MapType.OPEN;
-      } else if (this.ServerTeacherList === "최인훈") {
-        maptype = MapType.CASCADING;
-      } else if (this.ServerTeacherList === "노설") {
-        maptype = MapType.MEETING_ROOM;
-      } else {
-        alert("강의실 유형을 정확하게 입력해주세요.")
-        console.log(maptype);
-        return;
       }
-        
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        name: this.ServerIPaddress,
-        type: maptype,
-        maxUser: this.ServerFrontNumValue,
-        instructorId: userId
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          console.log(res.data.success);
-          if (res.data.success === true) {
-            alert("강의실 생성이 완료되었습니다.");
-            this.ServerFrontDialog = false;
-            this.fetchData();
-          } else {
-            alert("강의실 이름이 중복되었습니다");
-            return;
-          }
-        })
     },
 
     ServerFrontDeleteClassModal() {

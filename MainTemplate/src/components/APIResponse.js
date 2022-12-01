@@ -384,6 +384,161 @@ export function API_updatequiz_Res(res) {
     })
 }
 
+
+
+// 35. Get http://IPAddress/api/ip/get/list
+export function API_iplist_Res(res) {
+    var ipList = [];
+    for (const ip of res.data) {
+        ipList.push({
+            id: ip.id,
+            address: ip.address,
+            name: ip.name,
+            maxUser: ip.maxUser
+        })
+    }
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_ipList: ipList
+    })
+}
+
+// 33. Post http://IPAddress/api/ip/post/create
+export function API_createip_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 34. Get http://IPAddress/api/ip/get/delete?id={ipId}
+export function API_deleteip_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 18. Post http://IPAddress/api/server/post/createserver
+export function API_createserver_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
+// 31. Get http://IPAddress/api/users/get/allInstructor
+export function API_instructorlist_Res(res) {
+    var instructorList = [];
+    for (const instructor of res.data) {
+        instructorList.push({
+            id: instructor.id,
+            name: instructor.name
+        })
+    }
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_instructorList: instructorList
+    })
+}
+
+// 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId={instructorId}
+export function API_findlecture_Res(res) {
+     var lectureList = [];
+     for (const lecture of res.data) {
+        lectureList.push({
+            lectureId: lecture.lectureId,
+            lectureName: lecture.lectureName,
+            lectureStartTime: lecture.lectureStartTime,
+            lectureEndTime: lecture.lectureEndTime
+        })
+     }
+     return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_lectureList: lectureList
+     })
+}
+
+// 19. Post - http://IPAddress/api/server/post/listserver
+export function API_serverlist_Res(res) {
+    var serverList = [];
+    for (const server of res.data) {
+        serverList.push({
+            id: server.id,
+            ipId: server.ipId,
+            ipAddress: server.ipAddress,
+            ipName: server.ipName,
+            lectureId: server.lectureId,
+            lectureName: server.lectureName,
+            lectureStartTime: server.lectureStartTime,
+            lectureEndTime: server.lectureEndTime
+        })
+    }
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_serverList: serverList
+    })
+}
+
+
+// 17. Post - http://IPAddress/api/lecture/instructor/post/cktstubylecture
+export function API_cktstudbylecture_Res(res) {
+    var lectureList = res.data;
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_lectureList: lectureList
+    })
+}
+
+// 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
+export function API_studentlecturelist_Res(res) {
+    var lectureList = res.data;
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_lectureList: lectureList
+    })
+}
+
+// 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
+export function API_registerlecturelist_Res(res) {
+    var lectureList = res.data;
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_lectureList: lectureList
+    })
+}
+
+
+// 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
+export function API_joinlecture_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code,
+        res_data: res.data
+    })
+}
+
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
 export function API_deletemap_Res(res) {
     return ({

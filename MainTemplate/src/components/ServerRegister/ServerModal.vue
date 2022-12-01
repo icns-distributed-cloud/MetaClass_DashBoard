@@ -37,8 +37,7 @@
 
 <!---->
 <script>
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require('../RestAPIManager');
 
 export default {
   props: {
@@ -56,29 +55,21 @@ export default {
   
   methods: {
     // 등록한 아이피 삭제 API : 34. Get - http://IPAddress/api/ip/get/delete?id=
-    Deletemap() {
+    async Deletemap() {
       var prompStr = prompt(
         '아이피가 삭제되며 복구할 수 없습니다.\n삭제를 원하면 "삭제"를 입력해주세요.'
       );
-      if (prompStr == null) {
+      if (prompStr === null) {
         return;
       }
       if (prompStr == "삭제") {
-        var url = RestAPIURL.IP.GetDeleteIPAPI + this.info.id;
-
-        var config = Config.config;
-
-        this.$http
-          .get(url, config)
-          .then(res => {
-            if (res.data.success === true) {
-              alert("성공적으로 삭제되었습니다.");
-              this.$parent.$parent.$parent.$parent.deleteIP();
-            } else {
-              alert(res.data.message);
-            }
-          })
-        console.log("delete map");
+        var deleteipRes = await RestAPIManager.API_deleteip(this.info.id);
+        if (deleteipRes.success === true) {
+          alert("성공적으로 삭제되었습니다.");
+          this.$parent.$parent.$parent.$parent.deleteIP();
+        } else {
+          alert(deleteipRes.message)
+        }
       } else {
         alert("정확하게 입력해주세요.");
         return;

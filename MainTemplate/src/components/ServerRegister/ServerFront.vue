@@ -85,20 +85,7 @@
                 color="white"
               >
               </v-text-field>
-              <!--
-              <v-autocomplete
-                v-model="ServerTeacherList"
-                :items="ServerTeacherListItem"
-                label="강의자 리스트"
-                color="white"   
-              ></v-autocomplete>
-              <v-autocomplete
-                v-model="ServerSubjectList"
-                :items="ServerSubjectListItem"
-                label="강좌 리스트"
-                color="white"   
-              ></v-autocomplete>
-              -->
+
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -139,8 +126,7 @@
 <!------script-------->
 <script>
 import ServerModal from './ServerModal.vue';
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require('../RestAPIManager');
 
 export default {
   components: { ServerModal },
@@ -173,8 +159,8 @@ export default {
   }),
   ServerTeacherList: "ServerFront",
 
-  created() {
-    this.fetchData();
+  async created() {
+    await this.fetchData();
   },
 
   methods: {
@@ -201,59 +187,27 @@ export default {
     },
 
     // 등록한 아이피 리스트 API : 35. Get - http://IPAddress/api/ip/get/list
-    fetchData() {
-      // var vm = this;
-      this.ServerFrontModalList = [];
-      var url = RestAPIURL.IP.GetIPListAPI;
-
-      var config = Config.config;
-
-      this.$http
-        .get(url, config)
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.ServerFrontModalList.push({
-                id: element.id,
-                maxUser: element.maxUser,
-                name: element.name,
-                address: element.address
-              })
-            })
-          }
-          console.log(this.ServerFrontModalList);
-          // console.log(this.ServerFrontModalList[0]);
-        })
+    async fetchData() {
+      var ipListRes = await RestAPIManager.API_iplist();
+      
+      if (ipListRes.success === true) {
+        this.ServerFrontModalList = ipListRes.ipList
+      }
     },
 
     // 아이피 등록 API : 33. Post - http://IPAddress/api/ip/post/create
-    ServerFrontRegister() {
-      var url = RestAPIURL.IP.PostCreateIPAPI;
-
-      var payload = {
-        address: this.ServerIPaddress,
-        name: this.ServerName,
-        maxUser: this.ServerMaxUser
+    async ServerFrontRegister() {
+      var createIpRes = await RestAPIManager.API_createip(this.ServerIPaddress, this.ServerName, this.ServerMaxUser)
+      
+      if (createIpRes.success === true) {
+        alert("서버 등룍이 완료되었습니다.");
+        this.ServerFrontDialog = false;
+        await this.fetchData();
+      } else {
+        alert("서버 이름이 중복되었습니다");
+        return;
       }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.success === true) {
-            alert("강의실 생성이 완료되었습니다.");
-            this.ServerFrontDialog = false;
-            this.fetchData();
-          } else {
-            alert("강의실 이름이 중복되었습니다");
-            return;
-          }
-        })
-        .catch(err => {
-          alert(err.response.data.message);
-        })      
+      
     },
 
     ServerFrontDeleteClassModal() {

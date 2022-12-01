@@ -172,7 +172,7 @@
               text
               color="secondary"
               @click=deletelecture(CalendarFrontSelectedEvent)
-              :disabled="!CalendarFrontSelectedEvent.canJoinCancel"
+              :disabled="CalendarFrontSelectedEvent.canJoinCancel"
             >
               수강 취소
             </v-btn>
@@ -186,8 +186,7 @@
 
 <!--script-->
 <script>
-var Config = require("../../../config");
-var RestAPIURL = require("../../../RestAPIURL");
+var RestAPIManager = require('../../RestAPIManager');
 var ClassMapEnum = require("../../Enum/MapEnum");
 var MapType = ClassMapEnum.Maptype;
 
@@ -284,303 +283,255 @@ export default {
     
     // 수강 신청 가능 리스트 API : 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
     // 수강 신청한 강좌 조회 API : 22. Post - http://IPAddress//api/lecture/student/post/lecturelist
-    CalendarFrontUpdateRange ({ start, end }) {
+    async CalendarFrontUpdateRange ({ start, end }) {
       this.beforestart = start;
       this.beforeend = end;
       // 이벤트 막대기 생성부분
       // 여기서 데이터베이스에서 정보를 가져와야한다.
       // 가져올 데이터 data , time
-        
-      const CalendarFrontEvents = []
 
-      var url = RestAPIURL.Lecture.Student.PostRegistreLectureListAPI;
-      
       var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        studentId: userId,
-        startDate: start.date,
-        endDate: end.date
+      var registerlecturelistRes = await RestAPIManager.API_registerlecturelist(userId, start.date, end.date);
+
+      const CalendarFrontEvents = []
+      var maptype = "";
+
+      for (const lecture of registerlecturelistRes.lectureList) {        
+ 
+        if (lecture.mapType === MapType.OPEN) {
+          maptype = "오픈형";
+        } else if (lecture.mapType === MapType.CASCADING) {
+          maptype = "계단식";
+        } else if (lecture.mapType === MapType.MEETING_ROOM) {
+          maptype = "소회의실"
+        }
+
+        var endTime = new Date(`${lecture.endTime}`);
+        var now = new Date();
+        
+        var canJoinCancel;
+        
+        if (now > endTime) {
+          canJoinCancel = false;
+        } else {
+          canJoinCancel = true;
+        }
+        CalendarFrontEvents.push({
+          name: lecture.name,
+          start: new Date(`${lecture.startTime}`),
+          end: endTime,
+          color: this.CalendarFrontColors[1],
+          timed: true,
+          classid: lecture.id,
+          isRegistered: false,
+          canJoinCancel: canJoinCancel,
+          showevent: [
+            {
+              CalendarClassnameAction: lecture.startTime,
+              CalendarClassnameTitle: '강의 시작 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.endTime,
+              CalendarClassnameTitle: '강의 끝 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.instructorName,
+              CalendarClassnameTitle: '강의자',
+            },
+            {
+              CalendarClassnameAction: maptype,
+              CalendarClassnameTitle: '강의 타입',
+            },
+            {
+              CalendarClassnameAction: lecture.countUser+"/"+lecture.mapMaxUser,
+              CalendarClassnameTitle: '참여 인원수',
+            },
+          ]
+        })
       }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var maptype = "";
-              if (element.mapType === MapType.OPEN) {
-                maptype = "오픈형";
-              } else if (element.mapType === MapType.CASCADING) {
-                maptype = "계단식";
-              } else if (element.mapType === MapType.MEETING_ROOM) {
-                maptype = "소회의실"
-              }
-
-              var endTime = new Date(`${element.endTime}`);
-              var now = new Date();
-              
-              var canJoinCancel;
-              
-              if (now > endTime) {
-                canJoinCancel = false;
-              } else {
-                canJoinCancel = true;
-              }
-              CalendarFrontEvents.push({
-                name: element.name,
-                start: new Date(`${element.startTime}`),
-                end: endTime,
-                color: this.CalendarFrontColors[1],
-                timed: true,
-                classid: element.id,
-                isRegistered: false,
-                canJoinCancel: canJoinCancel,
-                showevent: [
-                  {
-                    CalendarClassnameAction: element.startTime,
-                    CalendarClassnameTitle: '강의 시작 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.endTime,
-                    CalendarClassnameTitle: '강의 끝 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.instructorName,
-                    CalendarClassnameTitle: '강의자',
-                  },
-                  {
-                    CalendarClassnameAction: maptype,
-                    CalendarClassnameTitle: '강의 타입',
-                  },
-                  {
-                    CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                    CalendarClassnameTitle: '참여 인원수',
-                  },
-                ]
-              })
-            })
-          }
-          this.CalendarFrontEvents = CalendarFrontEvents;
-        })
       
-      var url2 = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
-      
-      this.$http
-        .post(url2, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var maptype = "";
-              if (element.mapType === MapType.OPEN) {
-                maptype = "오픈형";
-              } else if (element.mapType === MapType.CASCADING) {
-                maptype = "계단식";
-              } else if (element.mapType === MapType.MEETING_ROOM) {
-                maptype = "소회의실"
-              }
-              CalendarFrontEvents.push({
-                name: element.name,
-                start: new Date(`${element.startTime}`),
-                end: new Date(`${element.endTime}`),
-                color: this.CalendarFrontColors[0],
-                timed: true,
-                classid: element.id,
-                isRegistered: true,
-                showevent: [
-                  {
-                    CalendarClassnameAction: element.startTime,
-                    CalendarClassnameTitle: '강의 시작 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.endTime,
-                    CalendarClassnameTitle: '강의 끝 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.instructorName,
-                    CalendarClassnameTitle: '강의자',
-                  },
-                  {
-                    CalendarClassnameAction: maptype,
-                    CalendarClassnameTitle: '강의 타입',
-                  },
-                  {
-                    CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                    CalendarClassnameTitle: '참여 인원수',
-                  },
-                ]
-              })
-            })
+      var studentlecturelistRes = await RestAPIManager.API_studentlecturelist(userId, start.date, end.date)
+      for (const lecture of studentlecturelistRes.lectureList) {
+        
+          if (lecture.mapType === MapType.OPEN) {
+            maptype = "오픈형";
+          } else if (lecture.mapType === MapType.CASCADING) {
+            maptype = "계단식";
+          } else if (lecture.mapType === MapType.MEETING_ROOM) {
+            maptype = "소회의실"
           }
-        })
+          CalendarFrontEvents.push({
+            name: lecture.name,
+            start: new Date(`${lecture.startTime}`),
+            end: new Date(`${lecture.endTime}`),
+            color: this.CalendarFrontColors[0],
+            timed: true,
+            classid: lecture.id,
+            isRegistered: true,
+            showevent: [
+              {
+                CalendarClassnameAction: lecture.startTime,
+                CalendarClassnameTitle: '강의 시작 일자',
+              },
+              {
+                CalendarClassnameAction: lecture.endTime,
+                CalendarClassnameTitle: '강의 끝 일자',
+              },
+              {
+                CalendarClassnameAction: lecture.instructorName,
+                CalendarClassnameTitle: '강의자',
+              },
+              {
+                CalendarClassnameAction: maptype,
+                CalendarClassnameTitle: '강의 타입',
+              },
+              {
+                CalendarClassnameAction: lecture.countUser+"/"+lecture.mapMaxUser,
+                CalendarClassnameTitle: '참여 인원수',
+              },
+            ]
+          })
+      }
+      this.CalendarFrontEvents = CalendarFrontEvents;
     },
 
     // 강좌 수강 신청 API : 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
-    register(a) {
-      var url = RestAPIURL.Lecture.Student.PostJoinLectureAPI;
-
+    async register(a) {
       var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        studentId: userId,
-        lectureId: a.classid
-      }
-      var config = Config.config;
+      var joinlectureRes = await RestAPIManager.API_joinlecture(userId, a.classid);
 
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.success === true) {
-            alert("수강신청이 완료되었습니다.");
-            this.CalendarFrontSelectedOpen = false;
-            this.refreshData();
-          } else {
-            alert(res.data.message);
-          }
-        });
+      if (joinlectureRes.success === true) {
+        alert("수강신청이 완료되었습니다.");
+        this.CalendarFrontSelectedOpen = false;
+        this.refreshData();
+      } else {
+        alert(joinlectureRes.message);
+      }
+      console.log(joinlectureRes);
+
     },
 
     // 수강 신청 가능 리스트 API : 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
     // 수강 신청한 강좌 조회 API : 22. Post - http://IPAddress//api/lecture/student/post/lecturelist
-    refreshData() { 
+    async refreshData() { 
+      var userId = this.$store.getters.getUserInfo.id;
+      var registerlectureRes =  await RestAPIManager.API_registerlecturelist(userId, this.beforestart.date, this.beforeend.date);
+
+      var maptype = "";
       const CalendarFrontEvents = []
 
-      var url = RestAPIURL.Lecture.Student.PostRegistreLectureListAPI;
-      
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        studentId: userId,
-        startDate: this.beforestart.date,
-        endDate: this.beforeend.date
+      for (const lecture of registerlectureRes.lectureList) {
+        
+        if (lecture.mapType === MapType.Open) {
+          maptype = "오픈형"
+        } else if (lecture.mapType === MapType.CASCADING) {
+          maptype = "계단식";
+        } else if (lecture.mapType === MapType.MEETING_ROOM) {
+          maptype = "소회의실"
+        }
+
+        var endTime = new Date(`${lecture.endTime}`);
+        var now = new Date();
+        
+        var canJoinCancel;
+        
+        if (now > endTime) {
+          canJoinCancel = false;
+        } else {
+          canJoinCancel = true;
+        }
+        
+        CalendarFrontEvents.push({
+          name: lecture.name,
+          start: new Date(`${lecture.startTime}`),
+          end: new Date(`${lecture.endTime}`),
+          color: this.CalendarFrontColors[1],
+          isRegistered: false,
+          canJoinCancel: canJoinCancel,
+          timed: true,
+          showevent: [
+            {
+              CalendarClassnameAction: lecture.startTime,
+              CalendarClassnameTitle: '강의 시작 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.endTime,
+              CalendarClassnameTitle: '강의 끝 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.instructorName,
+              CalendarClassnameTitle: '강의자',
+            },
+            {
+              CalendarClassnameAction: maptype,
+              CalendarClassnameTitle: '강의 타입',
+            },
+            {
+              CalendarClassnameAction: lecture.countUser+"/"+lecture.mapMaxUser,
+              CalendarClassnameTitle: '참여 인원수',
+            },
+          ]
+        })
       }
+      this.CalendarFrontEvents = CalendarFrontEvents;
 
-      var config = Config.config;
 
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var maptype = "";
-              if (element.mapType === MapType.OPEN) {
-                maptype = "오픈형";
-              } else if (element.mapType === MapType.CASCADING) {
-                maptype = "계단식";
-              } else if (element.mapType === MapType.MEETING_ROOM) {
-                maptype = "소회의실"
-              }
-              CalendarFrontEvents.push({
-                name: element.name,
-                start: new Date(`${element.startTime}`),
-                end: new Date(`${element.endTime}`),
-                color: this.CalendarFrontColors[1],
-                isRegistered: false,
-                timed: true,
-                showevent: [
-                  {
-                    CalendarClassnameAction: element.startTime,
-                    CalendarClassnameTitle: '강의 시작 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.endTime,
-                    CalendarClassnameTitle: '강의 끝 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.instructorName,
-                    CalendarClassnameTitle: '강의자',
-                  },
-                  {
-                    CalendarClassnameAction: maptype,
-                    CalendarClassnameTitle: '강의 타입',
-                  },
-                  {
-                    CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                    CalendarClassnameTitle: '참여 인원수',
-                  },
-                ]
-              })
-            })
-
-          }
-          this.CalendarFrontEvents = CalendarFrontEvents;
-        })
-
-      var url2 = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
+      var studentlecturelistRes = await RestAPIManager.API_studentlecturelist(userId, this.beforestart.date, this.beforeend.date);
       
-      this.$http
-        .post(url2, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var maptype = "";
-              if (element.mapType === MapType.OPEN) {
-                maptype = "오픈형";
-              } else if (element.mapType === MapType.CASCADING) {
-                maptype = "계단식";
-              } else if (element.mapType === MapType.MEETING_ROOM) {
-                maptype = "소회의실"
-              }
-              CalendarFrontEvents.push({
-                name: element.name,
-                start: new Date(`${element.startTime}`),
-                end: new Date(`${element.endTime}`),
-                color: this.CalendarFrontColors[0],
-                timed: true,
-                classid: element.id,
-                isRegistered: true,
-                showevent: [
-                  {
-                    CalendarClassnameAction: element.startTime,
-                    CalendarClassnameTitle: '강의 시작 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.endTime,
-                    CalendarClassnameTitle: '강의 끝 일자',
-                  },
-                  {
-                    CalendarClassnameAction: element.instructorName,
-                    CalendarClassnameTitle: '강의자',
-                  },
-                  {
-                    CalendarClassnameAction: maptype,
-                    CalendarClassnameTitle: '강의 타입',
-                  },
-                  {
-                    CalendarClassnameAction: element.countUser+"/"+element.mapMaxUser,
-                    CalendarClassnameTitle: '참여 인원수',
-                  },
-                ]
-              })
-            })
-          }
+      for (const lecture of studentlecturelistRes.lectureList) {
+        if (lecture.mapType === MapType.OPEN) {
+          maptype = "오픈형";
+        } else if (lecture.mapType === MapType.CASCADING) {
+          maptype = "계단식";
+        } else if (lecture.mapType === MapType.MEETING_ROOM) {
+          maptype = "소회의실"
+        }
+        CalendarFrontEvents.push({
+          name: lecture.name,
+          start: new Date(`${lecture.startTime}`),
+          end: new Date(`${lecture.endTime}`),
+          color: this.CalendarFrontColors[0],
+          timed: true,
+          classid: lecture.id,
+          isRegistered: true,
+          showevent: [
+            {
+              CalendarClassnameAction: lecture.startTime,
+              CalendarClassnameTitle: '강의 시작 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.endTime,
+              CalendarClassnameTitle: '강의 끝 일자',
+            },
+            {
+              CalendarClassnameAction: lecture.instructorName,
+              CalendarClassnameTitle: '강의자',
+            },
+            {
+              CalendarClassnameAction: maptype,
+              CalendarClassnameTitle: '강의 타입',
+            },
+            {
+              CalendarClassnameAction: lecture.countUser+"/"+lecture.mapMaxUser,
+              CalendarClassnameTitle: '참여 인원수',
+            },
+          ]
         })
+      }
     },
 
     // 강좌 취소 API : 23. Post - http://IPAddress/api/lecture/student/delete/deletelecture
-    deletelecture(a) {
-      console.log(a);
-      var url = RestAPIURL.Lecture.Student.DeleteDeleteLectureAPI;
-
+    async deletelecture(a) {
       var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        data: {
-          studentId: userId,
-          lectureId: a.classid
-        }
-      }
 
-      this.$http
-        .delete(url, payload)
-        .then(res => {
-          if (res.data.success === true) {
-            alert("수강 취소가 완료되었습니다.")
-            this.CalendarFrontSelectedOpen = false;
-            this.refreshData();
-          } else if (res.data.success === false) {
-            alert(res.data.message);
-          }
-        })
-        console.log(a.classid);
+      var deletelectureRes = await RestAPIManager.API_deletelecture(userId, a.classid);
+      if (deletelectureRes.success === true) {
+        alert("수강 취소가 완료되었습니다.")
+        this.CalendarFrontSelectedOpen = false;
+        this.refreshData();
+      } else if (deletelectureRes.success === false) {
+        alert(deletelectureRes.message);
+      }
     },
 
     rnd (a, b) {

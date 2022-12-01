@@ -27,8 +27,7 @@
 
 <!--script-->
 <script>
-var Config = require("../../../config");
-var RestAPIURL = require("../../../RestAPIURL");
+var RestAPIManager = require('../../RestAPIManager');
 
 export default {
   data () {
@@ -57,42 +56,25 @@ export default {
 
   methods: {
     // 수강 신청한 강좌 조회 API : 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
-    fetchData() {
-      this.subjectlist = [];
-
-      var url = RestAPIURL.Lecture.Student.PostStuLectureListAPi;
-
+    async fetchData() {
       var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        studentId: userId,
-        startDate: "2000-01-01",
-        endDate: "2100-12-31"
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              var lateYN;
-              if (element.lateYN === true) {
-                lateYN = "YES"
-              } else if (element.lateYN === false) {
-                lateYN = "NO";
-              }
-              var startdate = this.lectureDatetoString(new Date(`${element.startTime}`));
-              this.StudentIndividualText.push({
-                subject: element.name,
-                date: startdate,
-                participation: element.participationLevel,
-                tardy: lateYN
-              })
-              console.log(element);
-            })              
-          }
+      var studentlecturelistRes = await RestAPIManager.API_studentlecturelist(userId, "2000-01-01", "2100-12-31");
+      
+      for (const lecture of studentlecturelistRes.lectureList) {
+        var lateYN;
+        if (lecture.lateYN === true) {
+          lateYN = "YES"
+        } else if (lecture.lateYN === false) {
+          lateYN = "NO"
+        }
+        var startdate = this.lectureDatetoString(new Date(`${lecture.startTime}`));
+        this.StudentIndividualText.push({
+          subject: lecture.name,
+          date: startdate,
+          participation: lecture.participationLevel,
+          tardy: lateYN
         })
+      }      
     },
 
     lectureDatetoString(source, delimiter = '-') {

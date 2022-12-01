@@ -100,6 +100,7 @@ export default {
 
   watch: {
     student() {
+      console.log(this.student)
       var studentsubjecttext = []
       this.student.data.forEach(element => {
         var istardy;
@@ -120,7 +121,6 @@ export default {
   },
 
   created () {
-    this.initialize()
   },
 
   methods: {
@@ -130,39 +130,7 @@ export default {
     closeModal() {
       this.$emit("close", "closeModal");
     },
-    initialize () {
-      this.StudentSubjectText= [{
-          name: '홍길동',
-          participation: 80,
-          tardy: 10,
-        },
-        {
-          name: '김영희',
-          participation: 70,
-          tardy: 20,
-        },
-        {
-          name: '정훈이',
-          participation: 50,
-          tardy: 30,
-        },
-        {
-          name: '김나라',
-          participation: 95,
-          tardy: 0.5,
-        },
-        {
-          name: '김민국',
-          participation: 65,
-          tardy: 35,
-        },
-        {
-          name: '박민지',
-          participation: 75,
-          tardy: 10,
-        },
-      ]
-    },
+    
     // 상세보기 안에 있는 사람 아이콘을 클릭
     // 수강신청한 강좌 조회 API : 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
     StudentIndividualModalItem (item) {

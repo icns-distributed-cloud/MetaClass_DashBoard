@@ -61,7 +61,6 @@
         >
           <v-icon 
             left
-            @click="StudentSubjectModalItem(item)"
           >
             mdi-account
           </v-icon>
@@ -104,6 +103,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 var Config = require("../../config");
 var RestAPIURL = require("../../RestAPIURL");
+var RestAPIManager = require('../RestAPIManager');
 
 Vue.use(Vuetify)
 export default {
@@ -149,51 +149,12 @@ export default {
     },
 
     // 선생님 강좌 목록 불러오기 API : 12. Post - http://IPAddress/api/lecture/instructor/post/lecturelist
-    fetchClassData() {
-      var url = RestAPIURL.Lecture.Instructor.PostInsLectureList;
+    async fetchClassData() {
+      var lectureList = await RestAPIManager.API_lecturelist_("2000-01-01", "2100-12-31", this.$store.getters.getUserInfo.id);
 
-      var userId = this.$store.getters.getUserInfo.id;
-      var payload = {
-        instructorId: userId,
-        startDate: "2000-01-01",
-        endDate: "2100-12-31"
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              this.ClassName.push({
-                name: element.name,
-                ClassDate: element.startTime.slice(0, 10),
-                id: element.id
-              })
-            })
-          }
-        })
+      this.ClassName = lectureList.lectureList
     },
-    /*
-    initialize () {
-      this.ClassName = [
-        {
-          name: '미분적분학',
-          ClassDate : '2022-04-08',
-        },
-        {
-          name: '선형대수',
-          ClassDate: '2021-07-18',
-        },
-        {
-          name: '컴퓨터개론',
-          ClassDate : '2023-10-08',
-        },
-        
-      ]
-    },
-    */
+    
   
     isNotEmpty() {
       return this.items && this.items.length > 0;
@@ -201,8 +162,15 @@ export default {
   
     // 상세보기 안에 있는 사람 아이콘을 클릭
     // 특정 강좌 학생 목록 보기 API : 17 Post - http://IPAddress/api/lecture/instructor/post/cktstubylecture
-    StudentSubjectModalItem (item) {
+    async StudentSubjectModalItem (item) {
       var selectedclass = item;
+      var cktstubylectureRes = await RestAPIManager.API_cktstudbylecture(item.id)
+      selectedclass.data = cktstubylectureRes.lectureList;
+      this.selectedClass = selectedclass
+
+      this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
+      this.StudentSubjectModal = true;
+
 
       var url = RestAPIURL.Lecture.Instructor.PostCKTStubyLectureAPI;
 
