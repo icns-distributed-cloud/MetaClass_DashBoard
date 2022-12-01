@@ -97,6 +97,7 @@ export default {
       // 추후 형식 맞는지 검사
       // base64 encoding
       this.onSubmit(this.id, window.btoa(this.password));
+      //this.onSubmit(this.id, this.password);
     },
 
     // signin
@@ -132,7 +133,7 @@ export default {
       var userMode = this.$store.getters.getUserInfo.userMode;
       var redirectPath = "/";
       if (this.$store.getters.getUserInfo.status === Status.NOT_AVAILABLE){
-        // 비밀번호 변경 modal or page 이동
+        redirectPath = "/ChangePassword"
       } else {
         if (userMode === UserModes.INSTRUCTOR) {
           redirectPath = "/CalendarPage"

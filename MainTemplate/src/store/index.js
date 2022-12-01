@@ -50,7 +50,7 @@ export default new Vuex.Store({
             state.email = email;
             state.departmentName = departmentName;
             state.phone = phone;
-            state.stuts = status;
+            state.status = status;
 
             localStorage.id = id;
             localStorage.name = name;

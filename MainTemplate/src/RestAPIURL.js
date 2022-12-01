@@ -55,7 +55,7 @@ export const Lecture = {
         // 강좌 수강 신청 API : 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
         PostJoinLectureAPI: resourceHost + "/api/lecture/student/post/joinlecture",
         // 수강 신청 가능 리스트 API : 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
-        PostRegistreLectureListAPI: resourceHost + "/api/lecture/student/post/registerlecturelist",
+        PostRegisterLectureListAPI: resourceHost + "/api/lecture/student/post/registerlecturelist",
         // 출석 정보 조회 API : 29 Post - http://IPAddress/api/lecture/student/post/ParticipationInfo
         PostParticipationInfoAPI: resourceHost + "/api/lecture/student/post/ParticipationInfo",
     }

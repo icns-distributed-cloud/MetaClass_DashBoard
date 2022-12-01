@@ -193,6 +193,100 @@ export function API_updatequiz_Req(quizId, quizName, data) {
     }
 }
 
+
+
+// 35. Get http://IPAddress/api/ip/get/list
+
+// 33. Post http://IPAddress/api/ip/post/create
+export function API_createip_Req(ipAddress, ipName, maxUser) {
+    return {
+        address: ipAddress,
+        name: ipName,
+        maxUser: maxUser
+    }
+}
+
+// 34. Get http://IPAddress/api/ip/get/delete?id={ipId}
+export function API_deleteip_Req(ipId) {
+    return{
+        ipId: ipId
+    }
+}
+
+// 18. Post http://IPAddress/api/server/post/createserver
+export function API_createserver_Req(lectureId, ipId) {
+    return {
+        lectureId: lectureId,
+        ipId: ipId
+    }
+}
+
+
+// 31. Get http://IPAddress/api/users/get/allInstructor
+
+
+// 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId={instructorId}
+export function API_findlecture_Req(instructorId) {
+    return {
+        instructorId: instructorId
+    }
+}
+
+
+// 19. Post - http://IPAddress/api/server/post/listserver
+export function API_serverlist_Req(instructorId) {
+    return {
+        instructorId: instructorId
+    }
+}
+
+
+// 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
+export function API_lecturelist_Req_(startDate, endDate, instructorId) {
+    return {
+        instructorId: instructorId,
+        startDate: startDate,
+        endDate: endDate
+    }
+}
+
+
+// 17. Post - http://IPAddress/api/lecture/instructor/post/cktstubylecture
+export function API_cktstudbylecture_Req(lectureId) {
+    return {
+        lectureId: lectureId
+    }
+}
+
+// 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
+export function API_studentlecturelist_Req(studentId, startDate, endDate) {
+    return {
+        studentId: studentId,
+        startDate: startDate,
+        endDate: endDate
+    }
+}
+
+// 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
+export function API_registerlecturelist_Req(studentId, startDate, endDate) {
+    return {
+        studentId: studentId,
+        startDate: startDate,
+        endDate: endDate
+    }
+}
+
+
+// 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
+export function API_joinlecture_Req(studentId, lectureId) {
+    return {
+        studentId: studentId,
+        lectureId: lectureId
+    }
+}
+
+
+
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
 export function API_deletemap_Req(mapId) {
     return {
@@ -260,5 +354,14 @@ export function API_updateuserstatus_Req(userId, userMode, status) {
         id: userId,
         userMode: userMode,
         status: status
+    }
+}
+
+// 51. Post - http://IPAddress/api/users/post/changePassword
+export function API_changepassword_Req(userId, password, userMode) {
+    return {
+        id: userId,
+        password: password,
+        userMode: userMode
     }
 }

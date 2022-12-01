@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import CalendarPage from "../components/Calendar/CalendarPage.vue";
 import LoginHome from "../components/Login/LoginHome.vue";
 import Signup from "../components/Login/SignUp.vue"
+import ChangePassword from "../components/Login/ChangePassword.vue"
 import StudentPage from "../components/Student/StudentPage.vue";
 import MemberPage from "../components/Member/MemberPage.vue";
 import ClassMapPage from "../components/ClassMap/ClassMapPage.vue";
@@ -19,6 +20,25 @@ import StudentEvaluationPage from "../components/StudentFolder/StudentEvaluation
 import StudentInformationPage from "../components/StudentFolder/StudentInformation/StudentInformationPage.vue";
 import CertificatePage from "../components/Certificate/CertificatePage";
 import store from "@/store";
+
+
+const firstLogin = () => (from, to, next) => {
+    if (
+        store.getters.getUserInfo.status != null
+    ) {
+        if (store.getters.getUserInfo.status === 0) {
+            return next();
+        } else {
+            console.log("Unauthorized. (Only first login users are authorized)");
+            alert("최초 로그인 유저 비밀번호 변경 페이지입니다.");
+            next("/");
+        }
+    } else {
+        console.log("Unauthorized.");
+        alert("로그인이 필요한 서비스입니다.");
+        next("/");
+    }
+}
 
 
 const teacherAuth = () => (from, to, next) => {
@@ -90,6 +110,12 @@ const routes = [
         path: "/Signup",
         name: Signup,
         component: Signup
+    },
+    {
+        path: "/ChangePassword",
+        name: ChangePassword,
+        component: ChangePassword,
+        beforeEnter: firstLogin()  
     },
     /* 사이드바가 있는 route들 */
     {

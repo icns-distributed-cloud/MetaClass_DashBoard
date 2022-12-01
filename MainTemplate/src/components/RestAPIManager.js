@@ -641,95 +641,323 @@ export async function API_updatequiz(quizId, quizName, data) {
 
 
 
-// 35. Get http://IPAddress/api/ip/get/list
 
-// 33. Post http://IPAddress/api/ip/post/create
-export function API_createip_Req(ipAddress, ipName, maxUser) {
-    return {
-        address: ipAddress,
-        name: ipName,
-        maxUser: maxUser
-    }
+// 35. Get http://IPAddress/api/ip/get/list
+export async function API_iplist() {
+    var url = APIURL.IP.GetIPListAPI;
+    var config = Config.config;
+    var response = [];
+
+    await fetch(url, {
+        method: "GET",
+        headers: config.headers
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_iplist_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        ipList: response.res_ipList
+    })
 }
 
+// 33. Post http://IPAddress/api/ip/post/create
+export async function API_createip(ipAddress, ipName, maxUser) {
+    var url = APIURL.IP.PostCreateIPAPI;
+    var payload = APIRequest.API_createip_Req(ipAddress, ipName, maxUser);
+    var config = Config.config;
+    var response = [];
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_createip_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
+}
+
+
 // 34. Get http://IPAddress/api/ip/get/delete?id={ipId}
-export function API_deleteip_Req(ipId) {
-    return{
-        ipId: ipId
-    }
+export async function API_deleteip(ipId) {
+    var url = APIURL.IP.GetDeleteIPAPI + ipId;
+    var config = Config.config;
+    var response = []
+
+    await fetch(url, {
+        method: "GET",
+        headers: config.headers
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_deleteip_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
 }
 
 // 18. Post http://IPAddress/api/server/post/createserver
-export function API_createserver_Req(lectureId, ipId) {
-    return {
-        lectureId: lectureId,
-        ipId: ipId
-    }
+export async function API_createserver(lectureId, ipId) {
+    var url = APIURL.Server.PostCreateServerAPI;
+    var payload = APIRequest.API_createserver_Req(lectureId, ipId);
+    var config = Config.config
+
+    var response = []
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_createserver_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
 }
 
 
 // 31. Get http://IPAddress/api/users/get/allInstructor
+export async function API_instructorlist() {
+    var url = APIURL.Users.GetAllInstructorAPI;
+    var config = Config.config
+
+    var response = []
+
+    await fetch(url, {
+        method: "GET",
+        headers: config.headers
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_instructorlist_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        instructorList: response.res_instructorList
+    })
+}
 
 
 // 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId={instructorId}
-export function API_findlecture_Req(instructorId) {
-    return {
-        instructorId: instructorId
-    }
+export async function API_findlecture(instructorId) {
+    var url = APIURL.Server.GetFindLectureInfoAPI + instructorId;
+    var config = Config.config
+
+    var response = []
+
+    await fetch(url, {
+        method: "GET",
+        headers: config.headers
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_findlecture_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        lectureList: response.res_lectureList
+    })
 }
 
 
 // 19. Post - http://IPAddress/api/server/post/listserver
-export function API_serverlist_Req(instructorId) {
-    return {
-        instructorId: instructorId
-    }
+export async function API_serverlist(instructorId) {
+    var url = APIURL.Server.PostListServerAPI;
+    var payload = APIRequest.API_serverlist_Req(instructorId);
+    var config = Config.config
+
+    var response = []
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_serverlist_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        serverList: response.res_serverList
+    })
 }
 
 
-// 12. Post - http://IPAdress/api/lecture/instructor/post/lecturelist
-export function API_lecturelist_Req_(startDate, endDate, instructorId) {
-    return {
-        instructorId: instructorId,
-        startDate: startDate,
-        endDate: endDate
+// 12. Post - http://IPAddress/api/lecture/instructor/post/lecturelist
+export async function API_lecturelist_(start, end, instructorId) {
+    var lectureList = [];
+    var url = APIURL.Lecture.Instructor.PostInsLectureList;
+    var payload = APIRequest.API_lecturelist_Req_(start, end, instructorId);
+    var config = Config.config;
+
+    var response = {};
+    await fetch(url, {
+            method: 'POST',
+            headers: config.headers,
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            response = APIResponse.API_lecturelist_Res(res);
+        })
+
+    if (response !== {}) {
+        for (const lecture of response.res_lecturelist) {
+
+            lectureList.push({
+                id: lecture.id,
+                name: lecture.name,
+                ClassDate: lecture.startTime.slice(0, 10),               
+            })
+        }
     }
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        lectureList: lectureList
+    })
 }
 
 
 // 17. Post - http://IPAddress/api/lecture/instructor/post/cktstubylecture
-export function API_cktstudbylecture_Req(lectureId) {
-    return {
-        lectureId: lectureId
-    }
+export async function API_cktstudbylecture(lectureId) {
+    var lectureList = []
+    var url = APIURL.Lecture.Instructor.PostCKTStubyLectureAPI;
+    var payload = APIRequest.API_cktstudbylecture_Req(lectureId);
+    var config = Config.config;
+
+    var response = []
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_cktstudbylecture_Res(res);
+    })
+
+    lectureList = response.res_lectureList;
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        lectureList: lectureList
+    })
 }
+
 
 // 22. Post - http://IPAddress/api/lecture/student/post/lecturelist
-export function API_studentlecturelist_Req(studentId, startDate, endDate) {
-    return {
-        studentId: studentId,
-        startDate: startDate,
-        endDate: endDate
-    }
+export async function API_studentlecturelist(studentId, startDate, endDate) {
+    var lectureList = []
+    var url = APIURL.Lecture.Student.PostStuLectureListAPi;
+    var payload = APIRequest.API_studentlecturelist_Req(studentId, startDate, endDate);
+    var config = Config.config;
+
+    var response = []
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_studentlecturelist_Res(res);
+    })
+    lectureList = response.res_lectureList;
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        lectureList: lectureList
+    })
 }
 
+
 // 25. Post - http://IPAddress/api/lecture/student/post/registerlecturelist
-export function API_registerlecturelist_Req(studentId, startDate, endDate) {
-    return {
-        studentId: studentId,
-        startDate: startDate,
-        endDate: endDate
-    }
+export async function API_registerlecturelist(studentId, startDate, endDate) {
+    var lectureList = []
+    var url = APIURL.Lecture.Student.PostRegisterLectureListAPI;
+
+    var payload = APIRequest.API_registerlecturelist_Req(studentId, startDate, endDate);
+    var config = Config.config;
+
+    var response = []
+
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_registerlecturelist_Res(res);
+    })
+    lectureList = response.res_lectureList;
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        lectureList: lectureList
+    })
 }
 
 
 // 24. Post - http://IPAddress/api/lecture/student/post/joinlecture
-export function API_joinlecture_Req(studentId, lectureId) {
-    return {
-        studentId: studentId,
-        lectureId: lectureId
-    }
+export async function API_joinlecture(studentId, lectureId) {
+    var url = APIURL.Lecture.Student.PostJoinLectureAPI;
+    var payload = APIRequest.API_joinlecture_Req(studentId, lectureId);
+    var config = Config.config;
+
+    var response = []
+    await fetch(url, {
+        method: "POST",
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_joinlecture_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code,
+        data: response.res_data
+    })
 }
+
 
 
 // 6. Patch - http://IPAdress/api/map/patch/deletemap
@@ -941,6 +1169,29 @@ export async function API_updateuserstatus(userId, userMode, status) {
     .then(res => res.json())
     .then(res => {
         response = APIResponse.API_updateuserstatus_Res(res);
+    })
+    return ({
+        success: response.res_success,
+        message: response.res_message,
+        code: response.res_code
+    })
+}
+
+// 51. Post - http://IpAddress/api/users/post/changePassword
+export async function API_changepassword(userId, password, userMode) {
+    var url = APIURL.Users.PostChangePasswordAPI;
+    var config = Config.config;
+    var payload = APIRequest.API_changepassword_Req(userId, password, userMode);
+    var response = [];
+
+    await fetch(url, {
+        method: 'POST',
+        headers: config.headers,
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        response = APIResponse.API_changepassword_Res(res);
     })
     return ({
         success: response.res_success,

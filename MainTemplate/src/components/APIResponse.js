@@ -631,3 +631,12 @@ export function API_updateuserstatus_Res(res) {
         res_code: res.code
     })
 }
+
+// 51. Post - http://IpAddress/api/users/post/changePassword
+export function API_changepassword_Res(res) {
+    return ({
+        res_success: res.success,
+        res_message: res.message,
+        res_code: res.code
+    })
+}
