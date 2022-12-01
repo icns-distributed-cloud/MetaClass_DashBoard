@@ -195,6 +195,7 @@ export default {
 
     // 서버 아이피 등록 API : 18. Post - http://IPAddress/api/server/post/createserver
     async save() {
+      console.log(this.ServerSubjectList)
       var createserverRes = await RestAPIManager.API_createserver(this.ServerSubjectList, this.ServerIpList);
 
       if (createserverRes.success === true) {
@@ -245,6 +246,7 @@ export default {
 
     // 서버 아이피 리스트 API : 19. Post - http://IPAddress/api/server/post/listserver
     async fetchData() {
+      this.ServerFrontModalList = []
       var serverlistRes = await RestAPIManager.API_serverlist(0)
       console.log(serverlistRes)
 

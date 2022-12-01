@@ -38,8 +38,8 @@ export function API_insdeletelecturelist_Req(id) {
 // 23. Post - http://localhost:8088/api/lecture/student/delete/deletelecture
 export function API_deletelecturelist_Req(studentId, lectureId) {
     return {
-        studentId: studentId.date,
-        lectureId: lectureId.date
+        studentId: studentId,
+        lectureId: lectureId
     }
 }
 

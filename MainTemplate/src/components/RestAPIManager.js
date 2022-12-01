@@ -212,14 +212,14 @@ export async function API_insdeletelecture(lectureId) {
 
 // 23. Post - api/lecture/student/delete/deletelecture
 export async function API_deletelecture(studentId, lectureId) {
-    var deletelecture = [];
     var url = APIURL.Lecture.Student.DeleteDeleteLectureAPI;
     var payload = APIRequest.API_deletelecturelist_Req(studentId, lectureId);
+    console.log(payload)
     var config = Config.config;
 
     var response = {};
     await fetch(url, {
-            method: 'POST',
+            method: 'DELETE',
             headers: config.headers,
             body: JSON.stringify(payload)
         })
@@ -228,13 +228,13 @@ export async function API_deletelecture(studentId, lectureId) {
             response = APIResponse.API_deletelecture_Res(res);
         })
     if (response !== {}) {
-        deletelecture.push({
+
+        return {
             success: response.res_success,
             message: response.res_code,
             code: response.res_code
-        })
+        }
     }
-    return deletelecture
 }
 
 // 10. Patch - http://IPAdress/api/lecture/instructor/patch/updatelecture

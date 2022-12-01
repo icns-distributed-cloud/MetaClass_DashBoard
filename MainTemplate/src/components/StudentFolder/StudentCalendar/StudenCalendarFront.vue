@@ -523,8 +523,11 @@ export default {
     // 강좌 취소 API : 23. Post - http://IPAddress/api/lecture/student/delete/deletelecture
     async deletelecture(a) {
       var userId = this.$store.getters.getUserInfo.id;
+      console.log(a)
+      console.log(userId)
 
       var deletelectureRes = await RestAPIManager.API_deletelecture(userId, a.classid);
+      console.log(deletelectureRes)
       if (deletelectureRes.success === true) {
         alert("수강 취소가 완료되었습니다.")
         this.CalendarFrontSelectedOpen = false;
