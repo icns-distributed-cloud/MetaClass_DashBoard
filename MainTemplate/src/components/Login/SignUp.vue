@@ -183,7 +183,8 @@ export default {
           alert("정확하게 입력해주세요.");
           return;
         }
-        var register = await RestAPIManager.API_register(this.userid, window.btoa(this.userpass), this.name, usermode, this.email, this.selectedDepartment.item_value, this.phone);
+        // var register = await RestAPIManager.API_register(this.userid, window.btoa(this.userpass), this.name, usermode, this.email, this.selectedDepartment.item_value, this.phone);
+        var register = await RestAPIManager.API_register(this.userid, this.userpass, this.name, usermode, this.email, this.selectedDepartment.item_value, this.phone);
         if (register.success){
           alert("회원가입이 완료되었습니다.")
           this.redirect();

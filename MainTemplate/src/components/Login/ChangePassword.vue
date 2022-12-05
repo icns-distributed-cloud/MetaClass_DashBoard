@@ -133,7 +133,8 @@ export default {
             var userId = this.$store.getters.getUserInfo.id;
             var userMode = this.$store.getters.getUserInfo.userMode;
 
-            var changePassword = await RestAPIManager.API_changepassword(userId, window.btoa(this.confirm), userMode)
+            // var changePassword = await RestAPIManager.API_changepassword(userId, window.btoa(this.confirm), userMode);
+            var changePassword = await RestAPIManager.API_changepassword(userId, this.confirm, userMode);
 
             console.log(changePassword);
             if (changePassword.success === true) {
