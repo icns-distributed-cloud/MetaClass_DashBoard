@@ -232,6 +232,7 @@ export default {
 
     // 강사가 강좌 예정인 강좌 리스트 API : 20. Get - http://IPAddress/api/server/get/findlectureinfo?instructorId=
     async fetchSubject() {
+      this.ServerSubjectListItem = []
       var lecturelistRes = await RestAPIManager.API_findlecture(this.ServerTeacherList);
 
       for (const lecture of lecturelistRes.lectureList) {
