@@ -228,7 +228,7 @@
                     item-value="item_value"
                     label="소속 선택"
                     outlined
-                    prepend-icon="mdi-domain"
+                    prepend-icon="mdi-domain"                
                     @change="GetStudentList()"
                   >    
                   </v-select> 
@@ -287,7 +287,9 @@
                     :single-select="singleSelect"
                     item-key="studentName"
                     hide-default-footer
-                    show-select
+                    show-select 
+                    :items-per-page="-1"
+                    style="height: 500px;overflow: auto; margin-bottom:30px"
                     @click:row="selectstudent()"
                   >
                     <template v-slot:top>
