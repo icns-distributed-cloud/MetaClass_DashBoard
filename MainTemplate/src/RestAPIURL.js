@@ -1,4 +1,4 @@
-var resourceHost = "http://163.180.117.43:8088";
+var resourceHost = "http://163.180.117.47:8088";
 
 export const Users = {
     // 로그인 관련 API : 1. Post - http://IPAddress/api/users/post/login
