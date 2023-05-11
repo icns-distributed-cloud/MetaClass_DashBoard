@@ -493,11 +493,8 @@ export default {
     return {
 
       active: false,
-
-
-
-
-
+      isAutoClass: false,
+      
       CreateClassModalColorItem: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal','green', 'light-green', 'lime', 'amber'],
       CreateClassModalColor: 'Primary',
       mainDialog: false,
@@ -716,8 +713,12 @@ export default {
 
     // 9. Post - http://IPAdress/api/lecture/instructor/post/createlecture
     async CreateClass() {
-      var startdate = new Date(this.CreateClassModalStartDate1+":"+this.CreateClassModalStartTime2).toISOString().split('T');
-      var enddate = new Date(this.CreateClassModalFinishDate3+":"+this.CreateClassModalFinishTime4).toISOString().split('T');
+      var startdate = new Date(this.CreateClassModalStartDate1+":"+this.CreateClassModalStartTime2)//.toISOString().split('T');
+      startdate.setHours(startdate.getHours() + 9);
+      startdate = startdate.toISOString().split('T');
+      var enddate = new Date(this.CreateClassModalFinishDate3+":"+this.CreateClassModalFinishTime4)//.toISOString().split('T');
+      enddate.setHours(enddate.getHours() + 9);
+      enddate = enddate.toISOString().split('T');
       var classInfo = {
         name: this.CreateClassModalTitle,
         mapId: this.selectedMap,
@@ -728,7 +729,8 @@ export default {
         startTime: startdate[0] + ' ' + startdate[1].split('.')[0],
         endTime: enddate[0] + ' ' + enddate[1].split('.')[0]
       };
-
+      console.log("ClsassInfo Test");
+      console.log(classInfo);
       if (startdate < enddate) {
         var createlecture = await RestAPIManager.API_createlecture(classInfo, this.$store.getters.getUserInfo.id);
         if (createlecture.res_success === true) {
