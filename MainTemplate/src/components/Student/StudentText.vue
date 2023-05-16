@@ -100,7 +100,6 @@ export default {
 
   watch: {
     student() {
-      console.log(this.student)
       var studentsubjecttext = []
       this.student.data.forEach(element => {
         var istardy;

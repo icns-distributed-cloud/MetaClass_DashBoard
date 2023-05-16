@@ -34,9 +34,12 @@ export default {
     }
   },
   watch: {
-    info() {
-      this.studentlist = this.info;
-    }
+    // info() {
+    //   this.studentlist = this.info;
+    // }
+  },
+  mounted() {
+    this.studentlist = this.info;
   },
   updated() {
   },

@@ -101,39 +101,41 @@ import StudentSubjectModal from './StudentSubjectModal.vue'; // StudentSubjectMo
 import 'material-design-icons-iconfont/dist/material-design-icons.css'; // Ensure you are using css-loader
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
-var Config = require("../../config");
-var RestAPIURL = require("../../RestAPIURL");
+// var Config = require("../../config");
+// var RestAPIURL = require("../../RestAPIURL");
 var RestAPIManager = require('../RestAPIManager');
 
 Vue.use(Vuetify)
 export default {
   components: { StudentModal, StudentSubjectModal }, // StudentModal, StudentSubjectModal
-  data: () => ({
-    dialogsync: false,
-    StudentSubjectModalDialog: false, // StudentSubjectModalDialog
-    selectedClass: {},
-    expanded: [],
-    page: 1, // page
-    pageCount: 0, // pageCount
-    itemsPerPage: 10, // itemsPerPage
-    StudentFrontDialog: false,
-    search: '', // 회원 평가 관리 Search
-    // headers
-    StudentHeaders: [
-      {
-        text: '강의명', //ClassName
-        align: 'start',
-        filterable: true, // 모든 항목에 오름차순, 내림차순
-        //sortable: false,
-        value: 'name',
-      },
-      { text: '강의 날짜', value: 'ClassDate'},  
-      { text: '상세보기', value: 'actions', sortable: false }, 
-    ],
-    ClassName: [], //ClassName
-    StudentModal : true, //  StudentModal
-    StudentSubjectModal : false, //  StudentSubjectModal
-  }),
+  data() {
+    return ({
+      dialogsync: false,
+      StudentSubjectModalDialog: false, // StudentSubjectModalDialog
+      selectedClass: {},
+      expanded: [],
+      page: 1, // page
+      pageCount: 0, // pageCount
+      itemsPerPage: 10, // itemsPerPage
+      StudentFrontDialog: false,
+      search: '', // 회원 평가 관리 Search
+      // headers
+      StudentHeaders: [
+        {
+          text: '강의명', //ClassName
+          align: 'start',
+          filterable: true, // 모든 항목에 오름차순, 내림차순
+          //sortable: false,
+          value: 'name',
+        },
+        { text: '강의 날짜', value: 'ClassDate'},  
+        { text: '상세보기', value: 'actions', sortable: false }, 
+      ],
+      ClassName: [], //ClassName
+      StudentModal : true, //  StudentModal
+      StudentSubjectModal : false, //  StudentSubjectModal
+    })
+  },
 
   watch: {
     
@@ -164,29 +166,11 @@ export default {
     // 특정 강좌 학생 목록 보기 API : 17 Post - http://IPAddress/api/lecture/instructor/post/cktstubylecture
     async StudentSubjectModalItem (item) {
       var selectedclass = item;
-      var cktstubylectureRes = await RestAPIManager.API_cktstudbylecture(item.id)
-      selectedclass.data = cktstubylectureRes.lectureList;
-      this.selectedClass = selectedclass
+      var cktstubylectureRes = await RestAPIManager.API_cktstudbylecture(item.id);
 
-      this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
-      this.StudentSubjectModal = true;
+      selectedclass.data = await cktstubylectureRes.lectureList;
+      this.selectedClass = await selectedclass
 
-
-      var url = RestAPIURL.Lecture.Instructor.PostCKTStubyLectureAPI;
-
-      var payload = {
-        lectureId: item.id
-      }
-
-      var config = Config.config;
-
-      this.$http
-        .post(url, payload, config)
-        .then(res => {
-          selectedclass.data = res.data.data;
-          this.selectedClass = selectedclass;
-        })
-      // this.editedIndex = this.ClassName.indexOf(item)
       this.StudentSubjectModalDialog = true // StudentSubjectModalDialog 
       this.StudentSubjectModal = true;
     },

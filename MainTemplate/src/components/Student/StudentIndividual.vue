@@ -87,7 +87,7 @@ export default {
           date: startdate
         })
       })
-      /*
+
       var url = "http://163.180.117.47:8088/api/lecture/student/post/ParticipationInfo"
 
       var config = {
@@ -115,7 +115,6 @@ export default {
             }
           })
       })
-      */
     }
   },
 
