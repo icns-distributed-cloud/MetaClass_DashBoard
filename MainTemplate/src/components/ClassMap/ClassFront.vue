@@ -4,7 +4,7 @@
   <v-card class="overflow-hidden">
     <v-responsive :aspect-ratio="16/9">
     <v-spacer></v-spacer>
-    <!-- grey lighten-3 색이 포함된 sheet 늘리기 800-->
+    <!-- grey lighten-3 sheet size 800-->
     <v-sheet
       id="classmap-mainscroll"
       class="overflow-y-auto"
@@ -26,9 +26,8 @@
     </div>
     <v-container style="height: 1000px;"></v-container>
     </v-sheet>
-    <!--강의실 등록-->
       <template>
-      <!--강의실 등록 우측으로 이동-->
+      <!--classroom registration text-right move-->
       <div class="text-right">
         <v-col
           cols="12"
@@ -51,7 +50,7 @@
               강의실 등록
             </v-btn>  
             </template>
-            <!--강의실 등록 팝업창-->
+            <!--classroom registration pop-up window-->
             <v-card
               class="overflow-hidden"
               color="purple lighten-1"
@@ -63,7 +62,7 @@
               >
                 <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
               </v-toolbar>
-              <!--강의실 이름: ClassFrontMapName-->
+              <!--class front mapname-->
               <v-card-text>
                 <v-text-field
                   v-model="ClassFrontMapName"
@@ -71,14 +70,14 @@
                   color="white"
                 >
               </v-text-field>
-              <!--강의실 유형 (type)-->
+              <!--classfrontmaptype-->
               <v-autocomplete
                 v-model="ClassFrontMapType"
                 :items="ClassFrontMapTypeItem"
                 label="강의실 유형"
                 color="white"
               ></v-autocomplete>     
-              <!--강의실 참여 인원-->
+              <!--number of participants in the classroom-->
               <v-text-field
                 v-model="ClassFrontNumValue"
                 label="강의실 참여 인원수"
@@ -109,7 +108,7 @@
             </v-card-actions>  
           </v-card>
         </v-dialog>
-        <!--강의실 등록 입력이 스크롤창 위로 보이도록 조정-->
+        <!--adjust class registration input so that it appears above the scroll bar-->
         <v-container style="height: 20px;"></v-container>
         </v-col>
       </div>
@@ -124,15 +123,15 @@
 var RestAPIManager = require('../RestAPIManager')
 import ClassMapModal from './ClassMapModal.vue'
 export default {
-  //props: ['ClassFrontMapName', 'ClassFrontMapType', 'ClassFrontNumValue'],
+
 components: { ClassMapModal },
   data: () => ({
     ClassFrontMapName: "",
     ClassFrontDialog: false,
     ClassFrontMapType: [],
-    ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // 강의실 타입
+    ClassFrontMapTypeItem: ['오픈형', '계단식', '소회의실'],  // classroom type
 
-    // 참여 인원수 체크 (참여 인원)   s
+    // check the number of participants in the class(lecture)
     ClassFrontNumValue: 50,
     ClassFrontForm : {
       min: 2,

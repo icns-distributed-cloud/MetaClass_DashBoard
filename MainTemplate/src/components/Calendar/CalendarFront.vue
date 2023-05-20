@@ -19,7 +19,7 @@
         </v-btn>
       </v-tab>
       <v-tab>
-          <!--중간상단 날짜 Prev -->
+          <!--middle date prev-->
         <v-btn
           fab
           text
@@ -31,11 +31,11 @@
             mdi-chevron-left
           </v-icon>
         </v-btn>
-        <!--중간상단 오늘의 날짜 -->
+        <!--screen top middle today date-->
         <v-toolbar-title style="color:black" v-if="$refs.calendar">
           {{ $refs.calendar.title }} 
         </v-toolbar-title>
-        <!--중간상단 날짜 Next-->
+        <!--top middle date Next click button-->
         <v-btn
           fab
           text
@@ -48,7 +48,7 @@
           </v-icon>  
         </v-btn>
         </v-tab>
-        <!--우측상단 month-->
+        <!--top right month-->
         <v-tab>
         <v-menu
           bottom
@@ -82,9 +82,7 @@
       </v-tab>   
     </v-tabs>
   </v-toolbar>
-  <!--캘린더 전체 sheet 상하(위-아래)사이즈 조절 -->
-  <!--원래 사이즈 600에서 850으로 변경-->
-  <!--:events="CalendarFrontEvents" 이벤트: 시간, 과목-->
+  <!--Adjust the size of the entire calendar sheet up and down (top-bottom)-->
   <v-sheet height="850">
     <v-calendar
       ref="calendar"
@@ -102,8 +100,7 @@
       :event-overlap-mode="mode"
       :event-overlap-threshold="60"
     ></v-calendar>
-    <!--class="test-css black--text"-->
-    <!--event 클릭 시 나타나는 화면--> 
+    <!--event click screen--> 
     <v-menu
       v-model="CalendarFrontSelectedOpen"
       :close-on-content-click="false"
@@ -111,7 +108,6 @@
       offset-x
       CalendarFrontUpdateRange
     >
-    <!---->
       <v-card
         color="grey lighten-4"
         min-width="300px"
@@ -124,7 +120,7 @@
         >
           <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
           <v-spacer></v-spacer>
-          <!--강좌 생성에 따른 펜 생성-->
+          <!--mdi-pencil icon according to the class create-->
           <v-btn
             dark
             color="blue-grey"
@@ -138,7 +134,7 @@
           </v-btn>
         </v-toolbar>
 
-        <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
+        <!--Full screen that appears when an event (subject) is clicked on the calendar-->
         <template>
         <v-row>
           <v-col>
@@ -146,7 +142,7 @@
               v-model="CreateClassModalDialog"
               max-width="500px"
             >
-              <!--강좌명 수정-->
+              <!--Modify class name-->
               <template>
               <v-card>
                 <v-toolbar
@@ -154,7 +150,7 @@
                   dark
                 >강좌명 수정
                 </v-toolbar>
-                <!--강좌명-->
+                <!--class name-->
                 <div>
                   <v-card-text>
                     <v-text-field
@@ -168,7 +164,7 @@
                     </v-text-field>   
                   </v-card-text> 
                 </div>
-                <!--창 닫기/ 생성-->
+                <!--screen close/create-->
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
@@ -186,7 +182,7 @@
                 </v-card-actions>
               </v-card>
               </template> 
-              <!--강의실 A 클릭 후 sumit 끝 부분-->
+              <!--sumit-->
             </v-dialog>
           </v-col>      
         </v-row> 
@@ -264,7 +260,7 @@
             mdi-pencil
           </v-icon>
 
-          <!--참여인원수 : 회원(학생)리스트-->
+          <!--number of participants: list of members (students)-->
           <v-icon
             small
             class="mr-2"
@@ -274,14 +270,7 @@
             mdi-pencil
           </v-icon>
 
-            <!--ClaendarStudentListModal
-      <ClaendarStudentListModal
-      v-if="ClaendarStudentListModal"
-      @close="
-      ClaendarStudentListModal = false;"
-      />-->
-
-          <!--컨텐츠 펜 아이콘-->
+          <!--content pen-icon-->
           <v-icon
             small
             class="mr-2"
@@ -291,7 +280,7 @@
             mdi-pencil
           </v-icon>
           
-          <!--퀴즈 펜 아이콘-->
+          <!--quiz pen-icon-->
           <v-icon
             small
             class="mr-2"
@@ -302,12 +291,12 @@
           </v-icon>
           </template>
         </v-data-table>
-        <!--전체 강의실 선택하는 부분 (추가)-->
+        <!--All Classroom Selected Part (Additional)-->
         <v-dialog
           v-model="popupMaplistDialog"
           max-width="500px"
         >
-        <!--강의실 상단 box-->
+        <!--classroom top box-->
           <v-card>
             <v-toolbar
               class="overflow-hidden mx-auto"
@@ -324,7 +313,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-            <!--강의실 A--> 
+  
             <v-col cols="auto">
               <v-dialog
                 transition="dialog-bottom-transition"
@@ -350,7 +339,7 @@
             </v-col>
           </v-card>
         </v-dialog>
-        <!--참여인원수 버튼 클릭시 나타나는 화면 : 참여자 명단-->
+        <!--The screen that appears when the number of participants button is clicked: list of participants-->
         <template>
         <v-dialog
           v-model="popupStudentListDialog"
@@ -421,22 +410,6 @@
                       <strong>{{ item.loginId }}</strong>
                     </v-list-item-title>
                   </v-list-item-action>
-
-                  <!--<v-list-item-action>
-                    <v-btn
-                      depressed
-                      small
-                    >
-                      View User
-
-                      <v-icon
-                        color="orange darken-4"
-                        right
-                      >
-                        mdi-open-in-new
-                      </v-icon>
-                    </v-btn>
-                  </v-list-item-action>-->
                 </v-list-item>
                 <v-divider></v-divider>
                 </template>
@@ -445,12 +418,12 @@
           </v-card>
         </v-dialog>
         </template>
-        <!-- 컨텐츠 dialog-->
+        <!-- contents dialog-->
         <v-dialog
           v-model="popupContentListDialog"
           max-width="500px"
         >
-        <!--강의실 상단 box-->
+        <!--classroom top box-->
           <v-card>
             <v-toolbar
               class="overflow-hidden mx-auto"
@@ -467,7 +440,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-            <!--컨텐츠 이름--> 
+            <!--contents name--> 
             <v-col cols="auto">
               <v-dialog
                 transition="dialog-bottom-transition"
@@ -493,12 +466,12 @@
             </v-col>
           </v-card>
         </v-dialog>
-        <!-- 퀴즈 dialog-->
+        <!--quize dialog-->
         <v-dialog
           v-model="popupQuizListDialog"
           max-width="500px"
         >
-        <!--퀴즈 상단 box-->
+        <!--quize top box-->
           <v-card>
             <v-toolbar
               class="overflow-hidden mx-auto"
@@ -515,7 +488,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-            <!--퀴즈 이름--> 
+            <!--quize name--> 
             <v-col cols="auto">
               <v-dialog
                 transition="dialog-bottom-transition"
@@ -616,11 +589,11 @@
           </v-time-picker>
         </v-dialog>
         <span v-html="CalendarFrontSelectedEvent.details"></span>
-        <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면에서 가장 "하단"-->
+        <!--When you click an event (subject) in the calendar, the most "bottom" of the 'full-screen' appears-->
         <v-list two-line color="grey lighten-3">
           <v-card-actions>
             <v-spacer></v-spacer>
-            <!--강의 메세지 전송-->
+            <!--class(lecture) message send-->
             <v-btn
               color="teal darken-4"
               class="ma-2 white--text"
@@ -634,7 +607,7 @@
                 mdi-email
               </v-icon>
             </v-btn>
-          <!--강의 메세지 전송 클릭 후 dialog-->
+          <!--After clicking Send class(lecture) Message dialog-->
           <template>
           <v-row>
             <v-col>
@@ -654,7 +627,7 @@
                   >
                     <v-toolbar-title v-html="CalendarFrontSelectedEvent.name"></v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <!--강의 메시지 전송 dialog 닫기 버튼-->
+                    <!--Send class(lecture) message dialog close button-->
                     <v-btn
                       icon
                       dark
@@ -680,7 +653,6 @@
                       ></v-textarea>
                     </v-container>
                   </v-card-title>
-                  <!--강의 메세지 전송 내용입력 아래에 있는 강의 메세지-->
                   <v-card-subtitle>
                     <v-row class="ma-2" justify="center">
                       <v-card-actions> 
@@ -700,7 +672,7 @@
                         </v-btn>
                       </v-card-actions>
                     </v-row>
-                    <!--이메일, sms 문자-->
+                    <!--email, sms message-->
                     <v-card-actions>
                       <v-row class="ma-2" justify="space-around">
                         <v-checkbox
@@ -724,19 +696,16 @@
                     </v-card-actions>
                   </v-card-subtitle>
                 </v-card>
-              <!--캘린더에서 이벤트(과목)을 클릭 했을 때, 나타나는 '전체'화면-->
-              <!--강의실 A 클릭 후 sumit 끝 부분-->
               </v-dialog>
             </v-col>
           </v-row>
           </template>
         </v-card-actions>
       </v-list>
-        <!--test-->
         <v-list two-line color="grey lighten-3">
           <v-card-actions>
             <v-spacer></v-spacer>
-            <!--유리추가: 수정 클릭 시 item-->
+            <!--When clicking on a created course, modify and check class information-->
             <template v-slot:[`item.actions`]="{ item }">
             <v-btn
               color="green"
@@ -763,7 +732,7 @@
       </v-card>
     </v-menu>
   </v-sheet>
-  <!--하단 버튼 클릭-->
+  <!--mdi-plus button click-->
   <div class="text-right">
     <v-btn 
       fab
@@ -916,7 +885,7 @@ export default {
       ]
   }),
   
-  // 강의 메세지 전송
+  // Send class(lecture) message
   watch: {
     popUpCalendarFrontMessage () {
       const l = this.popUpCalendarFrontMessage
@@ -936,13 +905,6 @@ export default {
   },
 
   methods: {
-
-
-    
-    onClickOutside () {
-        console.log(333333);
-      },
-
     closeCreateClassModal(){
       this.showCreateClassModal=false;
     },
@@ -955,21 +917,21 @@ export default {
       return event.color
     },
 
-    // 참여 리스트 : 동그라미 이름
+    // class(lecture) Participation List
     GetFirstName(name){
       var length = name.length
       return name.substr(1, length-1)
     },
 
-    // 시간 5분 간격으로 나눠질 때 TRUE
+    // true when time is divided into 5-minute intervals
     allowedInterval: m => m % 5 == 0,
 
-    // CalendarFrontMessageDialog
+    // popUpCalendarFrontMessage
     popUpCalendarFrontMessage() {
       this.CalendarFrontMessageDialog= true
     },
 
-    // CalendarFrontMessageDialog
+    // closeCalendarFrontMessage
     closeCalendarFrontMessage() {
       this.CalendarFrontMessageDialog= false 
       },
@@ -1004,7 +966,7 @@ export default {
       else{return false}
     },
 
-     // 참여 인원수 (펜)
+     // Number of participants in the class(lecture) button click-pens
     isStudentList(item) {
       if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 5) {
         return true
@@ -1013,7 +975,7 @@ export default {
       }
     },
 
-    // 컨텐츠 (펜)
+    // contents button click-pens
     isContent(item) {
       if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 6) {
         return true
@@ -1022,7 +984,7 @@ export default {
       }
     },
     
-    // 퀴즈 (펜)
+    // quize button click-pens
     isQuiz(item) {
       if(this.CalendarFrontSelectedEvent.showevent.indexOf(item) === 7) {
         return true
@@ -1044,7 +1006,7 @@ export default {
       this.popupMaplistDialog = true
     },
 
-    // 학생 리스트
+    // student list
     popupStudentList() {
       this.popupStudentListDialog = true  // 
     },
@@ -1053,7 +1015,7 @@ export default {
       this.popupStudentListDialog = false // 
     },
 
-    // 컨텐츠
+    // contents list
     popupContentList() {
       this.fetchContentData()
       this.popupContentListDialog = true
@@ -1063,12 +1025,12 @@ export default {
       this.popupContentListDialog = false
     },
 
-    // 강의실 이름 수정할 때, 강의실 선택 창 닫기 
+    // When editing a classroom name, close the classroom selection window
     closeClassList() {
       this.popupMaplistDialog = false
     },
 
-    // 퀴즈
+  
     popupQuizList() {
       this.fetchQuizData()
       this.popupQuizListDialog = true
@@ -1093,14 +1055,14 @@ export default {
       this.CalendarFrontSelectedOpen=true
     },
 
-    // 컨텐츠 수정본 저장
+    // Save content revisions
     SetContentData(item) {
       this.CalendarFrontSelectedEvent.showevent[6].CalendarClassnameAction = item.name
       this.CalendarFrontSelectedEvent.contentId = item.id
       this.popupContentListDialog=false
     },
 
-    // 퀴즈 수정본 저장
+    // Save quize revisions
     SetQuizData(item) {
       this.CalendarFrontSelectedEvent.showevent[7].CalendarClassnameAction = item.name
       this.CalendarFrontSelectedEvent.quizId = item.id
@@ -1131,7 +1093,6 @@ export default {
       this.CreateClassModalDialog = false
     },
 
-    // 처음 등록 확인
     saveLectureName () {
       this.CalendarFrontSelectedEvent.name = this.editLectureName
       this.closeLectureName()

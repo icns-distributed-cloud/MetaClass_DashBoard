@@ -24,7 +24,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-              <!--강좌명 입력-->
+              <!--enter class name-->
             <div>
               
               <v-card-text>
@@ -37,7 +37,7 @@
                   outlined
                 >
                 </v-text-field>    
-                <!--강의 시작 날짜 및 시간-->
+                <!--class start date and time-->
                 <v-row>
                   <v-col cols="12" sm="6">
                     <v-dialog
@@ -90,7 +90,7 @@
                       </v-time-picker>
                     </v-dialog>
                   </v-col>
-                  <!--강의 종료 날짜 및 시간--> 
+                  <!--class end date and time--> 
                   <v-col cols="12" sm="6">
                     <v-dialog
                       ref="CreateClassModalFinishDateDialog3"
@@ -142,7 +142,7 @@
                     </v-dialog>
                   </v-col>
                 </v-row>
-                <!--강의실 선택-->
+                <!--select classroom-->
                 <v-row class="mx-auto">
                   <v-select
                     v-model="selectedMap"
@@ -173,7 +173,7 @@
                     >
                       <v-toolbar-title class="front-weight-light">강의실 등록</v-toolbar-title>
                     </v-toolbar>
-                    <!--강의실 이름: ClassMapName-->
+                    <!--classmap name-->
                     <v-card-text>
                       <v-text-field
                         v-model="ClassMapName"
@@ -181,14 +181,14 @@
                         color="white"
                       >
                     </v-text-field>
-                    <!--강의실 유형 (type)-->
+                    <!--classmap type-->
                     <v-autocomplete
                       v-model="ClassMapType"
                       :items="ClassMapTypeItem"
                       label="강의실 유형"
                       color="white"
                     ></v-autocomplete>     
-                    <!--강의실 참여 인원-->
+                    <!--class participation number-->
                     <v-text-field
                       v-model="ClassNumValue"
                       label="강의실 참여 인원수"
@@ -219,7 +219,7 @@
                   </v-card-actions>  
                 </v-card>
                 </v-dialog>
-                <!-- 소속 선택-->
+                <!--belong select-->
                 <v-row class="mx-auto">
                   <v-select
                     v-model="CreateClassModalBelong"
@@ -260,7 +260,7 @@
                       >
                       </v-text-field>
                     </v-card-text>                     
-                    <!--하단 취소, 확인 버튼-->
+                    <!--cancel/ok button-->
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
@@ -303,7 +303,7 @@
                     </template>
                   </v-data-table>
                 </v-card>
-                <!-- 컨텐츠 파일 선택-->
+                <!--contents file select-->
                 <v-row class="mx-auto">
                   <v-select
                     v-model="CreateClassModalFile"
@@ -328,14 +328,14 @@
                     color="purple lighten-1"
                     dark
                   >
-                    <!--상단 컨텐츠 등록-->   
+                    <!--register content-->   
                     <v-toolbar
                       flat
                       color="purple"
                     >
                       <v-toolbar-title class="front-weight-light">컨텐츠 등록</v-toolbar-title> 
                     </v-toolbar>
-                    <!--컨텐츠 이름: ContentName-->
+                    <!--content name-->
                     <v-card-text>
                       <v-text-field
                         v-model="ContentName"
@@ -352,7 +352,7 @@
                         height="20px"
                       >
                       </v-progress-linear>
-                      <!-- 콘텐츠 파일 첨부-->
+                      <!--attach content file-->
                       <v-file-input
                         v-model="ContentFrontFiles"
                         :accept="fileAccept"
@@ -386,7 +386,7 @@
                         </template>
                       </v-file-input>
                     </v-card-text>
-                    <!--하단 취소, 확인 버튼-->
+                    <!--cancel/ok button-->
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
@@ -414,7 +414,7 @@
                     </v-snackbar>
                   </v-card>
                 </v-dialog>
-                <!-- 퀴즈 선택-->
+                <!--quize select-->
                 <v-row class="mx-auto">
                   <v-select
                     v-model="CreateClassModalQuiz"
@@ -430,7 +430,7 @@
                   <QuizCreateModal>퀴즈 등록</QuizCreateModal>
                   </v-row>
                 </v-row>
-                <!-- 컬러 선택-->
+                <!--class modal color select-->
                 <v-row class="mx-auto">
                   <v-select
                     v-model="CreateClassModalColor"
@@ -454,7 +454,7 @@
               </v-checkbox>
             </v-col>
             </v-row>
-            <!--등록 확인-->
+            <!--create class registration confirmation-->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -621,14 +621,14 @@ export default {
        this.CreateClassDone();
     },
 
-    // 시간 5분 간격으로 나눠질 때 TRUE
+    // true when time is divided into 5-minute intervals
     allowedInterval: m => m % 5 == 0,
 
     selectstudent() {
       console.log(this.selectedStudents)
     },
 
-    // 강의실 생성 시작 date, time
+    // start creating classrooms date, time
     CreateClassModalStartSet() {
       this.saveStartDate = this.CreateClassModalStartDate1;
       this.CreateClassModalStartDate1 = this.CreateClassModalStartDate1 +" "+ this.CreateClassModalStartTime2;
@@ -637,7 +637,7 @@ export default {
       this.createClassModalFinish = false
     },
 
-    // 강의실 생성 종료 date, time
+    // end of classroom creation date, time
     CreateClassModalFinishSet() {
       this.CreateClassModalFinishDate3 = this.CreateClassModalFinishDate3 +" "+ this.CreateClassModalFinishTime4;
       this.$refs.CreateClassModalFinishDateDialog3.save(this.CreateClassModalFinishDate3);
@@ -789,7 +789,7 @@ export default {
       }
     },
 
-    // 부서 입력 API : 26. Post - http://IPAddress/api/department/post/postdepartment
+    // 26. Post - http://IPAddress/api/department/post/postdepartment
     async CreateDepartment() {
       var postDepartment = await RestAPIManager.API_postdepartment(this.DepartmentName);
       if (postDepartment.res_success){
